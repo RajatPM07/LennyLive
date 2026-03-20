@@ -218,4 +218,111 @@ function playPing() {
   }
 }
 
+// ─── Selection Capture + Keyboard Handler ────────────────────────────────────
+
+let lastCtrlPress = 0;
+let currentSelection = '';
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Control') {
+    const now = Date.now();
+
+    if (state === 'idle' && now - lastCtrlPress < 300) {
+      // Double-tap Ctrl: capture selection at this moment, then activate
+      currentSelection = window.getSelection().toString().trim().slice(0, 500);
+      activateLennyLive();
+    } else if (state === 'listening') {
+      // Single tap during listening: stop capture immediately
+      stopListening();
+    }
+
+    lastCtrlPress = now; // always update, regardless of state
+  }
+
+  if (e.key === 'Escape' && state === 'listening') {
+    cancelLennyLive();
+  }
+});
+
+// ─── Activation ───────────────────────────────────────────────────────────────
+
+function activateLennyLive() {
+  if (state !== 'idle') return;
+  state = 'listening';
+  playPing();
+  showIndicator('listening');
+  startListening(); // defined below
+}
+
+function cancelLennyLive() {
+  state = 'idle';
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  if (typeof recognition !== 'undefined' && recognition) {
+    try { recognition.abort(); } catch (_) {}
+  }
+  hideIndicator();
+  console.log('[LennyLive] Cancelled — returned to idle');
+}
+
+// ─── Query Processing ─────────────────────────────────────────────────────────
+
+let processingTimeout = null;
+
+function processQuery(transcript) {
+  state = 'processing';
+  showIndicator('thinking');
+  console.log('[LennyLive] Sending query:', { transcript, selection: currentSelection });
+
+  chrome.runtime.sendMessage(
+    { type: 'QUERY', transcript, selection: currentSelection },
+    (response) => {
+      clearTimeout(processingTimeout);
+
+      if (!response) {
+        console.log('[LennyLive] No response from service worker — returning to idle');
+        cancelLennyLive();
+        return;
+      }
+
+      console.log('[LennyLive] Response received:', response);
+      state = 'loading';
+      showIndicator('loading');
+
+      // Sub-project 4 renders postcard here.
+      // For sub-project 1: return to idle after short delay.
+      setTimeout(() => {
+        state = 'idle';
+        hideIndicator();
+        console.log('[LennyLive] Returned to idle after stub response');
+      }, 500);
+    }
+  );
+
+  // Safety timeout: return to idle if service worker never responds
+  processingTimeout = setTimeout(() => {
+    if (state === 'processing' || state === 'loading') {
+      console.log('[LennyLive] Service worker timeout (10s) — returning to idle');
+      cancelLennyLive();
+    }
+  }, 10000);
+}
+
+// ─── Stub startListening (replaced in Task 6) ─────────────────────────────────
+// Simulates speech recognition for testing state machine in Task 5.
+// Task 6 replaces this with real SpeechRecognition.
+
+let timerA, timerB;
+
+function startListening() {
+  console.log('[LennyLive] [STUB] Listening started — type in console to simulate speech');
+  // In Task 5, test by calling processQuery('test') in DevTools console
+}
+
+function stopListening() {
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  processQuery('manually stopped'); // simulate a transcript
+}
+
 console.log('[LennyLive] Content script loaded — Shadow DOM ready');
