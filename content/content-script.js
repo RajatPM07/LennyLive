@@ -188,4 +188,34 @@ function showBuzzwordChip(topic) {
   };
 }
 
+// ─── State Machine ────────────────────────────────────────────────────────────
+// States: idle | listening | processing | loading
+// One-directional: idle → listening → processing → loading → idle
+// Errors / Esc always return to idle.
+
+let state = 'idle';
+
+// ─── Ping Tone (Web Audio API) ────────────────────────────────────────────────
+// Double-tap Ctrl is a keydown event — qualifies as a user gesture for autoplay.
+
+function playPing() {
+  try {
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch (err) {
+    console.log('[LennyLive] Ping audio failed (autoplay blocked):', err.message);
+    // Fail silently — activation continues without sound
+  }
+}
+
 console.log('[LennyLive] Content script loaded — Shadow DOM ready');
