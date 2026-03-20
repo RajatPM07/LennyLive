@@ -308,21 +308,96 @@ function processQuery(transcript) {
   }, 10000);
 }
 
-// ─── Stub startListening (replaced in Task 6) ─────────────────────────────────
-// Simulates speech recognition for testing state machine in Task 5.
-// Task 6 replaces this with real SpeechRecognition.
+// ─── Speech Recognition ───────────────────────────────────────────────────────
 
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let recognition = null;
 let timerA, timerB;
 
+if (!SpeechRecognition) {
+  console.warn('[LennyLive] SpeechRecognition not supported in this browser — activation disabled');
+  // activateLennyLive will still run but startListening will no-op gracefully
+}
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => {
+    console.log('[LennyLive] Recognition started — Timer A (5s no-speech) running');
+    timerA = setTimeout(() => {
+      console.log('[LennyLive] Timer A fired — no speech detected, cancelling');
+      cancelLennyLive();
+    }, 5000);
+  };
+
+  recognition.onspeechstart = () => {
+    console.log('[LennyLive] Speech detected — clearing Timer A');
+    clearTimeout(timerA);
+  };
+
+  recognition.onspeechend = () => {
+    console.log('[LennyLive] Speech ended — Timer B (2s post-silence) running');
+    timerB = setTimeout(() => {
+      console.log('[LennyLive] Timer B fired — processing query');
+      // recognition.stop() triggers onresult if speech was captured
+      try { recognition.stop(); } catch (_) {}
+    }, 2000);
+  };
+
+  recognition.onresult = (e) => {
+    clearTimeout(timerA);
+    clearTimeout(timerB);
+    const transcript = e.results[0][0].transcript;
+    console.log('[LennyLive] Transcript:', transcript);
+    processQuery(transcript);
+  };
+
+  recognition.onerror = (e) => {
+    clearTimeout(timerA);
+    clearTimeout(timerB);
+    console.log('[LennyLive] Speech error:', e.error);
+    if (e.error === 'not-allowed') {
+      showMicDeniedTooltip();
+    }
+    cancelLennyLive();
+  };
+
+  recognition.onend = () => {
+    // Fires when session ends for any reason (including natural browser termination).
+    // If still in 'listening', no result was captured — return to idle.
+    if (state === 'listening') {
+      console.log('[LennyLive] Recognition ended without result — returning to idle');
+      cancelLennyLive();
+    }
+  };
+}
+
 function startListening() {
-  console.log('[LennyLive] [STUB] Listening started — type in console to simulate speech');
-  // In Task 5, test by calling processQuery('test') in DevTools console
+  if (!recognition) {
+    console.warn('[LennyLive] SpeechRecognition unavailable — cannot start listening');
+    cancelLennyLive();
+    return;
+  }
+  try {
+    recognition.start();
+    console.log('[LennyLive] Recognition started');
+  } catch (err) {
+    console.log('[LennyLive] Failed to start recognition:', err.message);
+    cancelLennyLive();
+  }
 }
 
 function stopListening() {
   clearTimeout(timerA);
   clearTimeout(timerB);
-  processQuery('manually stopped'); // simulate a transcript
+  if (recognition) {
+    try { recognition.stop(); } catch (_) {}
+  }
 }
 
 console.log('[LennyLive] Content script loaded — Shadow DOM ready');
