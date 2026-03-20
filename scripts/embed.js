@@ -2,6 +2,10 @@ import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
@@ -35,7 +39,12 @@ async function rowExists(episodeTitle, pullQuote) {
 }
 
 async function main() {
-  const moments = JSON.parse(readFileSync('data/curated_moments.json', 'utf8'));
+  const REQUIRED_ENV = ['GOOGLE_AI_API_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
+  for (const key of REQUIRED_ENV) {
+    if (!process.env[key]) throw new Error(`Missing required env var: ${key}`);
+  }
+
+  const moments = JSON.parse(readFileSync(join(__dirname, '../data/curated_moments.json'), 'utf8'));
   console.log(`[LennyLive] ${DRY_RUN ? 'DRY RUN — ' : ''}Processing ${moments.length} moments...`);
 
   let embedded = 0, skipped = 0;
@@ -59,9 +68,9 @@ async function main() {
     const embedding = await getEmbedding(normalize(m.pull_quote));
 
     const { error } = await supabase.from('transcript_chunks').insert({
-      topic: m.topic,
-      guest_name: m.guest_name,
-      insight: m.insight,
+      topic:         normalize(m.topic),
+      guest_name:    normalize(m.guest_name),
+      insight:       normalize(m.insight),
       pull_quote: normalize(m.pull_quote),
       episode_title: normalize(m.episode_title),
       youtube_url: m.youtube_url,
