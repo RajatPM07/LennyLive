@@ -19,12 +19,10 @@ Build the Chrome extension shell with three activation modes: double-tap Ctrl (a
 LennyLive/
 ├── manifest.json
 ├── assets/
-│   ├── icons/
-│   │   ├── icon16.png
-│   │   ├── icon48.png
-│   │   └── icon128.png
-│   └── sounds/
-│       └── ping.mp3              # ~0.5s activation chime
+│   └── icons/
+│       ├── icon16.png
+│       ├── icon48.png
+│       └── icon128.png
 ├── content/
 │   └── content-script.js         # Detection + Shadow DOM UI injection
 ├── background/
@@ -34,6 +32,8 @@ LennyLive/
     ├── popup.js
     └── popup.css
 ```
+
+> No `assets/sounds/` directory — ping is generated via Web Audio API (no file needed).
 
 ---
 
@@ -53,7 +53,9 @@ LennyLive/
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content-script.js"]
+      "js": ["content/content-script.js"],
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "action": {
@@ -67,7 +69,12 @@ LennyLive/
 }
 ```
 
-**No `microphone` permission in manifest** — Web Speech API requests mic access at runtime via the browser. No `side_panel` yet — sidebar is sub-project 4.
+**Notes:**
+- `run_at: document_idle` — default, stated explicitly. Content script runs after DOM is ready.
+- `all_frames: false` — inject into top-level frame only. Iframes (embedded Notion, Docs) are out of scope for V1.
+- No `microphone` permission — Web Speech API requests mic at runtime via the browser prompt.
+- No `side_panel` — sidebar UI is sub-project 4.
+- No `web_accessible_resources` — ping sound is generated via Web Audio API, no file assets needed.
 
 ---
 
@@ -81,53 +88,98 @@ idle → listening → processing → idle
 
 Transitions:
 - `idle` → `listening`: double-tap Ctrl (within 300ms window)
-- `listening` → `processing`: 2s silence OR single tap Ctrl
-- `listening` → `idle`: Esc key (cancel)
-- `processing` → `idle`: service worker responds (or timeout after 10s)
+- `listening` → `processing`: post-speech silence (2s after speech ends) OR single tap Ctrl
+- `listening` → `idle`: Esc key (cancel) OR `recognition.onerror`
+- `processing` → `idle`: service worker responds (or 10s timeout)
 
-### Double-tap Detection
+### Double-tap + Single-tap Detection
+
+`lastCtrlPress` is always updated regardless of state, keeping the timing window accurate:
+
 ```javascript
 let lastCtrlPress = 0;
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Control') {
     const now = Date.now();
-    if (now - lastCtrlPress < 300 && state === 'idle') {
+
+    if (state === 'idle' && now - lastCtrlPress < 300) {
       activateLennyLive();
+    } else if (state === 'listening') {
+      stopListening(); // single tap stops capture immediately
     }
-    lastCtrlPress = now;
+
+    lastCtrlPress = now; // always update, regardless of state
   }
+
   if (e.key === 'Escape' && state === 'listening') {
     cancelLennyLive();
   }
 });
 ```
 
-Single-tap Ctrl to stop (while listening):
-```javascript
-// Inside the keydown listener
-if (e.key === 'Control' && state === 'listening') {
-  stopListening();
-}
-```
+**No conflict:** The double-tap check only triggers when `state === 'idle'`. Any Ctrl press during `listening` hits the `else if` branch and stops listening — the double-tap path is unreachable from `listening`.
 
 ### Activation Sequence
-1. Play `ping.mp3` via Web Audio API (fetched as extension asset URL)
+1. Play ping tone via Web Audio API (see Part 7)
 2. Inject listening indicator into Shadow DOM: pulsing dot + "Lenny is listening..."
 3. Start `SpeechRecognition`
-4. On result: update indicator to "Lenny is thinking...", send to service worker
+4. On speech result: update indicator to "Lenny is thinking...", send to service worker
 5. On service worker response: remove indicator (postcard rendered by sub-project 4)
 
 ### Speech Recognition Config
 ```javascript
-const recognition = new webkitSpeechRecognition();
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// All recognition setup and usage must be inside this guard
+if (!SpeechRecognition) {
+  console.warn('[LennyLive] SpeechRecognition not supported — activation disabled');
+  // Do not instantiate recognition or wire up any recognition handlers
+} else {
+const recognition = new SpeechRecognition();
 recognition.continuous = false;
 recognition.interimResults = false;
 recognition.lang = 'en-US';
 recognition.maxAlternatives = 1;
 ```
 
-### Silence Detection
-`recognition.onresult` fires when speech is detected. If no result fires within 2 seconds of `recognition.start()`, treat as silence and call `stopListening()`. Implemented via `setTimeout` reset on `recognition.onspeechstart`.
+### Silence Detection — Two Distinct Timers
+
+**Timer A — no-speech timeout (5s):** Starts when `recognition.start()` is called. If `onspeechstart` has not fired within 5 seconds, the user said nothing — call `cancelLennyLive()`.
+
+**Timer B — post-speech silence (2s):** Starts on `recognition.onspeechend`. If no `onresult` fires within 2 seconds, the user finished speaking — call `stopListening()`.
+
+Both timers are cleared on `recognition.onresult`.
+
+```javascript
+let timerA, timerB;
+
+recognition.onstart = () => {
+  timerA = setTimeout(() => cancelLennyLive(), 5000);
+};
+
+recognition.onspeechstart = () => {
+  clearTimeout(timerA); // user is speaking — cancel no-speech timeout
+};
+
+recognition.onspeechend = () => {
+  timerB = setTimeout(() => stopListening(), 2000);
+};
+
+recognition.onresult = (e) => {
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  const transcript = e.results[0][0].transcript;
+  processQuery(transcript);
+};
+
+recognition.onerror = (e) => {
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  console.log('[LennyLive] Speech error:', e.error);
+  cancelLennyLive(); // always return to idle on error
+};
+```
 
 ---
 
@@ -139,9 +191,9 @@ recognition.maxAlternatives = 1;
 - Checks for any PM_BUZZWORDS match (case-insensitive)
 - Debounce: same buzzword suppressed for 5 minutes per tab (`Map` keyed by buzzword)
 - Does not run while state is `listening` or `processing`
+- On match: write `{ lastTopic: matchedDisplayTopic }` to `chrome.storage.local`, then show chip
 
-### PM Buzzwords List
-Defined inline in content-script.js (imported from data/pm_buzzwords.js via content script injection is not available — inline the array directly):
+### PM Buzzwords List (inlined — no separate module in MV3 content scripts)
 
 ```javascript
 const PM_BUZZWORDS = [
@@ -160,14 +212,24 @@ const PM_BUZZWORDS = [
 ```
 
 ### Topic Mapping
-Map detected buzzwords to the 3 RAG topic strings (for display in the chip):
+
+Maps detected buzzwords to the 3 RAG topic strings for chip display. Any buzzword not in the map uses a capitalised version of the buzzword itself as fallback.
+
 ```javascript
 const TOPIC_MAP = {
   'retention': 'Retention', 'churn': 'Retention', 'DAU': 'Retention',
-  'GTM': 'GTM Strategy', 'go-to-market': 'GTM Strategy', 'acquisition': 'GTM Strategy',
+  'MAU': 'Retention', 'WAU': 'Retention', 'activation': 'Retention',
+  'GTM': 'GTM Strategy', 'go-to-market': 'GTM Strategy',
+  'acquisition': 'GTM Strategy', 'growth loop': 'GTM Strategy',
+  'PLG': 'GTM Strategy', 'product-led': 'GTM Strategy',
   'PMF': 'Product-Market Fit', 'product market fit': 'Product-Market Fit',
-  // ... rest default to the matched buzzword itself
+  'pre-PMF': 'Product-Market Fit', 'zero to one': 'Product-Market Fit',
+  '0 to 1': 'Product-Market Fit',
 };
+// Fallback: capitalize the matched buzzword
+function getDisplayTopic(buzzword) {
+  return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
+}
 ```
 
 ---
@@ -179,9 +241,11 @@ All extension UI is injected into a Shadow DOM host appended to `document.body`.
 ```javascript
 const host = document.createElement('div');
 host.id = 'lenny-live-root';
-const shadow = host.attachShadow({ mode: 'closed' });
+const shadow = host.attachShadow({ mode: 'open' }); // open for easier debugging
 document.body.appendChild(host);
 ```
+
+> **Shadow DOM mode:** `open` is used during development — it allows Chrome DevTools to inspect the shadow root, which is valuable when building the extension. `closed` can be considered for a production release if stricter isolation is needed, but offers no meaningful security benefit for a Chrome extension.
 
 ### Listening Indicator
 Positioned fixed, bottom-right (32px from edges). Shown during `listening` and `processing` states.
@@ -192,7 +256,7 @@ Positioned fixed, bottom-right (32px from edges). Shown during `listening` and `
 ╰──────────────────────────────╯
 ```
 
-Dark pill, purple pulsing dot, white text. Transitions: "Lenny is thinking..." when processing.
+Dark pill, purple pulsing dot, white text. Transitions text to "Lenny is thinking..." when processing.
 
 ### Buzzword Chip (Glassy Strip)
 Positioned fixed, bottom-center (20px from bottom). Slides up on appear (200ms ease-out), fades out after 10s if not clicked.
@@ -201,9 +265,9 @@ Positioned fixed, bottom-center (20px from bottom). Slides up on appear (200ms e
 ● Lenny on retention →
 ```
 
-Translucent purple-tinted background, 1px purple border, pulsing dot. Clicking triggers `activateLennyLive()`. Same buzzword suppressed for 5 minutes after chip shown.
+Translucent purple-tinted background, 1px purple border, pulsing dot. Clicking triggers `activateLennyLive()`.
 
-**Both elements share the same Shadow DOM host.** They are separate `div`s within it, shown/hidden via CSS classes.
+**Both elements share the same Shadow DOM host.** They are separate `div`s within it, shown/hidden via CSS `display` property.
 
 ---
 
@@ -216,18 +280,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[LennyLive] Message received:', message.type);
 
   if (message.type === 'QUERY') {
-    // Sub-project 2 replaces this stub with RAG pipeline
     sendResponse({ type: 'RESPONSE', status: 'ok', insight: null });
   }
 
   if (message.type === 'BUZZWORD_TRIGGERED') {
-    // Sub-project 2 may use this for passive RAG pre-fetch
     sendResponse({ type: 'ACK' });
   }
 
-  return true; // Keep message channel open for async response
+  return true; // required to keep message channel open
 });
 ```
+
+> **MV3 service worker lifetime constraint:** In Manifest V3, service workers can be terminated by Chrome at any time. `return true` keeps the message port open for an async `sendResponse`, but if the service worker is terminated before responding, the content script's callback fires with `undefined`. The shell implementation above responds synchronously (no async work), so this is not an issue for sub-project 1. **Sub-project 2 must call `sendResponse` synchronously** — or switch to a push model where the service worker calls `chrome.tabs.sendMessage` back to the tab instead of using `sendResponse`. Sub-project 2 should choose one pattern and document it.
 
 ### Message Contract (shared across all sub-projects)
 
@@ -254,39 +318,40 @@ Minimal status display — no settings.
 **popup.html shows:**
 - Lenny Live logo/name
 - Status: "Active on this tab" or "Ready"
-- Last topic detected (from `chrome.storage.local` key `lastTopic`)
+- Last topic detected (reads `chrome.storage.local` key `lastTopic` — written by buzzword detector on each match)
 - "Double-tap Ctrl to activate" reminder text
 
 **popup.js** reads `chrome.storage.local` on open and renders. No writes.
 
 ---
 
-## Part 7: Audio Asset
+## Part 7: Ping Tone (Web Audio API)
 
-`assets/sounds/ping.mp3` — a short (~0.5s) activation chime.
+No audio file needed — generated programmatically. Double-tap Ctrl is a keyboard event and qualifies as a user gesture, satisfying the browser's autoplay policy.
 
-**Options (in order of preference):**
-1. Use a royalty-free chime from freesound.org (MIT/CC0)
-2. Generate a simple tone programmatically via Web Audio API (no file needed)
-
-**Recommended: option 2** — generate the ping in JS, no asset dependency:
 ```javascript
 function playPing() {
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.frequency.value = 880;
-  osc.type = 'sine';
-  gain.gain.setValueAtTime(0.3, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + 0.4);
+  try {
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') {
+      ctx.resume(); // handle suspended AudioContext
+    }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch (err) {
+    console.log('[LennyLive] Ping audio failed (autoplay blocked):', err.message);
+    // fail silently — activation continues without sound
+  }
 }
 ```
-
-This removes the `assets/sounds/` directory from the file structure entirely.
 
 ---
 
@@ -294,14 +359,16 @@ This removes the `assets/sounds/` directory from the file structure entirely.
 
 Load the extension in Chrome (`chrome://extensions` → Load unpacked → select `LennyLive/`):
 
-1. **Double-tap Ctrl** on any page → ping tone plays → "Lenny is listening..." indicator appears
-2. **Speak** → silence or single tap Ctrl → indicator changes to "Lenny is thinking..."
-3. **Service worker responds** → indicator disappears
-4. **Esc** during listening → cancels silently, returns to idle
-5. **Open a page with PM buzzwords** (e.g., any Notion doc mentioning "retention") → chip appears after ≤30s
-6. **Click the chip** → activates Lenny
-7. **Ignore the chip** → fades after 10s
-8. **Open popup** → shows "Ready" and last detected topic
+1. **Double-tap Ctrl** on any HTTPS page → ping tone plays → "Lenny is listening..." indicator appears bottom-right
+2. **Speak** → pause 2s → indicator changes to "Lenny is thinking..." → disappears
+3. **Double-tap Ctrl** → speak → **single tap Ctrl** → stops immediately, processes
+4. **Double-tap Ctrl** → say nothing → after 5s, indicator disappears silently (Timer A)
+5. **Esc** during listening → cancels, returns to idle
+6. **Open a page with "retention" or "GTM"** → buzzword chip appears bottom-center within 30s
+7. **Click chip** → activates Lenny
+8. **Ignore chip** → fades after 10s
+9. **Open popup** → shows "Ready" and last detected topic
+10. **Check `chrome.storage.local`** in DevTools → `lastTopic` key populated after buzzword detection
 
 ---
 
@@ -311,4 +378,4 @@ Load the extension in Chrome (`chrome://extensions` → Load unpacked → select
 - Postcard / sidebar UI (sub-project 4)
 - Gamification (V2)
 - Selection review mode (V2)
-- `data/pm_buzzwords.js` as a separate module (inlined for MV3 compatibility)
+- iframe injection (`all_frames: false` by design)
