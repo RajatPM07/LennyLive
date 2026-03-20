@@ -5,7 +5,7 @@
   "description": "Your ambient PM mentor — Lenny Rachitsky's voice in your workflow",
   "permissions": ["activeTab", "storage", "scripting"],
   "host_permissions": [
-    "*://*.google.com/document/*",
+    "*://docs.google.com/document/*",
     "*://*.notion.so/*",
     "*://*.atlassian.net/*",
     "*://*.linear.app/*"
@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.google.com/document/*",
+        "*://docs.google.com/document/*",
         "*://*.notion.so/*",
         "*://*.atlassian.net/*",
         "*://*.linear.app/*"
