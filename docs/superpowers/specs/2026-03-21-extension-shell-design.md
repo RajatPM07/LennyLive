@@ -46,13 +46,23 @@ LennyLive/
   "version": "0.1.0",
   "description": "Your ambient PM mentor — Lenny Rachitsky's voice in your workflow",
   "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "*://*.google.com/document/*",
+    "*://*.notion.so/*",
+    "*://*.atlassian.net/*",
+    "*://*.linear.app/*"
+  ],
   "background": {
     "service_worker": "background/service-worker.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "*://*.google.com/document/*",
+        "*://*.notion.so/*",
+        "*://*.atlassian.net/*",
+        "*://*.linear.app/*"
+      ],
       "js": ["content/content-script.js"],
       "run_at": "document_idle",
       "all_frames": false
@@ -70,40 +80,48 @@ LennyLive/
 ```
 
 **Notes:**
-- `run_at: document_idle` — default, stated explicitly. Content script runs after DOM is ready.
+- `host_permissions` narrowed to the 4 PM tools PMs actually use: Google Docs, Notion, Jira, Linear. Keeps the permission footprint minimal and honest.
+- `run_at: document_idle` — content script runs after DOM is ready.
 - `all_frames: false` — inject into top-level frame only. Iframes (embedded Notion, Docs) are out of scope for V1.
 - No `microphone` permission — Web Speech API requests mic at runtime via the browser prompt.
 - No `side_panel` — sidebar UI is sub-project 4.
 - No `web_accessible_resources` — ping sound is generated via Web Audio API, no file assets needed.
+
+> **V1.5:** Popup settings page lets the user add custom URL patterns. Stored in `chrome.storage.local` and injected dynamically via `chrome.scripting.registerContentScripts`. Not in V1.
 
 ---
 
 ## Part 2: Activation Flow (content-script.js)
 
 ### State Machine
-Four states, one direction:
+Five states, one direction:
 ```
-idle → listening → processing → idle
+idle → listening → processing → loading → idle
 ```
 
 Transitions:
 - `idle` → `listening`: double-tap Ctrl (within 300ms window)
 - `listening` → `processing`: post-speech silence (2s after speech ends) OR single tap Ctrl
-- `listening` → `idle`: Esc key (cancel) OR `recognition.onerror`
-- `processing` → `idle`: service worker responds (or 10s timeout)
+- `listening` → `idle`: Esc key (cancel) OR `recognition.onerror` OR mic denied
+- `processing` → `loading`: service worker acknowledged query (stub: immediate)
+- `loading` → `idle`: service worker responds with insight (or 10s timeout)
+
+> The `loading` state exists to show a skeleton shimmer between "Lenny is thinking..." and the postcard appearing (sub-project 4). In sub-project 1, the stub response moves through loading instantly — but the state is wired now so sub-project 4 can hook in cleanly.
 
 ### Double-tap + Single-tap Detection
 
-`lastCtrlPress` is always updated regardless of state, keeping the timing window accurate:
+`lastCtrlPress` is always updated regardless of state, keeping the timing window accurate. Selection is captured at double-tap time:
 
 ```javascript
 let lastCtrlPress = 0;
+let currentSelection = '';
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Control') {
     const now = Date.now();
 
     if (state === 'idle' && now - lastCtrlPress < 300) {
+      currentSelection = window.getSelection().toString().trim().slice(0, 500);
       activateLennyLive();
     } else if (state === 'listening') {
       stopListening(); // single tap stops capture immediately
@@ -120,12 +138,64 @@ document.addEventListener('keydown', (e) => {
 
 **No conflict:** The double-tap check only triggers when `state === 'idle'`. Any Ctrl press during `listening` hits the `else if` branch and stops listening — the double-tap path is unreachable from `listening`.
 
+**Selection capture:** `currentSelection` is populated at activation time (not at query send time) so it reflects what the user had highlighted when they invoked Lenny. Passed along in the `QUERY` message if non-empty.
+
 ### Activation Sequence
 1. Play ping tone via Web Audio API (see Part 7)
 2. Inject listening indicator into Shadow DOM: pulsing dot + "Lenny is listening..."
 3. Start `SpeechRecognition`
 4. On speech result: update indicator to "Lenny is thinking...", send to service worker
-5. On service worker response: remove indicator (postcard rendered by sub-project 4)
+5. On service worker acknowledgement: transition to `loading` — indicator shows skeleton shimmer
+6. On service worker response: remove indicator (postcard rendered by sub-project 4)
+
+### State Transitions in Code
+
+`processQuery` handles the `listening → processing → loading → idle` path:
+
+```javascript
+function processQuery(transcript) {
+  state = 'processing';
+  updateIndicator('thinking'); // "Lenny is thinking..."
+
+  chrome.runtime.sendMessage(
+    { type: 'QUERY', transcript, selection: currentSelection },
+    (response) => {
+      if (!response) {
+        // Service worker terminated before responding
+        console.log('[LennyLive] No response from service worker — returning to idle');
+        cancelLennyLive();
+        return;
+      }
+      state = 'loading';
+      updateIndicator('loading'); // skeleton shimmer
+
+      // Sub-project 4 renders postcard here; for now, return to idle after 500ms
+      setTimeout(() => {
+        state = 'idle';
+        hideIndicator();
+      }, 500);
+    }
+  );
+
+  // Safety timeout: if service worker never responds, return to idle after 10s
+  setTimeout(() => {
+    if (state === 'loading' || state === 'processing') {
+      console.log('[LennyLive] Service worker timeout — returning to idle');
+      cancelLennyLive();
+    }
+  }, 10000);
+}
+
+function cancelLennyLive() {
+  state = 'idle';
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  if (recognition) recognition.abort();
+  hideIndicator();
+}
+```
+
+> **Esc during processing/loading:** Esc is only wired to `listening` state. Once the query is sent (`processing` or `loading`), there is no cancellation — the request is in flight. This is intentional for V1. Sub-project 4 may add a dismiss button on the postcard.
 
 ### Speech Recognition Config
 ```javascript
@@ -142,6 +212,24 @@ recognition.interimResults = false;
 recognition.lang = 'en-US';
 recognition.maxAlternatives = 1;
 ```
+
+### Mic Denied — Error Handling
+
+If the user denies mic access, `recognition.onerror` fires with `e.error === 'not-allowed'`. Show a tooltip inside Shadow DOM:
+
+```javascript
+recognition.onerror = (e) => {
+  clearTimeout(timerA);
+  clearTimeout(timerB);
+  console.log('[LennyLive] Speech error:', e.error);
+  if (e.error === 'not-allowed') {
+    showMicDeniedTooltip(); // renders inside Shadow DOM, auto-dismisses after 4s
+  }
+  cancelLennyLive(); // always return to idle on error
+};
+```
+
+**Tooltip:** Small dark pill in Shadow DOM, positioned below the listening indicator. Text: "Mic access needed — click the lock icon in your address bar." Auto-removes after 4 seconds.
 
 ### Silence Detection — Two Distinct Timers
 
@@ -177,7 +265,20 @@ recognition.onerror = (e) => {
   clearTimeout(timerA);
   clearTimeout(timerB);
   console.log('[LennyLive] Speech error:', e.error);
+  if (e.error === 'not-allowed') {
+    showMicDeniedTooltip();
+  }
   cancelLennyLive(); // always return to idle on error
+};
+
+recognition.onend = () => {
+  // Fires when recognition session ends for any reason (including natural termination
+  // after silence, or browser stopping recognition). If state is still 'listening',
+  // the session ended without an onresult — return to idle.
+  if (state === 'listening') {
+    console.log('[LennyLive] Recognition ended without result — returning to idle');
+    cancelLennyLive();
+  }
 };
 ```
 
@@ -185,13 +286,58 @@ recognition.onerror = (e) => {
 
 ## Part 3: Buzzword Detection (content-script.js)
 
-### Scanning
-- `setInterval` every 30 seconds
-- Reads `document.body.innerText` (capped at first 5000 chars for performance)
-- Checks for any PM_BUZZWORDS match (case-insensitive)
-- Debounce: same buzzword suppressed for 5 minutes per tab (`Map` keyed by buzzword)
-- Does not run while state is `listening` or `processing`
-- On match: write `{ lastTopic: matchedDisplayTopic }` to `chrome.storage.local`, then show chip
+### Scanning — MutationObserver (not setInterval)
+
+Use `MutationObserver` instead of polling. Fires on DOM mutations (user typing, page content loading), debounced 2s to avoid thrashing:
+
+```javascript
+let buzzwordDebounceTimer = null;
+
+const observer = new MutationObserver(() => {
+  clearTimeout(buzzwordDebounceTimer);
+  buzzwordDebounceTimer = setTimeout(scanForBuzzwords, 2000);
+});
+
+observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+```
+
+**Why MutationObserver:** PMs are actively writing — Docs, Notion, Jira. DOM mutations happen exactly when they're typing PM concepts, making the trigger more accurate than a 30s polling interval.
+
+**Does not run while state is `listening` or `processing` or `loading`** — `scanForBuzzwords` checks state before executing.
+
+### scanForBuzzwords
+
+```javascript
+function scanForBuzzwords() {
+  if (state !== 'idle') return;
+
+  const text = document.body.innerText.slice(0, 5000);
+  const now = Date.now();
+
+  for (const buzzword of PM_BUZZWORDS) {
+    const regex = new RegExp(`\\b${buzzword}\\b`, 'i');
+    if (!regex.test(text)) continue;
+
+    const displayTopic = getDisplayTopic(buzzword);
+
+    // General cooldown: any chip shown in last 3 min → skip
+    if (now - lastChipShownAt < 3 * 60 * 1000) continue;
+
+    // Per-topic cooldown: same topic shown in last 30 min → skip
+    if (topicCooldowns.get(displayTopic) && now - topicCooldowns.get(displayTopic) < 30 * 60 * 1000) continue;
+
+    lastChipShownAt = now;
+    topicCooldowns.set(displayTopic, now);
+    chrome.storage.local.set({ lastTopic: displayTopic });
+    showBuzzwordChip(displayTopic);
+    break; // show one chip at a time
+  }
+}
+```
+
+**Debounce strategy:**
+- `lastChipShownAt`: prevents any chip appearing more than once every 3 minutes, regardless of buzzword. Stops chip spam if the user is typing many PM terms at once.
+- `topicCooldowns` (Map): per-topic, 30 minutes. Same topic won't re-trigger for half an hour. Covers the case where a PM is deep in a retention doc and every mutation would match "retention".
 
 ### PM Buzzwords List (inlined — no separate module in MV3 content scripts)
 
@@ -256,7 +402,18 @@ Positioned fixed, bottom-right (32px from edges). Shown during `listening` and `
 ╰──────────────────────────────╯
 ```
 
-Dark pill, purple pulsing dot, white text. Transitions text to "Lenny is thinking..." when processing.
+Dark pill, purple pulsing dot, white text. Transitions:
+- `listening` → "Lenny is listening..."
+- `processing` → "Lenny is thinking..."
+- `loading` → skeleton shimmer (animated grey bar, same pill dimensions)
+
+### Mic Denied Tooltip
+Small dark pill rendered below the listening indicator. Auto-removes after 4 seconds.
+```
+╭──────────────────────────────────────────────────╮
+│  Mic access needed — click the lock icon above.  │
+╰──────────────────────────────────────────────────╯
+```
 
 ### Buzzword Chip (Glassy Strip)
 Positioned fixed, bottom-center (20px from bottom). Slides up on appear (200ms ease-out), fades out after 10s if not clicked.
@@ -267,7 +424,7 @@ Positioned fixed, bottom-center (20px from bottom). Slides up on appear (200ms e
 
 Translucent purple-tinted background, 1px purple border, pulsing dot. Clicking triggers `activateLennyLive()`.
 
-**Both elements share the same Shadow DOM host.** They are separate `div`s within it, shown/hidden via CSS `display` property.
+**All elements share the same Shadow DOM host.** They are separate `div`s within it, shown/hidden via CSS `display` property.
 
 ---
 
@@ -297,17 +454,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 **Content script → Service worker:**
 ```javascript
-{ type: 'QUERY', transcript: 'string' }
+{ type: 'QUERY', transcript: 'string', selection: 'string | ""' }
 { type: 'BUZZWORD_TRIGGERED', topic: 'string' }
 ```
 
 **Service worker → Content script:**
 ```javascript
+// In response to QUERY:
 { type: 'RESPONSE', status: 'ok' | 'error', insight: object | null }
+// In response to BUZZWORD_TRIGGERED:
 { type: 'ACK' }
 ```
 
-The `insight` object shape is defined in sub-project 2. Content script ignores `null` insight.
+The `insight` object shape is defined in sub-project 2. Content script ignores `null` insight (stub state = always null).
+
+> **V1.5 — REVIEW message:** When the user double-taps Ctrl with text selected but says nothing (Timer A fires), instead of cancelling, the content script sends `{ type: 'REVIEW', selection: 'string' }` for document review mode (1 strength + 1 improvement + 1 question). Sub-project 2 routes REVIEW to a different prompt template. Not wired in V1.
 
 ---
 
@@ -322,6 +483,8 @@ Minimal status display — no settings.
 - "Double-tap Ctrl to activate" reminder text
 
 **popup.js** reads `chrome.storage.local` on open and renders. No writes.
+
+> **V1.5:** Popup gains a settings section — a text input for adding custom URL patterns (e.g. `*://*.miro.com/*`). Stored in `chrome.storage.local` as `customUrls[]`. Injected dynamically via `chrome.scripting.registerContentScripts`. Not in V1.
 
 ---
 
@@ -359,23 +522,30 @@ function playPing() {
 
 Load the extension in Chrome (`chrome://extensions` → Load unpacked → select `LennyLive/`):
 
-1. **Double-tap Ctrl** on any HTTPS page → ping tone plays → "Lenny is listening..." indicator appears bottom-right
-2. **Speak** → pause 2s → indicator changes to "Lenny is thinking..." → disappears
+1. **Double-tap Ctrl** on a Google Doc → ping tone plays → "Lenny is listening..." indicator appears bottom-right
+2. **Speak** → pause 2s → indicator changes to "Lenny is thinking..." → skeleton shimmer → disappears
 3. **Double-tap Ctrl** → speak → **single tap Ctrl** → stops immediately, processes
 4. **Double-tap Ctrl** → say nothing → after 5s, indicator disappears silently (Timer A)
 5. **Esc** during listening → cancels, returns to idle
-6. **Open a page with "retention" or "GTM"** → buzzword chip appears bottom-center within 30s
-7. **Click chip** → activates Lenny
-8. **Ignore chip** → fades after 10s
-9. **Open popup** → shows "Ready" and last detected topic
-10. **Check `chrome.storage.local`** in DevTools → `lastTopic` key populated after buzzword detection
+6. **Deny mic permission** → tooltip "Mic access needed..." appears, auto-dismisses after 4s, state returns to idle
+7. **Highlight text** on a Google Doc → double-tap Ctrl → speak a question → `selection` is non-empty in service worker log
+8. **Open a Google Doc with "retention" or "GTM"** → type more text (trigger MutationObserver) → buzzword chip appears within 2s debounce window
+9. **Click chip** → activates Lenny
+10. **Ignore chip** → fades after 10s
+11. **Trigger same topic chip twice within 30 min** → second trigger suppressed (per-topic cooldown)
+12. **Trigger any chip twice within 3 min** → second trigger suppressed (general cooldown)
+13. **Open popup** → shows "Ready" and last detected topic
+14. **Check `chrome.storage.local`** in DevTools → `lastTopic` key populated after buzzword detection
+15. **Try on a non-whitelisted site** (e.g. twitter.com) → content script does not load, no Lenny UI
 
 ---
 
-## Out of Scope
+## Out of Scope — V1
+
 - RAG pipeline (sub-project 2)
 - ElevenLabs voice (sub-project 3)
 - Postcard / sidebar UI (sub-project 4)
-- Gamification (V2)
-- Selection review mode (V2)
+- Gamification (V1.5)
+- Selection review right-click menu (V1.5)
+- Custom URL settings in popup (V1.5)
 - iframe injection (`all_frames: false` by design)
