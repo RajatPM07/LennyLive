@@ -400,4 +400,95 @@ function stopListening() {
   }
 }
 
+// ─── PM Buzzwords ─────────────────────────────────────────────────────────────
+// Inlined — MV3 content scripts cannot import external modules.
+
+const PM_BUZZWORDS = [
+  'retention', 'churn', 'DAU', 'MAU', 'WAU', 'activation',
+  'conversion', 'funnel', 'cohort', 'ARR', 'MRR', 'ARPU',
+  'LTV', 'CAC', 'NPS', 'CSAT', 'north star', 'KPI', 'OKR',
+  'PMF', 'product market fit', 'GTM', 'go-to-market', 'roadmap',
+  'prioritization', 'prioritisation', 'discovery', 'strategy',
+  'positioning', 'competitive', 'moat', 'differentiation',
+  'growth loop', 'viral', 'acquisition', 'referral', 'PLG',
+  'product-led', 'MVP', 'launch', 'zero to one', '0 to 1',
+  'early stage', 'pre-PMF', 'founding', 'user research',
+  'jobs to be done', 'JTBD', 'A/B test', 'experiment',
+  'stakeholder', 'cross-functional'
+];
+
+const TOPIC_MAP = {
+  'retention': 'Retention', 'churn': 'Retention', 'DAU': 'Retention',
+  'MAU': 'Retention', 'WAU': 'Retention', 'activation': 'Retention',
+  'GTM': 'GTM Strategy', 'go-to-market': 'GTM Strategy',
+  'acquisition': 'GTM Strategy', 'growth loop': 'GTM Strategy',
+  'PLG': 'GTM Strategy', 'product-led': 'GTM Strategy',
+  'PMF': 'Product-Market Fit', 'product market fit': 'Product-Market Fit',
+  'pre-PMF': 'Product-Market Fit', 'zero to one': 'Product-Market Fit',
+  '0 to 1': 'Product-Market Fit',
+};
+
+function getDisplayTopic(buzzword) {
+  return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
+}
+
+// ─── Buzzword Scanning ────────────────────────────────────────────────────────
+
+let lastChipShownAt = 0;
+const topicCooldowns = new Map(); // topic → timestamp of last chip shown
+
+function scanForBuzzwords() {
+  if (state !== 'idle') return; // never interrupt active session
+
+  const text = document.body.innerText.slice(0, 5000);
+  const now = Date.now();
+
+  for (const buzzword of PM_BUZZWORDS) {
+    const regex = new RegExp(`\\b${buzzword}\\b`, 'i');
+    if (!regex.test(text)) continue;
+
+    const displayTopic = getDisplayTopic(buzzword);
+
+    // General cooldown: any chip shown in last 3 minutes → skip
+    if (now - lastChipShownAt < 3 * 60 * 1000) {
+      console.log('[LennyLive] Buzzword match suppressed (general 3min cooldown):', buzzword);
+      return;
+    }
+
+    // Per-topic cooldown: same topic shown in last 30 minutes → skip
+    const topicLastShown = topicCooldowns.get(displayTopic) || 0;
+    if (now - topicLastShown < 30 * 60 * 1000) {
+      console.log('[LennyLive] Buzzword match suppressed (topic 30min cooldown):', displayTopic);
+      continue; // try next buzzword — different topic might not be suppressed
+    }
+
+    console.log('[LennyLive] Buzzword matched:', buzzword, '→', displayTopic);
+    lastChipShownAt = now;
+    topicCooldowns.set(displayTopic, now);
+    chrome.storage.local.set({ lastTopic: displayTopic });
+    showBuzzwordChip(displayTopic);
+    break; // show one chip at a time
+  }
+}
+
+// ─── MutationObserver ─────────────────────────────────────────────────────────
+// Fires when DOM changes (user typing). Debounced 2s to avoid thrashing.
+// childList+subtree catches element additions (Notion, Linear live updates).
+// characterData catches text edits in Google Docs contenteditable nodes.
+
+let buzzwordDebounceTimer = null;
+
+const observer = new MutationObserver(() => {
+  clearTimeout(buzzwordDebounceTimer);
+  buzzwordDebounceTimer = setTimeout(scanForBuzzwords, 2000);
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+  characterData: true,
+});
+
+console.log('[LennyLive] MutationObserver watching for PM buzzwords');
+
 console.log('[LennyLive] Content script loaded — Shadow DOM ready');
