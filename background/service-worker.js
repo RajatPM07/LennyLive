@@ -17,6 +17,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.type === 'BUZZWORD_TRIGGERED') {
     // Stub: acknowledge. Sub-project 2 may pre-fetch related insights here.
+    // NOTE: content-script.js currently does NOT send this message — buzzword detection
+    // only writes to chrome.storage.local and shows the chip. Sub-project 2 should decide
+    // whether to wire BUZZWORD_TRIGGERED (for pre-fetching) or remove this dead handler.
     sendResponse({ type: 'ACK' });
   }
 
