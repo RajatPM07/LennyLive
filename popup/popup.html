@@ -1,1 +1,29 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"></head><body><p>Lenny Live</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span class="logo-name">Lenny Live</span>
+  </div>
+
+  <div class="status-row">
+    <span class="status-label">Status</span>
+    <span class="status-value" id="status-value">Ready</span>
+  </div>
+
+  <div class="status-row">
+    <span class="status-label">Last topic</span>
+    <span class="status-value" id="last-topic">—</span>
+  </div>
+
+  <hr class="divider">
+
+  <p class="hint">Double-tap <kbd>Ctrl</kbd> to activate</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

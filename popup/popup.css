@@ -1,1 +1,76 @@
-/* popup.css — implemented in Task 8 */
+/* popup/popup.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 240px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f0f0f;
+  color: #e5e7eb;
+  padding: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  background: #7c3aed;
+  border-radius: 50%;
+}
+
+.logo-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.status-label {
+  font-size: 11px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-value {
+  font-size: 12px;
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #1f1f1f;
+  margin: 12px 0;
+}
+
+.hint {
+  font-size: 11px;
+  color: #4b5563;
+  text-align: center;
+}
+
+.hint kbd {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #9ca3af;
+}
