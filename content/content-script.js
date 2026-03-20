@@ -14,6 +14,7 @@ const style = document.createElement('style');
 style.textContent = `
   /* ── Listening Indicator ── */
   #ll-indicator {
+    display: none;
     position: fixed;
     bottom: 32px;
     right: 32px;
@@ -212,6 +213,7 @@ function playPing() {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.4);
+    osc.onended = () => ctx.close();
   } catch (err) {
     console.log('[LennyLive] Ping audio failed (autoplay blocked):', err.message);
     // Fail silently — activation continues without sound
@@ -278,6 +280,8 @@ function processQuery(transcript) {
     { type: 'QUERY', transcript, selection: currentSelection },
     (response) => {
       clearTimeout(processingTimeout);
+      // Consume lastError to suppress Chrome's "unchecked runtime.lastError" warning
+      const _err = chrome.runtime.lastError;
 
       if (!response) {
         console.log('[LennyLive] No response from service worker — returning to idle');
