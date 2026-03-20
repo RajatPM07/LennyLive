@@ -393,14 +393,14 @@ node scripts/embed.js
 - [x] LENNY_LIVE_PRD.md written
 - [x] CLAUDE.md written
 - [x] Superpowers plugin installed (v5.0.5)
+- [x] 25 PM moments curated (Retention×10, GTM Strategy×8, PMF×7) — `data/curated_moments.json`
+- [x] Embedding pipeline built — `scripts/embed.js` using `gemini-embedding-001` (768 dims)
+- [x] 25 moments embedded into Supabase pgvector — RAG verified at threshold 0.5
 
 ## What's Next 🔨
 
 - [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
 - [ ] Update agent with Lenny's real voice ID
-- [ ] Curate 25–30 PM moments — start: Retention, GTM, PMF
-- [ ] Build curated_moments.json
-- [ ] Embed transcripts into Supabase pgvector via Google AI gemini-embedding-001 (see `docs/superpowers/plans/2026-03-20-embedding-pipeline.md`)
 - [ ] Chrome extension shell — Manifest V3
 - [ ] content-script.js — double tap Ctrl + passive detection
 - [ ] service-worker.js — RAG pipeline
@@ -443,6 +443,9 @@ node scripts/embed.js
 
 - [2026-03-20] — Pasted file path into Supabase SQL Editor instead of SQL content → Always open the file first with cat or a text editor, copy the content, then paste into SQL Editor
 - [2026-03-20] — Supabase MCP needs restart after first config → Run claude mcp add then restart Claude Code before expecting MCP to be active
+- [2026-03-21] — Supabase MCP requires a Personal Access Token (PAT), not the project anon key → Get PAT from supabase.com/dashboard/account/tokens and use that in .mcp.json Authorization header
+- [2026-03-21] — Google AI `text-embedding-004` no longer exists; replaced by `gemini-embedding-001` with `outputDimensionality: 768` → Always use `gemini-embedding-001` for embeddings
+- [2026-03-21] — `gemini-embedding-001` cosine similarities peak ~0.62 for related content (vs OpenAI ~0.85+) → Use `match_threshold: 0.5` when calling `match_transcript_chunks`, not 0.75
 
 ---
 
