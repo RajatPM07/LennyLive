@@ -1,0 +1,86 @@
+import 'dotenv/config';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { createClient } from '@supabase/supabase-js';
+import { readFileSync } from 'fs';
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const DRY_RUN = process.argv.includes('--dry-run');
+
+// Normalize whitespace before DB comparisons and inserts
+function normalize(str) {
+  return str.trim().replace(/\s+/g, ' ');
+}
+
+async function getEmbedding(text) {
+  // gemini-embedding-001 replaced text-embedding-004; outputDimensionality truncates to 768 dims
+  // to match the vector(768) column in transcript_chunks
+  const model = genAI.getGenerativeModel({ model: 'gemini-embedding-001' });
+  const result = await model.embedContent({
+    content: { parts: [{ text }] },
+    outputDimensionality: 768,
+  });
+  return result.embedding.values; // float[] of length 768
+}
+
+async function rowExists(episodeTitle, pullQuote) {
+  const { data, error } = await supabase
+    .from('transcript_chunks')
+    .select('id')
+    .eq('episode_title', normalize(episodeTitle))
+    .eq('pull_quote', normalize(pullQuote))
+    .limit(1);
+  if (error) throw new Error(`Existence check failed: ${error.message}`);
+  return data.length > 0;
+}
+
+async function main() {
+  const moments = JSON.parse(readFileSync('data/curated_moments.json', 'utf8'));
+  console.log(`[LennyLive] ${DRY_RUN ? 'DRY RUN — ' : ''}Processing ${moments.length} moments...`);
+
+  let embedded = 0, skipped = 0;
+
+  for (let i = 0; i < moments.length; i++) {
+    const m = moments[i];
+    const label = `${i + 1}/${moments.length}: ${m.guest_name} — ${m.topic}`;
+
+    if (await rowExists(m.episode_title, m.pull_quote)) {
+      console.log(`[LennyLive] Skipped (exists) ${label}`);
+      skipped++;
+      continue;
+    }
+
+    if (DRY_RUN) {
+      console.log(`[LennyLive] Would embed ${label}`);
+      embedded++;
+      continue;
+    }
+
+    const embedding = await getEmbedding(normalize(m.pull_quote));
+
+    const { error } = await supabase.from('transcript_chunks').insert({
+      topic: m.topic,
+      guest_name: m.guest_name,
+      insight: m.insight,
+      pull_quote: normalize(m.pull_quote),
+      episode_title: normalize(m.episode_title),
+      youtube_url: m.youtube_url,
+      timestamp_secs: m.timestamp_secs,
+      embedding,
+    });
+
+    if (error) throw new Error(`Insert failed for "${m.guest_name}": ${error.message}`);
+
+    console.log(`[LennyLive] Embedded ${label}`);
+    embedded++;
+
+    await new Promise(r => setTimeout(r, 100)); // conservative delay
+  }
+
+  console.log(`[LennyLive] Done. ${embedded} embedded, ${skipped} skipped.`);
+}
+
+main().catch(err => {
+  console.error('[LennyLive] Fatal error:', err.message);
+  process.exit(1);
+});
