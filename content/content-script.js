@@ -14,7 +14,6 @@ const style = document.createElement('style');
 style.textContent = `
   /* ── Listening Indicator ── */
   #ll-indicator {
-    display: none;
     position: fixed;
     bottom: 32px;
     right: 32px;
