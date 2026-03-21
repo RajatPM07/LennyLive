@@ -3,7 +3,7 @@
   "name": "Lenny Live",
   "version": "0.1.0",
   "description": "Your ambient PM mentor — Lenny Rachitsky's voice in your workflow",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "permissions": ["activeTab", "storage", "scripting", "tabs"],
   "host_permissions": [
     "*://docs.google.com/document/*",
     "*://*.notion.so/*",
