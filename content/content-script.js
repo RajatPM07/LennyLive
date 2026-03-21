@@ -516,6 +516,7 @@ function cancelLennyLive() {
   state = 'idle';
   clearTimeout(timerA);
   clearTimeout(timerB);
+  clearTimeout(processingTimeout); // fix: was missing — could leave ghost timeout
   if (typeof recognition !== 'undefined' && recognition) {
     try { recognition.abort(); } catch (_) {}
   }
@@ -558,14 +559,7 @@ function handleResponse(message) {
   hideIndicator();
 
   if (message.status === 'ok' && message.insight) {
-    // Sub-project 3 will render the sidebar postcard here.
-    // For now: log so it's verifiable in DevTools console.
-    console.log('[LennyLive] Insight received:', message.insight);
-    chrome.storage.local.set({ lastTopic: message.insight.topic }, () => {
-      if (chrome.runtime.lastError) {
-        console.warn('[LennyLive] storage.local.set failed:', chrome.runtime.lastError.message);
-      }
-    });
+    showPostcard(message.insight);
   } else if (message.status === 'no_results') {
     console.log('[LennyLive] No results found for query');
   } else {
@@ -573,11 +567,10 @@ function handleResponse(message) {
   }
 }
 
-// Listen for RESPONSE pushed back from service-worker via chrome.tabs.sendMessage
+// Single onMessage listener — handles both RESPONSE (Push 1) and AUDIO (Push 2)
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'RESPONSE') {
-    handleResponse(message);
-  }
+  if (message.type === 'RESPONSE') { handleResponse(message); }
+  if (message.type === 'AUDIO')    { playAudio(message.audio); }
   // Return nothing (no return true) — we never send a response back to the SW
 });
 
