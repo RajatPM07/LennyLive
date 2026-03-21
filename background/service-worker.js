@@ -31,9 +31,30 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   // Dead code from sub-project 1 stub — intentionally absent here.
 });
 
+// Strip conversational filler from speech queries before embedding.
+// "can you tell me about retention" → "retention"
+// Filler dilutes the embedding vector and reduces similarity scores.
+const FILLER_PREFIXES = [
+  /^(can you |could you |please |)tell me (about|what you know about|regarding) /i,
+  /^what do (we|you|i) know about /i,
+  /^what (does|do) (lenny|you) (say|think|know) about /i,
+  /^(what('s| is) (your|the) (take|view|opinion|insight) on) /i,
+  /^(talk to me about|explain|describe|give me|show me) /i,
+  /^(hey lenny[,.]? |lenny[,.]? )/i,
+];
+function cleanQuery(text) {
+  let q = text.trim();
+  for (const re of FILLER_PREFIXES) q = q.replace(re, '');
+  return q.trim() || text.trim(); // fallback to original if we stripped everything
+}
+
 async function handleQuery(message, tabId) {
   const { transcript, selection } = message;
-  const queryText = selection ? `${transcript}\n\nContext: ${selection}` : transcript;
+  const cleanedTranscript = cleanQuery(transcript);
+  const queryText = selection ? `${cleanedTranscript}\n\nContext: ${selection}` : cleanedTranscript;
+  if (cleanedTranscript !== transcript) {
+    console.log('[LennyLive] Query cleaned:', transcript, '→', cleanedTranscript);
+  }
 
   try {
     console.log('[LennyLive] Embedding query:', queryText.slice(0, 100));

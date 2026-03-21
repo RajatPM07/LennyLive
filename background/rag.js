@@ -51,7 +51,7 @@ export async function searchChunks(embedding) {
     },
     body: JSON.stringify({
       query_embedding: embedding,
-      match_threshold: 0.5,
+      match_threshold: 0.45,
       match_count: 3,
     }),
   });
