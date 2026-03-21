@@ -41,7 +41,7 @@ async function handleQuery(message, tabId) {
     console.log('[LennyLive] Searching Supabase pgvector...');
     const chunks = await searchChunks(embedding);
 
-    if (!chunks || chunks.length === 0) {
+    if (!chunks || !Array.isArray(chunks) || chunks.length === 0) {
       console.log('[LennyLive] No results above threshold for query:', transcript);
       pushResponse(tabId, { type: 'RESPONSE', status: 'no_results', insight: null });
       return;
@@ -71,8 +71,8 @@ async function handleQuery(message, tabId) {
 
 function pushResponse(tabId, response) {
   chrome.tabs.sendMessage(tabId, response, () => {
-    // Consume lastError to suppress "Unchecked runtime.lastError" console warning
-    // This fires if the tab was closed before we could push the response.
+    // Consume lastError — fires if the tab closed before the response arrived.
     const _e = chrome.runtime.lastError;
+    if (_e) console.warn('[LennyLive] pushResponse failed:', _e.message);
   });
 }
