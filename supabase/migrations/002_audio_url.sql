@@ -6,6 +6,9 @@
 ALTER TABLE transcript_chunks
   ADD COLUMN IF NOT EXISTS audio_url text;
 
+-- Must drop first — Postgres cannot change return type of an existing function.
+DROP FUNCTION IF EXISTS match_transcript_chunks(vector, float, int);
+
 -- Update match_transcript_chunks to return audio_url so the
 -- service worker can serve cached audio without a second DB round-trip.
 CREATE OR REPLACE FUNCTION match_transcript_chunks(
