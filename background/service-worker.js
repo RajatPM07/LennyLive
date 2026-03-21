@@ -70,9 +70,10 @@ async function handleQuery(message, tabId) {
 }
 
 function pushResponse(tabId, response) {
-  chrome.tabs.sendMessage(tabId, response, () => {
-    // Consume lastError — fires if the tab closed before the response arrived.
-    const _e = chrome.runtime.lastError;
-    if (_e) console.warn('[LennyLive] pushResponse failed:', _e.message);
+  // Use Promise API — no callback means Chrome doesn't expect sendResponse from
+  // the content script, avoiding the misleading "port closed" lastError noise.
+  chrome.tabs.sendMessage(tabId, response).catch((err) => {
+    // Only fires if the tab was closed before the message arrived.
+    console.warn('[LennyLive] pushResponse failed:', err.message);
   });
 }
