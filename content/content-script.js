@@ -305,7 +305,11 @@ function handleResponse(message) {
     // Sub-project 3 will render the sidebar postcard here.
     // For now: log so it's verifiable in DevTools console.
     console.log('[LennyLive] Insight received:', message.insight);
-    chrome.storage.local.set({ lastTopic: message.insight.topic });
+    chrome.storage.local.set({ lastTopic: message.insight.topic }, () => {
+      if (chrome.runtime.lastError) {
+        console.warn('[LennyLive] storage.local.set failed:', chrome.runtime.lastError.message);
+      }
+    });
   } else if (message.status === 'no_results') {
     console.log('[LennyLive] No results found for query');
   } else {
