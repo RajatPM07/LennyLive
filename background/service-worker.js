@@ -6,7 +6,7 @@
 // for async work in MV3 service workers.
 
 import { embedQuery, searchChunks } from './rag.js';
-import { fetchTTS } from './tts.js';
+import { fetchTTS, fetchAndEncodeUrl } from './tts.js';
 
 chrome.runtime.onMessage.addListener((message, sender) => {
   console.log('[LennyLive] Message received:', message.type, message);
@@ -80,20 +80,32 @@ async function handleQuery(message, tabId) {
       youtube_url:    top.youtube_url,
       timestamp_secs: top.timestamp_secs,
       similarity:     top.similarity,
+      audio_url:      top.audio_url ?? null,  // null if not yet seeded
     };
 
     console.log('[LennyLive] Insight found:', insight.guest_name, '|', insight.topic, '| similarity:', insight.similarity);
     pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
 
-    // Push 2 — fire-and-forget TTS race (never blocks Push 1)
-    // Use insight (1 sentence) for TTS — pull_quote is 300+ words, too long for voice.
-    // insight is already the concise takeaway; pull_quote is for reading on the postcard.
+    // Push 2 — fire-and-forget audio (never blocks Push 1)
+    // Prefer pre-cached URL from Supabase Storage (instant CDN fetch).
+    // If CDN fetch fails, falls back to real-time TTS so audio is never silently lost.
+    // Falls back to real-time TTS also when audio_url is null (unseeded moments).
     const ttsTimeout = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000)
     );
-    Promise.race([fetchTTS(insight.insight), ttsTimeout])
-      .then(audio => pushResponse(tabId, { type: 'AUDIO', audio }))
-      .catch(err => console.warn('[LennyLive] TTS skipped:', err.message));
+    const audioPromise = insight.audio_url
+      ? fetchAndEncodeUrl(insight.audio_url).catch(err => {
+          console.warn('[LennyLive] Cached audio failed, falling back to TTS:', err.message);
+          return Promise.race([fetchTTS(insight.insight), ttsTimeout]);
+        })
+      : Promise.race([fetchTTS(insight.insight), ttsTimeout]);
+
+    audioPromise
+      .then(audio => {
+        console.log('[LennyLive] Audio ready:', insight.audio_url ? 'cached' : 'real-time', insight.guest_name);
+        pushResponse(tabId, { type: 'AUDIO', audio });
+      })
+      .catch(err => console.warn('[LennyLive] Audio skipped:', err.message));
 
   } catch (err) {
     console.error('[LennyLive] RAG pipeline error:', err.message);

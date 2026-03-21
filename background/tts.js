@@ -49,3 +49,26 @@ export async function fetchTTS(text) {
   }
   return btoa(binary);
 }
+
+// Fetch a pre-cached MP3 from a URL and return base64-encoded string.
+// Used by service worker to serve audio from Supabase Storage instead of
+// calling ElevenLabs real-time. Same chunked btoa approach as fetchTTS.
+export async function fetchAndEncodeUrl(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Cached audio fetch failed: ${res.status} — ${url}`);
+  // Validate content-type — Storage should return audio/mpeg; guard against HTML error pages
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('audio')) {
+    const body = await res.text();
+    throw new Error(`Cached audio fetch: expected audio, got ${contentType} — ${body.slice(0, 200)}`);
+  }
+  const buffer = await res.arrayBuffer();
+  if (buffer.byteLength === 0) throw new Error(`Cached audio fetch: empty buffer — ${url}`);
+  const bytes = new Uint8Array(buffer);
+  const CHUNK = 8192;
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(binary);
+}
