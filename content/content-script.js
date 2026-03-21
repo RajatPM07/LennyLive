@@ -387,10 +387,22 @@ function updateMuteButton(muted) {
 function playAudio(base64) {
   const pc = shadow.getElementById('ll-postcard');
   if (pc && pc.dataset.muted === 'true') return;
-  const audio = new Audio(`data:audio/mpeg;base64,${base64}`);
-  audio.play().catch(err =>
-    console.warn('[LennyLive] Audio playback failed:', err.message)
-  );
+
+  // data: URIs are blocked by strict CSP on sites like Notion.
+  // Convert to a Blob and use a blob: URL — allowed by "media-src blob:".
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const blob = new Blob([bytes], { type: 'audio/mpeg' });
+  const url = URL.createObjectURL(blob);
+
+  const audio = new Audio(url);
+  audio.play()
+    .then(() => { audio.onended = () => URL.revokeObjectURL(url); })
+    .catch(err => {
+      URL.revokeObjectURL(url);
+      console.warn('[LennyLive] Audio playback failed:', err.message);
+    });
 }
 
 // ─── Postcard Event Listeners (set up once at load time) ──────────────────────
