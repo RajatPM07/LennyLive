@@ -329,6 +329,122 @@ function showBuzzwordChip(topic) {
   };
 }
 
+// ─── Postcard ─────────────────────────────────────────────────────────────────
+
+let autoDismissTimer = null;
+let currentInsight = null; // held for Save button
+
+function showPostcard(insight) {
+  currentInsight = insight;
+  const pc = shadow.getElementById('ll-postcard');
+
+  // Populate content
+  shadow.getElementById('ll-pc-topic').textContent = insight.topic;
+  shadow.getElementById('ll-pc-quote').textContent = insight.pull_quote;
+  shadow.getElementById('ll-pc-source').textContent =
+    `${insight.guest_name} · ${insight.episode_title}`;
+
+  // Set mute default synchronously so audio guard works even before storage returns
+  pc.dataset.muted = 'false';
+  updateMuteButton(false);
+
+  // Update from persisted preference (async — completes long before AUDIO arrives)
+  chrome.storage.local.get(['voiceMuted'], (result) => {
+    if (chrome.runtime.lastError) return;
+    const muted = !!result.voiceMuted;
+    pc.dataset.muted = String(muted);
+    updateMuteButton(muted);
+  });
+
+  // Show card and start auto-dismiss
+  pc.classList.remove('hidden');
+  clearTimeout(autoDismissTimer);
+  autoDismissTimer = setTimeout(hidePostcard, 30000);
+}
+
+function hidePostcard() {
+  clearTimeout(autoDismissTimer);
+  const pc = shadow.getElementById('ll-postcard');
+  if (pc.classList.contains('hidden')) return; // already hidden — no-op
+  pc.classList.add('ll-postcard-hiding');
+  // Duration must match --ll-anim-duration (0.2s = 200ms)
+  // If you change --ll-anim-duration, update this timeout to match.
+  setTimeout(() => {
+    pc.classList.remove('ll-postcard-hiding');
+    pc.classList.add('hidden');
+  }, 200);
+}
+
+function updateMuteButton(muted) {
+  const btn = shadow.getElementById('ll-btn-mute');
+  if (btn) btn.textContent = muted ? '🔊 Unmute' : '🔇 Mute';
+}
+
+function playAudio(base64) {
+  const pc = shadow.getElementById('ll-postcard');
+  if (pc && pc.dataset.muted === 'true') return;
+  const audio = new Audio(`data:audio/mpeg;base64,${base64}`);
+  audio.play().catch(err =>
+    console.warn('[LennyLive] Audio playback failed:', err.message)
+  );
+}
+
+// ─── Postcard Event Listeners (set up once at load time) ──────────────────────
+
+shadow.getElementById('ll-postcard').addEventListener('mouseenter', () => {
+  clearTimeout(autoDismissTimer);
+});
+
+shadow.getElementById('ll-postcard').addEventListener('mouseleave', () => {
+  clearTimeout(autoDismissTimer);
+  autoDismissTimer = setTimeout(hidePostcard, 30000);
+});
+
+shadow.getElementById('ll-btn-dismiss').addEventListener('click', () => {
+  clearTimeout(autoDismissTimer);
+  hidePostcard();
+});
+
+shadow.getElementById('ll-btn-mute').addEventListener('click', () => {
+  const pc = shadow.getElementById('ll-postcard');
+  const newMuted = pc.dataset.muted !== 'true';
+  pc.dataset.muted = String(newMuted);
+  updateMuteButton(newMuted);
+  chrome.storage.local.set({ voiceMuted: newMuted }, () => {
+    if (chrome.runtime.lastError) {
+      console.warn('[LennyLive] voiceMuted save failed:', chrome.runtime.lastError.message);
+    }
+  });
+});
+
+shadow.getElementById('ll-btn-save').addEventListener('click', () => {
+  if (!currentInsight) return;
+  const entry = {
+    topic:         currentInsight.topic,
+    pull_quote:    currentInsight.pull_quote,
+    guest_name:    currentInsight.guest_name,
+    episode_title: currentInsight.episode_title,
+    youtube_url:   currentInsight.youtube_url,
+    saved_at:      new Date().toISOString(),
+  };
+  // Read-modify-write to avoid overwriting concurrent saves
+  chrome.storage.local.get(['savedInsights'], (result) => {
+    if (chrome.runtime.lastError) {
+      console.warn('[LennyLive] Save read failed:', chrome.runtime.lastError.message);
+      return;
+    }
+    const existing = result.savedInsights || [];
+    existing.push(entry);
+    chrome.storage.local.set({ savedInsights: existing }, () => {
+      if (chrome.runtime.lastError) {
+        console.warn('[LennyLive] Save write failed:', chrome.runtime.lastError.message);
+      } else {
+        console.log('[LennyLive] Insight saved:', entry.topic);
+      }
+    });
+  });
+});
+
 // ─── State Machine ────────────────────────────────────────────────────────────
 // States: idle | listening | loading
 // Transitions: idle → listening → loading → idle
