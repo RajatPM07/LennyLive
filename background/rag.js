@@ -10,6 +10,9 @@ import { GOOGLE_AI_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js'
  * Throws on non-2xx HTTP response.
  */
 export async function embedQuery(text) {
+  if (!text || !text.trim()) {
+    throw new Error('embedQuery: text must be a non-empty string');
+  }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${GOOGLE_AI_API_KEY}`;
   const res = await fetch(url, {
     method: 'POST',
@@ -21,9 +24,13 @@ export async function embedQuery(text) {
     }),
   });
   if (!res.ok) {
-    throw new Error(`Google AI embedContent failed: ${res.status}`);
+    const errBody = await res.text();
+    throw new Error(`Google AI embedContent failed: ${res.status} — ${errBody}`);
   }
   const data = await res.json();
+  if (!data?.embedding?.values) {
+    throw new Error('Google AI embedContent: unexpected response shape');
+  }
   return data.embedding.values; // float[] (768 elements)
 }
 
@@ -49,7 +56,8 @@ export async function searchChunks(embedding) {
     }),
   });
   if (!res.ok) {
-    throw new Error(`Supabase match_transcript_chunks failed: ${res.status}`);
+    const errBody = await res.text();
+    throw new Error(`Supabase match_transcript_chunks failed: ${res.status} — ${errBody}`);
   }
-  return res.json(); // array of chunk objects, may be empty
+  return await res.json(); // array of chunk objects, may be empty
 }
