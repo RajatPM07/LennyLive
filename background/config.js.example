@@ -1,0 +1,6 @@
+// background/config.js.example
+// Copy this file to background/config.js, fill in real values from .env, NEVER commit the copy.
+// background/config.js is gitignored — it will not appear in git status.
+export const GOOGLE_AI_API_KEY = 'YOUR_GOOGLE_AI_KEY';
+export const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+export const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
