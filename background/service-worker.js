@@ -65,11 +65,12 @@ async function handleQuery(message, tabId) {
     pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
 
     // Push 2 — fire-and-forget TTS race (never blocks Push 1)
-    // If TTS resolves within 8s: sends AUDIO. If not: logs warning, no AUDIO sent.
+    // Use insight (1 sentence) for TTS — pull_quote is 300+ words, too long for voice.
+    // insight is already the concise takeaway; pull_quote is for reading on the postcard.
     const ttsTimeout = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000)
     );
-    Promise.race([fetchTTS(insight.pull_quote), ttsTimeout])
+    Promise.race([fetchTTS(insight.insight), ttsTimeout])
       .then(audio => pushResponse(tabId, { type: 'AUDIO', audio }))
       .catch(err => console.warn('[LennyLive] TTS skipped:', err.message));
 
