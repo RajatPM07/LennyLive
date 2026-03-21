@@ -713,6 +713,17 @@ const TOPIC_MAP = {
   'PMF': 'Product-Market Fit', 'product market fit': 'Product-Market Fit',
   'pre-PMF': 'Product-Market Fit', 'zero to one': 'Product-Market Fit',
   '0 to 1': 'Product-Market Fit',
+  'north star': 'Metrics & North Star',
+  'KPI': 'Metrics & North Star', 'OKR': 'Metrics & North Star',
+  'funnel': 'Metrics & North Star', 'cohort': 'Metrics & North Star',
+  'conversion': 'Metrics & North Star',
+  'prioritization': 'Roadmap Prioritisation', 'prioritisation': 'Roadmap Prioritisation',
+  'roadmap': 'Roadmap Prioritisation', 'backlog': 'Roadmap Prioritisation',
+  'strategy': 'Roadmap Prioritisation', 'positioning': 'Roadmap Prioritisation',
+  'competitive': 'Roadmap Prioritisation', 'moat': 'Roadmap Prioritisation',
+  'differentiation': 'Roadmap Prioritisation',
+  'discovery': 'User Research', 'user research': 'User Research',
+  'jobs to be done': 'User Research', 'JTBD': 'User Research',
 };
 
 function getDisplayTopic(buzzword) {

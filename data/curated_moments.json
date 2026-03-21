@@ -223,5 +223,140 @@
     "pull_quote": "Grubhub had what seemed like durable competitive advantages: an asset-light model, high margins, and established restaurant relationships. Yet DoorDash disrupted them in five years. When a disruptor dramatically expands selection in a cross-sided marketplace, network effects crumble. DoorDash built delivery infrastructure restaurants could not refuse and onboarded chains Grubhub never reached. Grubhub assumed these businesses were just structurally unprofitable, but zero-interest-rate funding kept competitors alive until unit economics improved post-pandemic. The strategic lesson: when everyone is finding a more efficient network effect for demand on the marketplace side, you probably need to copy that as soon as possible, and if you cannot copy it, own it, buy it. Grubhub's mistake was not operational; it was strategic: they saw the threat and moved too slowly. If the market is rewarding a model, it will find a way to make it profitable even when unit economics look broken. Watching a competitor get funded to lose money is not a reason to wait — it is a reason to move faster. The only rational reaction to existential competitive threat is overreaction.",
     "youtube_url": "",
     "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Shishir Mehrotra",
+    "episode_title": "The art of building great products | Shishir Mehrotra",
+    "insight": "YouTube's north star of watch time rewarded outrage over satisfaction — every north star needs a happiness counterweight",
+    "pull_quote": "Shishir explains why YouTube's watch time north star became dangerous without a counterbalancing satisfaction signal. Maximizing watch time was directionally right but incomplete: watch time could go up by recommending content people watch but feel bad about afterward, such as outrage content, misinformation, and extreme rabbit holes. The metric was not wrong — the incompleteness was. A north star metric must pass the regret test: if a user woke up tomorrow and realized they spent three hours on your product, would they regret it? If yes, your north star might be pointing you toward a cliff. At Notion, the north star is not session time or pages created, but whether users get actual work done and return because they accomplished something meaningful. Shishir learned at YouTube that once a metric compounds at scale, over-optimizing it creates emergent behaviors nobody designed for. Goodhart's Law applies ruthlessly: when a measure becomes a target, it ceases to be a good measure. The solution is pairing the north star with a health counterweight that penalizes hollow engagement — measuring delight alongside depth.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Shreyas Doshi",
+    "episode_title": "Clarity, influence, and the art of doing fewer things | Shreyas Doshi",
+    "insight": "North stars should be input metrics your team can directly influence, not output metrics like revenue that are downstream consequences",
+    "pull_quote": "Shreyas distinguishes between input metrics, which teams can directly influence through product decisions, and output metrics like revenue and retention, which are downstream consequences. Most companies mistake their output metrics for their north star, then wonder why teams feel powerless. Revenue is a result of value creation, not a target you can design toward. The north star should sit one step upstream: the behavior that reliably predicts the output. For Stripe, it is payment volume processed. For Spotify, it is time in the app listening to music you chose. For a B2B SaaS tool, it is teams reaching their aha moment together. The frame Shreyas uses is: can a PM wake up tomorrow and make a product change that moves this number within a quarter? If the answer is no, it is an output metric masquerading as a north star. The trap is that output metrics feel more rigorous because they are closer to business value. But rigor without agency is demoralizing. Teams need a north star they can actually steer toward — one that creates a direct line between daily product decisions and the number the whole company watches.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Casey Winters",
+    "episode_title": "Lessons from scaling Eventbrite, Grubhub, and Pinterest | Casey Winters",
+    "insight": "A single national north star can mask dying markets underneath — every north star needs disaggregation by cohort to reveal true health",
+    "pull_quote": "Casey explains how Grubhub's primary metric, daily orders, looked healthy at the aggregate level while individual markets were dying underneath it. New markets launching would briefly inflate the top-line metric while mature markets plateaued or declined. The team celebrated record orders while DoorDash was eating their lunch city by city. The problem was not that orders per day was the wrong north star — it was missing a decomposition layer. Every north star needs a health disaggregation: by cohort, by market, by acquisition channel. What looks like growth at the macro level can be a substitution effect, with new markets papering over decaying old ones. Casey recommends asking: if we stopped launching new markets tomorrow, would the north star still grow? If the answer is no, you are not growing; you are migrating. The north star should reflect organic expansion of value, not geographic dilution of a troubled core. Aggregate metrics feel reassuring precisely when they should be alarming. The discipline of decomposition is what separates PMs who understand their business from those who are surprised by it.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Shreyas Doshi",
+    "episode_title": "Clarity, influence, and the art of doing fewer things | Shreyas Doshi",
+    "insight": "The LNO framework: most PM work is Overhead that creates no upside — protecting time for Leverage work is the highest-leverage PM skill",
+    "pull_quote": "Shreyas introduces the LNO framework as a method for ruthless prioritization of a PM's own time. Leverage tasks are the ones where exceptional work creates disproportionate value — things that could 10x outcomes. Neutral tasks are necessary but unlikely to differentiate results. Overhead tasks are obligations with no upside regardless of quality. Most PM time gets consumed by Overhead and Neutral work: status meetings, spec reviews for features already decided, stakeholder alignment that could have been an email. Shreyas argues this pattern is not laziness but misprioritization reinforced by organizational incentives. The highest-leverage PM work is often the hardest to schedule because it has no deadline: deep user research, identifying the right problem, writing a strategy memo nobody asked for. These get displaced by Overhead that does have a deadline. The discipline is protecting time for Leverage work before the week fills. A one-hour investment in the right problem definition prevents a month of building the wrong solution. The reframe Shreyas offers: stop asking what is urgent and start asking what is Leverage. Most of what feels urgent is Overhead. Almost nothing that is Leverage feels urgent until it is too late.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Gokul Rajaram",
+    "episode_title": "How to make better decisions as a PM | Gokul Rajaram",
+    "insight": "SPADE turns gut-feel decisions into structured ones: Setting, People, Alternatives, Decide, Explain — reserved for irreversible, cross-functional calls",
+    "pull_quote": "Gokul developed SPADE at Square to give PMs a framework for making important, irreversible decisions with confidence and organizational transparency. Setting defines the decision context: what exactly is being decided, when it must be decided, and why it matters now. People identifies who is consulted for input, who is informed of the outcome, and who is the single accountable decision-maker. Alternatives forces enumeration of at least three real options, including the uncomfortable status quo. Decide documents the criteria used and which alternative won. Explain closes the loop with all stakeholders so no one is surprised. The common PM failure SPADE prevents is the hallway decision: a quick judgment call that turns out to be irreversible, made without consulting the right people, that creates organizational scar tissue for years. Gokul is explicit that not every decision needs SPADE — it is reserved for decisions that are hard to reverse and have cross-functional impact. The skill is knowing which decisions deserve the rigor. Using SPADE for trivial choices is overhead. Skipping it for genuinely consequential ones is how teams accumulate the kind of technical and strategic debt that kills products quietly over eighteen months.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Marty Cagan",
+    "episode_title": "What it means to build an empowered product team | Marty Cagan",
+    "insight": "Feature roadmaps are the wrong conversation — empowered teams are given problems to solve, not features to ship",
+    "pull_quote": "Marty argues that feature roadmaps are a symptom of a deeper organizational problem: treating product teams as implementation teams rather than discovery teams. When leadership hands a team a roadmap of features to ship, they have already made the most important decisions — what problem to solve, for which users, through which mechanism. PMs become project managers shipping someone else's thinking. Marty distinguishes between feature teams, which receive output to ship, and empowered product teams, which receive outcomes to achieve. For an empowered team, the conversation is: here is the business objective, here are the constraints, go figure out what to build. This is a fundamentally harder job because the team must now do discovery — testing assumptions about what users need before committing to a solution. But it is the only job that actually produces innovation. Roadmap prioritization is prioritizing between solutions that may all be wrong. Outcome prioritization is choosing which problems are worth solving. The first conversation feels more productive in the short run. The second one is actually productive over any time horizon that matters.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Teresa Torres",
+    "episode_title": "Continuous discovery habits | Teresa Torres",
+    "insight": "One customer interview per week compounds faster than quarterly research sprints — discovery is a habit, not a phase",
+    "pull_quote": "Teresa makes the case for continuous discovery as a habit rather than a research phase. Teams that interview one customer every week accumulate 50 conversations per year with negligible overhead per session. Teams that run quarterly research sprints accumulate four intense but context-free conversations that interrupt normal work. The compounding effect is not just more data — it is better judgment. When a PM talks to users weekly, their intuitions are calibrated by recent evidence. When a PM's last user conversation was three months ago, every product decision is made from stale signal. Teresa is explicit that the weekly interview does not need to be a formal study. A 30-minute conversation with a current user asking about recent workflows counts. The insight is that research intensity does not compensate for research recency. A team that has talked to 50 users this quarter knows something qualitatively different from a team that ran a rigorous 50-person study once eight months ago. Continuous contact creates the mental model; the mental model creates better instincts; better instincts create better products. Discovery is not a gate before development. It is the water the whole product process swims in.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Teresa Torres",
+    "episode_title": "Continuous discovery habits | Teresa Torres",
+    "insight": "Opportunity solution trees prevent the team from falling in love with one solution — map all opportunities before committing to any",
+    "pull_quote": "Teresa describes the opportunity solution tree as a visual thinking tool that prevents one of the most common product team failure modes: falling in love with a single solution before exploring the problem space. The tree starts with the desired outcome at the top, then branches into the opportunity space — the needs, pain points, and desires of users that, if addressed, would drive that outcome. Only after mapping the opportunity space broadly does the team branch into solutions. This sequencing matters because most teams invert it: they start with a solution, then hunt for the problem it solves. The opportunity solution tree forces genuine exploration by making the full landscape visible. Teams routinely discover that the opportunity they assumed was most important is actually a symptom of a deeper one two levels up the tree. Teresa is direct that teams who skip this structure tend to deliver features that are technically correct but strategically irrelevant. The tree also creates a natural prioritization layer: not every opportunity is equally valuable, and the tree lets teams make explicit bets on which ones to pursue rather than letting the loudest stakeholder or most recent user interview set the agenda.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Marty Cagan",
+    "episode_title": "What it means to build an empowered product team | Marty Cagan",
+    "insight": "Most product failures are discovery failures, not execution failures — teams ship technically excellent solutions to unvalidated problems",
+    "pull_quote": "Marty argues that the primary cause of product failure is not poor engineering or slow execution but inadequate discovery. Teams build things that are technically excellent, delivered on time, that users do not want, cannot understand, or cannot adopt within their existing workflows. The four risks every product team must address before committing to build are value risk, which asks whether customers will actually buy or use this; usability risk, which asks whether they can figure out how to use it; feasibility risk, which asks whether engineering can build it at all; and business viability risk, which asks whether this solution works for the business, not just the customer. Most product teams are disciplined about feasibility and viability but skip value and usability discovery entirely. They assume the problem is real because stakeholders said so, and assume the solution is obvious because it seemed logical in a brainstorm. A week of prototyping and five user sessions can eliminate months of engineering work on a bad solution. The absence of discovery is not a time-saver. It is a risk-transfer mechanism that moves uncertainty from the design phase to the launch phase, where it costs ten times more to fix.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Hila Qu",
+    "episode_title": "How to build and structure a growth team | Hila Qu",
+    "insight": "Doubling activation doubles the output of every acquisition channel simultaneously — activation is the highest-leverage point in any growth funnel",
+    "pull_quote": "Hila explains why activation is mathematically the highest-leverage point in the growth funnel. Improving activation from 20 percent to 40 percent doubles the productive output of every acquisition channel simultaneously. You did not change your ads, your SEO, or your referral program — you just ensured twice as many acquired users reached the moment of value. This compounding effect is why Hila prioritizes activation work before almost anything else on a growth team. The prerequisite is defining activation correctly, and most teams get this wrong. Activation is not completing onboarding or creating an account. It is a user experiencing the core value of the product in a way that predicts long-term retention. This requires analyzing cohorts to find the early action most correlated with 90-day retention, then rebuilding the onboarding flow to maximize that specific action. Activation metrics fail when they are defined by what the product wants users to do rather than what users need to experience. You do not activate users by showing them all your features. You activate them by removing obstacles between signup and the first moment the product earns its keep. Everything before that moment is overhead. Everything after it is compounding.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Elena Verna",
+    "episode_title": "10 growth tactics that never work | Elena Verna",
+    "insight": "Vanity metrics let teams feel busy while hiding whether value is being created — replace signups with activated users and installs with 7-day retained users",
+    "pull_quote": "Elena identifies vanity metrics as one of the most persistent traps in growth work. Page views, app downloads, email signups, and total registered users can all grow while the product's actual health declines. These metrics are easy to measure, easy to move through paid acquisition or promotional campaigns, and satisfying to put in a board slide. But they measure activity, not value creation. The discipline Elena applies is asking: would this metric still matter if we removed all marketing spend tomorrow? If the answer is no, it is a vanity metric. The metrics that matter are those driven by users returning, referring, or paying because the product solved a real problem — not because a campaign pushed them in. Elena's reframe: replace monthly active users with qualified monthly active users defined by behaviors that predict retention and revenue. Replace signups with activated users. Replace app downloads with seven-day retained users. Each substitution forces the team to confront a harder truth: are we creating value, or are we creating the appearance of value through acquisition tactics that flood the top of the funnel? Vanity metrics are a delayed failure. The product looks healthy in Q1 and disappoints in Q3.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Shishir Mehrotra",
+    "episode_title": "The art of building great products | Shishir Mehrotra",
+    "insight": "OKRs fail when teams reverse-engineer key results from their existing roadmap — real OKRs should make your current plan feel slightly uncomfortable",
+    "pull_quote": "Shishir spent years studying why OKRs fail and identified the central dysfunction: teams write key results backward from the roadmap they were already going to build. Instead of asking what outcome would prove we solved this problem, they ask what metric can we attach to the things we are already planning. This produces key results that are activity measurements masquerading as outcome measurements: ship feature X, conduct Y user interviews, hit Z usage threshold. Shishir's diagnostic is simple: if your key results do not create genuine tension with your current roadmap, forcing you to reconsider at least one thing you were planning, they are not real OKRs. Real OKRs should make your roadmap feel slightly uncomfortable, as though you are not sure you will achieve them without making harder choices. The absence of that discomfort is the signal that you have written a plan, not a goal. Goodhart's Law destroys OKR programs at scale: once teams know they are measured on the key results, they optimize the key results rather than the underlying problem. The protection against this is writing key results that are harder to game because they measure genuine user behavior change, not internal activity.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Shreyas Doshi",
+    "episode_title": "Clarity, influence, and the art of doing fewer things | Shreyas Doshi",
+    "insight": "There are only three root causes of poor product outcomes: wrong problem, wrong solution, wrong execution — most teams skip to execution",
+    "pull_quote": "Shreyas identifies three and only three root causes behind every poor product outcome. The first is working on the wrong problem: building something technically excellent that nobody wanted, or that addressed a symptom rather than the underlying cause. The second is proposing the wrong solution to the right problem: correctly diagnosing user pain but designing a mechanism that does not relieve it, or creating new friction while solving the original one. The third is poor execution of the right solution to the right problem: shipping late, with bugs, without alignment, or without the adoption tactics needed to make it land. Shreyas's observation is that most product teams skip directly to execution quality because it is the most visible and legible form of PM work. Shipping on time is measurable. Having found the right problem is not. This creates an incentive structure where PMs invest heavily in execution quality and systematically underinvest in problem selection and solution design. The consequence is organizations that are operationally excellent at building things the market does not care about. The discipline is asking, before writing a line of spec: are we certain this is the right problem? If the answer is not yes, execution skill is irrelevant.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Marty Cagan",
+    "episode_title": "What it means to build an empowered product team | Marty Cagan",
+    "insight": "Choosing which problems are worth solving is the rarest PM skill — most teams treat it as obvious and spend all their energy on solution design",
+    "pull_quote": "Marty argues that the single most consequential decision in product development happens before any engineering begins: choosing which problem to solve. Most product teams treat this as obvious and spend their energy on solution design. But choosing the wrong problem makes excellent execution irrelevant. Marty uses the test of asking whether solving this problem would meaningfully change the trajectory of the business, not just improve the experience at the margin. If the answer is uncertain, the problem has not been properly understood yet. The common failure mode is confusing proximity to stakeholders with insight about users. An executive who says users need feature X has given you a solution, not a problem. A PM's job is to unwrap the request, find the underlying pain or goal, and evaluate whether that pain is real, frequent, and shared by enough users to justify investment. Marty is direct that this problem-selection skill is the rarest in product management and the hardest to teach, because it requires intellectual honesty about uncertainty at the exact moment when every organizational force is pushing toward commitment and building. The reward for getting this right is that everything downstream — design, engineering, launch — compounds on a foundation that actually matters.",
+    "youtube_url": "",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Gibson Biddle",
+    "episode_title": "How Netflix built a culture of excellence | Gibson Biddle",
+    "insight": "Gibson's DHM model: great strategy must delight customers in ways that are hard to copy and margin-enhancing — all three must be true simultaneously",
+    "pull_quote": "Gibson introduces the DHM model as a strategic filter for every major product decision at Netflix and afterward. DHM stands for Delight, Hard to copy, and Margin-enhancing. Great product strategy must satisfy all three simultaneously. Delight alone is insufficient: many features delight users but can be replicated by competitors in months and do not improve unit economics. Hard to copy alone is insufficient: proprietary technology that customers do not actually value creates a moat around nothing. Margin-enhancing alone is insufficient: cost-cutting that degrades the user experience destroys long-term retention even if it improves quarterly margins. Netflix personalization passed all three tests: it delighted users by reducing the frustration of finding something to watch, was hard to copy because it required data from hundreds of millions of users to work, and was margin-enhancing because it allowed Netflix to right-size content investment based on predicted viewership. Gibson uses DHM as a meeting filter: if a proposed feature cannot articulate how it is delightful, defensible, and economically sound, it does not belong on the roadmap regardless of how confident the proponent feels. Most features fail the DHM test not because they are bad ideas, but because they were never asked to pass it.",
+    "youtube_url": "",
+    "timestamp_secs": 0
   }
 ]
