@@ -18,8 +18,8 @@ const OUTPUT_PATH  = path.join(process.cwd(), 'data', 'new_curated_moments.json'
 // but 60K chars keeps token cost low and avoids edge-case failures.
 const TRANSCRIPT_MAX_CHARS = 60_000;
 
-// 1 200ms between requests → ~50 RPM, well within Gemini Flash free tier (60 RPM).
-const DELAY_MS = 1_200;
+// 7 000ms between requests → ~8.5 RPM, safely under gemini-2.5-flash free tier (10 RPM).
+const DELAY_MS = 7_000;
 
 // These are the only values the transcript_chunks.topic CHECK constraint allows.
 // Keep in sync with 001_initial_schema.sql until 003_drop_topic_check.sql is run.
@@ -37,21 +37,28 @@ const ALLOWED_TOPICS = [
 ];
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
-const model  = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+// gemini-2.5-flash: used because gemini-2.0-flash daily free-tier quota is exhausted.
+// 2.5-flash has separate quota and is actually a more capable model for extraction.
+const model  = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function generateWithRetry(prompt, maxRetries = 4) {
+async function generateWithRetry(prompt, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const result = await model.generateContent(prompt);
       return result.response.text();
     } catch (err) {
       const msg = err.message || '';
-      const isRateLimit = msg.includes('429') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('quota');
-      if (isRateLimit && attempt < maxRetries) {
-        const backoff = 30_000 * attempt; // 30s → 60s → 90s
-        console.warn(`[curate] Rate limited — waiting ${backoff / 1000}s (attempt ${attempt}/${maxRetries})...`);
+      const isPerMinuteLimit = msg.includes('429') && msg.includes('PerMinute');
+      const isDailyLimit     = msg.includes('429') && (msg.includes('PerDay') || msg.includes('limit: 0'));
+      if (isDailyLimit) {
+        // Daily quota exhausted — no point retrying today
+        throw new Error(`Daily quota exhausted: ${msg.slice(0, 120)}`);
+      }
+      if (isPerMinuteLimit && attempt < maxRetries) {
+        const backoff = 20_000 * attempt; // 20s → 40s
+        console.warn(`[curate] Per-minute rate limit — waiting ${backoff / 1000}s (attempt ${attempt}/${maxRetries})...`);
         await sleep(backoff);
         continue;
       }
