@@ -230,45 +230,113 @@ It carries a `data-muted` attribute (`"true"` or `"false"`) for mute state, popu
 - `pointer-events: auto` — card is interactive (unlike `pointer-events: none` on indicator)
 - Indicator (`#ll-indicator`) is hidden before postcard is shown — they share the same corner
 
-### Styling (matches existing dark theme)
+### Styling — CSS Variables (theme config block)
 
-- Background: `#1a1a1a`
-- Border: `1px solid #333`
-- Border-radius: `16px`
-- Font: `system-ui, -apple-system, sans-serif`
-- Topic pill: `background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; border-radius: 20px; padding: 2px 10px; font-size: 11px`
-- Pull quote: `color: #e5e7eb; font-size: 14px; font-style: italic; line-height: 1.5`
-- Source line: `color: #6b7280; font-size: 12px`
-- Buttons: minimal, icon + label, `color: #a78bfa` for interactive elements
-- Padding: `16px`
+All visual tokens are defined as CSS custom properties on `#ll-postcard` at the **top** of the CSS appended to the shadow DOM `<style>` element. This is the single block to edit when polishing the visual design — nothing else in the stylesheet uses hardcoded values for these tokens.
+
+```css
+/* ─── LennyLive Postcard Theme Config ─────────────────────────── */
+#ll-postcard {
+  /* colours */
+  --ll-bg:               #1a1a1a;
+  --ll-border:           #333333;
+  --ll-accent:           #a78bfa;
+  --ll-accent-bg:        rgba(124, 58, 237, 0.15);
+  --ll-accent-border:    rgba(124, 58, 237, 0.3);
+  --ll-text-primary:     #e5e7eb;
+  --ll-text-secondary:   #6b7280;
+
+  /* typography */
+  --ll-font:             system-ui, -apple-system, sans-serif;
+  --ll-font-size-quote:  14px;
+  --ll-font-size-meta:   12px;
+  --ll-font-size-pill:   11px;
+  --ll-line-height:      1.5;
+
+  /* layout */
+  --ll-padding:          16px;
+  --ll-border-radius:    16px;
+  --ll-pill-radius:      20px;
+  --ll-width:            320px;
+
+  /* animation */
+  --ll-anim-duration:    0.2s;
+  --ll-anim-slide:       20px;
+}
+/* ─────────────────────────────────────────────────────────────── */
+```
+
+All subsequent CSS rules reference these variables. Examples:
+
+```css
+#ll-postcard {
+  background:    var(--ll-bg);
+  border:        1px solid var(--ll-border);
+  border-radius: var(--ll-border-radius);
+  font-family:   var(--ll-font);
+  padding:       var(--ll-padding);
+  width:         var(--ll-width);
+}
+
+.ll-topic-pill {
+  background:    var(--ll-accent-bg);
+  border:        1px solid var(--ll-accent-border);
+  color:         var(--ll-accent);
+  border-radius: var(--ll-pill-radius);
+  padding:       2px 10px;
+  font-size:     var(--ll-font-size-pill);
+}
+
+.ll-pull-quote {
+  color:       var(--ll-text-primary);
+  font-size:   var(--ll-font-size-quote);
+  font-style:  italic;
+  line-height: var(--ll-line-height);
+}
+
+.ll-source {
+  color:     var(--ll-text-secondary);
+  font-size: var(--ll-font-size-meta);
+}
+
+.ll-btn {
+  color: var(--ll-accent);
+}
+```
 
 ### Entry Animation
 
 Slide up from below + fade in:
+
 ```css
 @keyframes ll-postcard-in {
-  from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
+  to   { transform: translateY(0);                   opacity: 1; }
+}
+
+#ll-postcard:not(.hidden):not(.ll-postcard-hiding) {
+  animation: ll-postcard-in var(--ll-anim-duration) ease-out;
 }
 ```
-Duration: `0.2s ease-out` — matches existing animation convention.
 
 ### Exit Animation
 
-Slide down + fade out triggered by adding class `.ll-postcard-hiding`. After 200ms (animation duration), `.hidden` class is added and the animation class is removed:
+Slide down + fade out triggered by adding class `.ll-postcard-hiding`. After the duration stored in `--ll-anim-duration` (200ms), `.hidden` is added and `.ll-postcard-hiding` is removed:
 
 ```css
 @keyframes ll-postcard-out {
-  from { transform: translateY(0);    opacity: 1; }
-  to   { transform: translateY(20px); opacity: 0; }
+  from { transform: translateY(0);                   opacity: 1; }
+  to   { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
 }
 
 #ll-postcard.ll-postcard-hiding {
-  animation: ll-postcard-out 0.2s ease-out forwards;
+  animation: ll-postcard-out var(--ll-anim-duration) ease-out forwards;
 }
 ```
 
 `hidePostcard()` adds `.ll-postcard-hiding`, then after **200ms** adds `.hidden` and removes `.ll-postcard-hiding`.
+
+**Note:** The 200ms `setTimeout` in `hidePostcard()` is hardcoded in JS to match `--ll-anim-duration`. If the duration variable is changed, update the JS timeout to match.
 
 ---
 
