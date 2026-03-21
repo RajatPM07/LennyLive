@@ -90,9 +90,10 @@ async function handleQuery(message, tabId) {
     // Prefer pre-cached URL from Supabase Storage (instant CDN fetch).
     // If CDN fetch fails, falls back to real-time TTS so audio is never silently lost.
     // Falls back to real-time TTS also when audio_url is null (unseeded moments).
-    const ttsTimeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000)
-    );
+    let ttsTimeoutId;
+    const ttsTimeout = new Promise((_, reject) => {
+      ttsTimeoutId = setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000);
+    });
     const audioPromise = insight.audio_url
       ? fetchAndEncodeUrl(insight.audio_url).catch(err => {
           console.warn('[LennyLive] Cached audio failed, falling back to TTS:', err.message);
@@ -105,7 +106,8 @@ async function handleQuery(message, tabId) {
         console.log('[LennyLive] Audio ready:', insight.audio_url ? 'cached' : 'real-time', insight.guest_name);
         pushResponse(tabId, { type: 'AUDIO', audio });
       })
-      .catch(err => console.warn('[LennyLive] Audio skipped:', err.message));
+      .catch(err => console.warn('[LennyLive] Audio skipped:', err.message))
+      .finally(() => clearTimeout(ttsTimeoutId));
 
   } catch (err) {
     console.error('[LennyLive] RAG pipeline error:', err.message);
