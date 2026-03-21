@@ -190,9 +190,9 @@ function showBuzzwordChip(topic) {
 }
 
 // ─── State Machine ────────────────────────────────────────────────────────────
-// States: idle | listening | processing | loading
-// One-directional: idle → listening → processing → loading → idle
-// Errors / Esc always return to idle.
+// States: idle | listening | loading
+// Transitions: idle → listening → loading → idle
+// Errors / Esc / timeout always return to idle.
 
 let state = 'idle';
 
@@ -272,45 +272,54 @@ function cancelLennyLive() {
 let processingTimeout = null;
 
 function processQuery(transcript) {
-  state = 'processing';
-  showIndicator('thinking');
+  // currentSelection was captured at activation time — do not re-read here
+  state = 'loading';
+  showIndicator('loading');
   console.log('[LennyLive] Sending query:', { transcript, selection: currentSelection });
 
-  chrome.runtime.sendMessage(
-    { type: 'QUERY', transcript, selection: currentSelection },
-    (response) => {
-      clearTimeout(processingTimeout);
-      // Consume lastError to suppress Chrome's "unchecked runtime.lastError" warning
-      const _err = chrome.runtime.lastError;
+  // Fire-and-forget — no callback. RESPONSE arrives via chrome.runtime.onMessage listener below.
+  chrome.runtime.sendMessage({
+    type: 'QUERY',
+    transcript,            // field name matches service-worker expectation — do not rename
+    selection: currentSelection, // field name matches service-worker expectation — do not rename
+  });
 
-      if (!response) {
-        console.log('[LennyLive] No response from service worker — returning to idle');
-        cancelLennyLive();
-        return;
-      }
-
-      console.log('[LennyLive] Response received:', response);
-      state = 'loading';
-      showIndicator('loading');
-
-      // Sub-project 4 renders postcard here.
-      // For sub-project 1: return to idle after short delay.
-      setTimeout(() => {
-        state = 'idle';
-        hideIndicator();
-        console.log('[LennyLive] Returned to idle after stub response');
-      }, 500);
-    }
-  );
-
-  // Safety timeout: return to idle if service worker never responds
+  // Safety timeout: if RESPONSE never arrives (e.g. service worker crashed),
+  // return to idle after 10s so the user is never stuck.
   processingTimeout = setTimeout(() => {
-    if (state === 'processing' || state === 'loading') {
+    if (state === 'loading') {
+      state = 'idle';
+      hideIndicator();
       console.log('[LennyLive] Service worker timeout (10s) — returning to idle');
-      cancelLennyLive();
     }
   }, 10000);
 }
+
+function handleResponse(message) {
+  // Cancel the safety timeout — real response arrived
+  clearTimeout(processingTimeout);
+  state = 'idle';
+  hideIndicator();
+
+  if (message.status === 'ok' && message.insight) {
+    // Sub-project 3 will render the sidebar postcard here.
+    // For now: log so it's verifiable in DevTools console.
+    console.log('[LennyLive] Insight received:', message.insight);
+    chrome.storage.local.set({ lastTopic: message.insight.topic });
+  } else if (message.status === 'no_results') {
+    console.log('[LennyLive] No results found for query');
+  } else {
+    console.warn('[LennyLive] RAG error or null insight:', message.status);
+  }
+}
+
+// Listen for RESPONSE pushed back from service-worker via chrome.tabs.sendMessage
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'RESPONSE') {
+    handleResponse(message);
+  }
+  // Return nothing (no return true) — we never send a response back to the SW
+});
 
 // ─── Speech Recognition ───────────────────────────────────────────────────────
 
