@@ -6,6 +6,7 @@
 // for async work in MV3 service workers.
 
 import { embedQuery, searchChunks } from './rag.js';
+import { fetchTTS } from './tts.js';
 
 chrome.runtime.onMessage.addListener((message, sender) => {
   console.log('[LennyLive] Message received:', message.type, message);
@@ -62,6 +63,15 @@ async function handleQuery(message, tabId) {
 
     console.log('[LennyLive] Insight found:', insight.guest_name, '|', insight.topic, '| similarity:', insight.similarity);
     pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
+
+    // Push 2 — fire-and-forget TTS race (never blocks Push 1)
+    // If TTS resolves within 3s: sends AUDIO. If not: logs warning, no AUDIO sent.
+    const ttsTimeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('TTS timeout (3s)')), 3000)
+    );
+    Promise.race([fetchTTS(insight.pull_quote), ttsTimeout])
+      .then(audio => pushResponse(tabId, { type: 'AUDIO', audio }))
+      .catch(err => console.warn('[LennyLive] TTS skipped:', err.message));
 
   } catch (err) {
     console.error('[LennyLive] RAG pipeline error:', err.message);
