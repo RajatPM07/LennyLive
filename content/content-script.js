@@ -467,7 +467,7 @@ let state = 'idle';
 function playPing() {
   try {
     const ctx = new AudioContext();
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);

@@ -25,10 +25,27 @@ export async function fetchTTS(text) {
     const errBody = await res.text();
     throw new Error(`ElevenLabs TTS failed: ${res.status} — ${errBody}`);
   }
-  // Convert binary MP3 stream → base64 string for Chrome message bus transport
+
+  // Validate content-type — ElevenLabs should return audio/mpeg
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('audio')) {
+    const body = await res.text();
+    throw new Error(`ElevenLabs TTS: expected audio, got ${contentType} — ${body.slice(0, 200)}`);
+  }
+
   const buffer = await res.arrayBuffer();
+  if (buffer.byteLength === 0) {
+    throw new Error('ElevenLabs TTS: received empty audio buffer');
+  }
+
+  // Chunked binary → base64 conversion.
+  // Char-by-char += on large Uint8Arrays is slow and fragile.
+  // Spread over 8 KB chunks is fast and avoids call stack limits.
   const bytes = new Uint8Array(buffer);
+  const CHUNK = 8192;
   let binary = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
   return btoa(binary);
 }
