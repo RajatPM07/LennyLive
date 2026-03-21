@@ -8,7 +8,8 @@
     "*://docs.google.com/document/*",
     "*://*.notion.so/*",
     "*://*.atlassian.net/*",
-    "*://*.linear.app/*"
+    "*://*.linear.app/*",
+    "https://api.elevenlabs.io/*"
   ],
   "background": {
     "service_worker": "background/service-worker.js",
