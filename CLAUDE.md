@@ -396,18 +396,22 @@ node scripts/embed.js
 - [x] 25 PM moments curated (Retention×10, GTM Strategy×8, PMF×7) — `data/curated_moments.json`
 - [x] Embedding pipeline built — `scripts/embed.js` using `gemini-embedding-001` (768 dims)
 - [x] 25 moments embedded into Supabase pgvector — RAG verified at threshold 0.5
+- [x] Chrome extension shell — Manifest V3
+- [x] content-script.js — double-tap Ctrl + passive buzzword detection + shadow DOM
+- [x] service-worker.js — RAG pipeline (embed → pgvector search → push model)
+- [x] Postcard UI — shadow DOM, CSS variables theme, enter/exit animations
+- [x] ElevenLabs TTS integration — blob: URL audio (bypasses site CSP), 8s timeout
+- [x] Save to chrome.storage.local — read-modify-write, ✓ Saved! feedback
+- [x] Mute toggle — persisted via chrome.storage.local
+- [x] Auto-dismiss (30s) + hover-to-pause
+- [x] E2E verified on Notion — all 9 criteria pass
 
 ## What's Next 🔨
 
 - [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
-- [ ] Update agent with Lenny's real voice ID
-- [ ] Chrome extension shell — Manifest V3
-- [ ] content-script.js — double tap Ctrl + passive detection
-- [ ] service-worker.js — RAG pipeline
-- [ ] sidebar UI — postcard component
-- [ ] ElevenLabs agent full integration
-- [ ] Gamification — streaks, scores, saved library
-- [ ] End-to-end testing
+- [ ] Update ELEVENLABS_VOICE_ID in config.js when clone is ready
+- [ ] Gamification — streaks, scores, saved library (popup UI)
+- [ ] Expand corpus — add north star, metrics, prioritization moments (~15 more)
 - [ ] Demo video (2 minutes)
 - [ ] Submit to competition
 
@@ -445,7 +449,11 @@ node scripts/embed.js
 - [2026-03-20] — Supabase MCP needs restart after first config → Run claude mcp add then restart Claude Code before expecting MCP to be active
 - [2026-03-21] — Supabase MCP requires a Personal Access Token (PAT), not the project anon key → Get PAT from supabase.com/dashboard/account/tokens and use that in .mcp.json Authorization header
 - [2026-03-21] — Google AI `text-embedding-004` no longer exists; replaced by `gemini-embedding-001` with `outputDimensionality: 768` → Always use `gemini-embedding-001` for embeddings
-- [2026-03-21] — `gemini-embedding-001` cosine similarities peak ~0.62 for related content (vs OpenAI ~0.85+) → Use `match_threshold: 0.5` when calling `match_transcript_chunks`, not 0.75
+- [2026-03-21] — `gemini-embedding-001` cosine similarities peak ~0.62 for related content (vs OpenAI ~0.85+) → Use `match_threshold: 0.45` when calling `match_transcript_chunks`
+- [2026-03-21] — `data:` URI audio blocked by strict CSP on Notion, Linear, and similar sites → Always use `URL.createObjectURL(blob)` for audio playback in content scripts; never use `new Audio('data:audio/mpeg;base64,...')`
+- [2026-03-21] — `pull_quote` fields are 300+ word essays, far too long for TTS (timeouts + huge audio files) → Use `insight` field for TTS (1 concise sentence); `pull_quote` is for reading on the postcard
+- [2026-03-21] — Conversational speech queries ("can you tell me about X") dilute embedding similarity → Strip filler prefixes in `cleanQuery()` in service-worker.js before embedding
+- [2026-03-21] — `ctx.resume()` returns a Promise — unhandled rejection surfaces AudioContext autoplay warning even inside try/catch → Always `.catch(() => {})` on `ctx.resume()`
 
 ---
 
