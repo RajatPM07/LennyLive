@@ -337,6 +337,8 @@ let currentInsight = null; // held for Save button
 function showPostcard(insight) {
   currentInsight = insight;
   const pc = shadow.getElementById('ll-postcard');
+  hideIndicator(); // always hide indicator — they share bottom-right corner
+  pc.classList.remove('ll-postcard-hiding'); // cancel any in-flight exit animation
 
   // Populate content
   shadow.getElementById('ll-pc-topic').textContent = insight.topic;
