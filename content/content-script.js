@@ -127,6 +127,126 @@ style.textContent = `
 `;
 shadow.appendChild(style);
 
+// Append postcard styles to the existing shadow DOM style element
+style.textContent += `
+
+  /* ─── LennyLive Postcard Theme Config — edit here to restyle ──── */
+  /* All visual tokens are CSS variables. Change values here only.   */
+  #ll-postcard {
+    /* colours */
+    --ll-bg:               #1a1a1a;
+    --ll-border:           #333333;
+    --ll-accent:           #a78bfa;
+    --ll-accent-bg:        rgba(124, 58, 237, 0.15);
+    --ll-accent-border:    rgba(124, 58, 237, 0.3);
+    --ll-text-primary:     #e5e7eb;
+    --ll-text-secondary:   #6b7280;
+    /* typography */
+    --ll-font:             system-ui, -apple-system, sans-serif;
+    --ll-font-size-quote:  14px;
+    --ll-font-size-meta:   12px;
+    --ll-font-size-pill:   11px;
+    --ll-line-height:      1.5;
+    /* layout */
+    --ll-padding:          16px;
+    --ll-border-radius:    16px;
+    --ll-pill-radius:      20px;
+    --ll-width:            320px;
+    /* animation */
+    --ll-anim-duration:    0.2s;
+    --ll-anim-slide:       20px;
+  }
+  /* ─────────────────────────────────────────────────────────────── */
+
+  /* Postcard layout — references theme variables above */
+  #ll-postcard {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: var(--ll-width);
+    z-index: 2147483647;
+    pointer-events: auto;
+    background: var(--ll-bg);
+    border: 1px solid var(--ll-border);
+    border-radius: var(--ll-border-radius);
+    font-family: var(--ll-font);
+    padding: var(--ll-padding);
+    box-sizing: border-box;
+  }
+
+  #ll-postcard.hidden { display: none; }
+
+  #ll-postcard:not(.hidden):not(.ll-postcard-hiding) {
+    animation: ll-postcard-in var(--ll-anim-duration) ease-out;
+  }
+
+  @keyframes ll-postcard-in {
+    from { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
+    to   { transform: translateY(0);                    opacity: 1; }
+  }
+
+  @keyframes ll-postcard-out {
+    from { transform: translateY(0);                    opacity: 1; }
+    to   { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
+  }
+
+  #ll-postcard.ll-postcard-hiding {
+    animation: ll-postcard-out var(--ll-anim-duration) ease-out forwards;
+  }
+
+  .ll-postcard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .ll-topic-pill {
+    background: var(--ll-accent-bg);
+    border: 1px solid var(--ll-accent-border);
+    color: var(--ll-accent);
+    border-radius: var(--ll-pill-radius);
+    padding: 2px 10px;
+    font-size: var(--ll-font-size-pill);
+    font-family: var(--ll-font);
+  }
+
+  .ll-postcard-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .ll-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ll-accent);
+    font-family: var(--ll-font);
+    font-size: var(--ll-font-size-meta);
+    padding: 2px 4px;
+  }
+
+  .ll-pull-quote {
+    color: var(--ll-text-primary);
+    font-size: var(--ll-font-size-quote);
+    font-style: italic;
+    line-height: var(--ll-line-height);
+    margin: 0 0 8px 0;
+  }
+
+  .ll-source {
+    color: var(--ll-text-secondary);
+    font-size: var(--ll-font-size-meta);
+    margin: 0 0 12px 0;
+  }
+
+  .ll-postcard-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
+
 // Create indicator
 const indicator = document.createElement('div');
 indicator.id = 'll-indicator';
@@ -145,6 +265,26 @@ const chip = document.createElement('div');
 chip.id = 'll-chip';
 chip.innerHTML = '<div id="ll-chip-dot"></div><span>Lenny on <span id="ll-chip-topic"></span> →</span>';
 shadow.appendChild(chip);
+
+// Create postcard — injected at load time with .hidden; shown/hidden by showPostcard/hidePostcard
+const postcard = document.createElement('div');
+postcard.id = 'll-postcard';
+postcard.className = 'hidden';
+postcard.innerHTML = `
+  <div class="ll-postcard-header">
+    <span class="ll-topic-pill">● <span id="ll-pc-topic"></span></span>
+    <div class="ll-postcard-actions">
+      <button id="ll-btn-mute" class="ll-btn">🔇 Mute</button>
+      <button id="ll-btn-dismiss" class="ll-btn">✕</button>
+    </div>
+  </div>
+  <p id="ll-pc-quote" class="ll-pull-quote"></p>
+  <p id="ll-pc-source" class="ll-source"></p>
+  <div class="ll-postcard-footer">
+    <button id="ll-btn-save" class="ll-btn">🔖 Save</button>
+  </div>
+`;
+shadow.appendChild(postcard);
 
 // ─── UI Helper Functions ──────────────────────────────────────────────────────
 
