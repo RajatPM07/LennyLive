@@ -143,7 +143,7 @@ style.textContent += `
     --ll-text-secondary:   #6b7280;
     /* typography */
     --ll-font:             system-ui, -apple-system, sans-serif;
-    --ll-font-size-quote:  14px;
+    --ll-font-size-quote:  13px;
     --ll-font-size-meta:   12px;
     --ll-font-size-pill:   11px;
     --ll-line-height:      1.5;
@@ -164,6 +164,8 @@ style.textContent += `
     bottom: 32px;
     right: 32px;
     width: var(--ll-width);
+    max-height: 400px;
+    overflow-y: auto;
     z-index: 2147483647;
     pointer-events: auto;
     background: var(--ll-bg);
@@ -442,6 +444,11 @@ shadow.getElementById('ll-btn-save').addEventListener('click', () => {
         console.warn('[LennyLive] Save write failed:', chrome.runtime.lastError.message);
       } else {
         console.log('[LennyLive] Insight saved:', entry.topic);
+        const btn = shadow.getElementById('ll-btn-save');
+        if (btn) {
+          btn.textContent = '✓ Saved!';
+          setTimeout(() => { btn.textContent = '🔖 Save'; }, 2000);
+        }
       }
     });
   });

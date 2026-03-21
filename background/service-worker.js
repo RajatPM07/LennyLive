@@ -65,9 +65,9 @@ async function handleQuery(message, tabId) {
     pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
 
     // Push 2 — fire-and-forget TTS race (never blocks Push 1)
-    // If TTS resolves within 3s: sends AUDIO. If not: logs warning, no AUDIO sent.
+    // If TTS resolves within 8s: sends AUDIO. If not: logs warning, no AUDIO sent.
     const ttsTimeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('TTS timeout (3s)')), 3000)
+      setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000)
     );
     Promise.race([fetchTTS(insight.pull_quote), ttsTimeout])
       .then(audio => pushResponse(tabId, { type: 'AUDIO', audio }))
