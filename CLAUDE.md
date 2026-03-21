@@ -405,13 +405,20 @@ node scripts/embed.js
 - [x] Mute toggle — persisted via chrome.storage.local
 - [x] Auto-dismiss (30s) + hover-to-pause
 - [x] E2E verified on Notion — all 9 criteria pass
+- [x] Corpus expanded to 40 moments — added Metrics & North Star×6, Roadmap Prioritisation×5, User Research×4
+- [x] All 40 pull_quotes rewritten to 2-3 sentences (≤550 chars) — postcard-readable
+- [x] `audio_url` column added to `transcript_chunks`; `match_transcript_chunks` updated to return it
+- [x] 40 MP3s pre-generated via ElevenLabs, stored in Supabase Storage bucket `tts-audio` (public)
+- [x] Service worker lazy cache — CDN audio (~1-2s) with real-time TTS fallback
+- [x] `scripts/seed-audio.js` — idempotent TTS seeder with `--dry-run` flag
 
 ## What's Next 🔨
 
 - [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
 - [ ] Update ELEVENLABS_VOICE_ID in config.js when clone is ready
+- [ ] curate.js scaling — drop DB CHECK constraint, remove slice(0,5), enforce pull_quote char limit, add merge pipeline
+- [ ] Clippy UX fix — replace keyword chip with ambient glow dot
 - [ ] Gamification — streaks, scores, saved library (popup UI)
-- [ ] Expand corpus — add north star, metrics, prioritization moments (~15 more)
 - [ ] Demo video (2 minutes)
 - [ ] Submit to competition
 
@@ -454,6 +461,8 @@ node scripts/embed.js
 - [2026-03-21] — `pull_quote` fields are 300+ word essays, far too long for TTS (timeouts + huge audio files) → Use `insight` field for TTS (1 concise sentence); `pull_quote` is for reading on the postcard
 - [2026-03-21] — Conversational speech queries ("can you tell me about X") dilute embedding similarity → Strip filler prefixes in `cleanQuery()` in service-worker.js before embedding
 - [2026-03-21] — `ctx.resume()` returns a Promise — unhandled rejection surfaces AudioContext autoplay warning even inside try/catch → Always `.catch(() => {})` on `ctx.resume()`
+- [2026-03-22] — `Promise.race([fetch, timeout])` dangling rejection: when the fetch wins, the `setTimeout` inside the timeout promise is never cleared — 8s later it rejects as unhandled → Always extract `setTimeout` to a variable and call `clearTimeout(id)` in `.finally()` on the outer promise chain
+- [2026-03-22] — `CREATE OR REPLACE FUNCTION` fails when adding columns to `RETURNS TABLE` — Postgres cannot change return type of existing function → Always `DROP FUNCTION IF EXISTS fn(arg_types)` before recreating with a different return type
 
 ---
 
