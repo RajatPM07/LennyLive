@@ -10,9 +10,11 @@ import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import 'dotenv/config';
 
-const DRY_RUN = process.argv.includes('--dry-run');
-const EPISODES_DIR = '/tmp/lennys-transcripts/episodes';
-const OUTPUT_PATH  = path.join(process.cwd(), 'data', 'new_curated_moments.json');
+const DRY_RUN    = process.argv.includes('--dry-run');
+const EPISODES_DIR   = '/tmp/lennys-transcripts/episodes';
+const OUTPUT_PATH    = path.join(process.cwd(), 'data', 'new_curated_moments.json');
+// Tracks which episode dirs have been processed so the run is resumable.
+const PROGRESS_PATH  = path.join(process.cwd(), 'data', 'curate_progress.json');
 
 // Truncate very long transcripts — Gemini Flash context window is generous
 // but 60K chars keeps token cost low and avoids edge-case failures.
@@ -43,6 +45,28 @@ const model  = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+// Poll until the daily quota resets (Google resets at midnight PT).
+// Checks every 15 minutes with a tiny probe request.
+async function waitForQuotaReset() {
+  console.warn('[curate] Daily quota exhausted — polling every 15 min until it resets...');
+  while (true) {
+    await sleep(15 * 60 * 1000); // 15 minutes
+    try {
+      await model.generateContent('ping');
+      console.log('[curate] Quota reset detected — resuming...');
+      return;
+    } catch (err) {
+      const msg = err.message || '';
+      if (msg.includes('429')) {
+        console.log('[curate] Quota still exhausted — waiting 15 more min...');
+      } else {
+        // Unexpected error — log and keep waiting
+        console.warn('[curate] Unexpected error during quota poll:', msg.slice(0, 80));
+      }
+    }
+  }
+}
+
 async function generateWithRetry(prompt, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -50,14 +74,16 @@ async function generateWithRetry(prompt, maxRetries = 3) {
       return result.response.text();
     } catch (err) {
       const msg = err.message || '';
+      const isDailyLimit = msg.includes('429') && (msg.includes('PerDay') || (msg.includes('limit: 0') && msg.includes('quota')));
       const isPerMinuteLimit = msg.includes('429') && msg.includes('PerMinute');
-      const isDailyLimit     = msg.includes('429') && (msg.includes('PerDay') || msg.includes('limit: 0'));
       if (isDailyLimit) {
-        // Daily quota exhausted — no point retrying today
-        throw new Error(`Daily quota exhausted: ${msg.slice(0, 120)}`);
+        await waitForQuotaReset();
+        // After reset, retry this same request (reset attempt counter)
+        attempt = 0;
+        continue;
       }
       if (isPerMinuteLimit && attempt < maxRetries) {
-        const backoff = 20_000 * attempt; // 20s → 40s
+        const backoff = 20_000 * attempt;
         console.warn(`[curate] Per-minute rate limit — waiting ${backoff / 1000}s (attempt ${attempt}/${maxRetries})...`);
         await sleep(backoff);
         continue;
@@ -159,14 +185,30 @@ async function main() {
     .filter(d => !d.startsWith('.') && !d.includes('.'))
     .sort();
 
-  console.log(`[curate] ${DRY_RUN ? 'DRY RUN — ' : ''}${allDirs.length} episodes to process...`);
+  // Resume support — load previously processed dirs and saved moments
+  let processed = new Set();
+  let allMoments = [];
+  try {
+    const prog = JSON.parse(await fs.readFile(PROGRESS_PATH, 'utf8'));
+    processed = new Set(prog.processed || []);
+    console.log(`[curate] Resuming — ${processed.size} episodes already done`);
+  } catch { /* fresh start */ }
+  try {
+    const existing = JSON.parse(await fs.readFile(OUTPUT_PATH, 'utf8'));
+    if (Array.isArray(existing) && existing.length > 0) {
+      allMoments = existing;
+      console.log(`[curate] Loaded ${allMoments.length} existing moments from output file`);
+    }
+  } catch { /* fresh start */ }
 
-  const allMoments = [];
+  const remaining = allDirs.filter(d => !processed.has(d));
+  console.log(`[curate] ${DRY_RUN ? 'DRY RUN — ' : ''}${remaining.length} episodes remaining (${allDirs.length} total)...`);
+
   let found = 0, noInsight = 0, failed = 0;
 
-  for (let i = 0; i < allDirs.length; i++) {
-    const dir = allDirs[i];
-    const n   = `${i + 1}/${allDirs.length}`;
+  for (let i = 0; i < remaining.length; i++) {
+    const dir = remaining[i];
+    const n   = `${processed.size + i + 1}/${allDirs.length}`;
 
     try {
       const moment = await processEpisode(dir);
@@ -178,29 +220,34 @@ async function main() {
         noInsight++;
         if (!DRY_RUN) console.log(`[curate] − ${n} ${dir} — no strong PM insight`);
       }
+      // Mark as processed only on success or "no insight" (not on error)
+      processed.add(dir);
     } catch (err) {
       failed++;
       console.error(`[curate] ✗ ${n} ${dir}: ${err.message}`);
+      // Do NOT add to processed — allows retry on next run
     }
 
-    // Periodic save every 25 episodes so progress survives interruption
+    // Periodic save every 25 episodes
     if (!DRY_RUN && (i + 1) % 25 === 0) {
       await fs.writeFile(OUTPUT_PATH, JSON.stringify(allMoments, null, 2));
-      console.log(`[curate] 💾 Progress save — ${allMoments.length} moments so far`);
+      await fs.writeFile(PROGRESS_PATH, JSON.stringify({ processed: [...processed] }, null, 2));
+      console.log(`[curate] 💾 Progress save — ${allMoments.length} moments, ${processed.size} episodes done`);
     }
 
-    // Respect rate limit between requests
-    if (!DRY_RUN && i < allDirs.length - 1) {
+    if (!DRY_RUN && i < remaining.length - 1) {
       await sleep(DELAY_MS);
     }
   }
 
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(allMoments, null, 2));
+  await fs.writeFile(PROGRESS_PATH, JSON.stringify({ processed: [...processed] }, null, 2));
   console.log(`\n[curate] Done.`);
-  console.log(`[curate] ✓ Found:     ${found}`);
-  console.log(`[curate] − No insight: ${noInsight}`);
-  console.log(`[curate] ✗ Failed:     ${failed}`);
-  console.log(`[curate] Output:       ${OUTPUT_PATH}`);
+  console.log(`[curate] ✓ Found:      ${found}`);
+  console.log(`[curate] − No insight:  ${noInsight}`);
+  console.log(`[curate] ✗ Failed:      ${failed}`);
+  console.log(`[curate] Total moments: ${allMoments.length}`);
+  console.log(`[curate] Output:        ${OUTPUT_PATH}`);
 }
 
 main().catch(err => {
