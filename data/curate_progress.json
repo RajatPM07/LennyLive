@@ -118,7 +118,7 @@
     "grant-lee",
     "guillermo-rauch",
     "gustaf-alstromer",
-    "gustav-söderström",
+    "gustav-s\u00f6derstr\u00f6m",
     "hamel-husain-shreya-shankar",
     "hamelshreya",
     "hamilton-helmer",
@@ -301,7 +301,8 @@
     "yamashata",
     "yuhki-yamashata",
     "yuriy-timen",
-    "zoelle-egner"
+    "zoelle-egner",
+    "paul-adams"
   ],
   "complete": true
 }
