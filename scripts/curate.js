@@ -241,7 +241,8 @@ async function main() {
   }
 
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(allMoments, null, 2));
-  await fs.writeFile(PROGRESS_PATH, JSON.stringify({ processed: [...processed] }, null, 2));
+  // Mark complete: true so watch-and-finalize.js knows the run finished
+  await fs.writeFile(PROGRESS_PATH, JSON.stringify({ processed: [...processed], complete: true }, null, 2));
   console.log(`\n[curate] Done.`);
   console.log(`[curate] ✓ Found:      ${found}`);
   console.log(`[curate] − No insight:  ${noInsight}`);

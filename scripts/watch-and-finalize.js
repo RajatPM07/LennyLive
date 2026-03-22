@@ -21,19 +21,19 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 async function getProgress() {
   try {
     const data = JSON.parse(await readFile(PROGRESS, 'utf8'));
-    return (data.processed || []).length;
-  } catch { return 0; }
+    return { count: (data.processed || []).length, complete: !!data.complete };
+  } catch { return { count: 0, complete: false }; }
 }
 
 async function main() {
   console.log('[watch] Watching for curate.js to complete...');
-  console.log(`[watch] Will finalize when progress reaches ${TOTAL_EPISODES} episodes.`);
+  console.log(`[watch] Will finalize when curate.js sets complete:true in progress file.`);
 
   while (true) {
-    const done = await getProgress();
-    console.log(`[watch] Progress: ${done}/${TOTAL_EPISODES} episodes processed`);
+    const { count, complete } = await getProgress();
+    console.log(`[watch] Progress: ${count}/${TOTAL_EPISODES} processed, complete=${complete}`);
 
-    if (done >= TOTAL_EPISODES) {
+    if (complete) {
       console.log('[watch] ✓ curate.js complete! Running finalize-corpus.js...');
       try {
         execSync('node scripts/finalize-corpus.js', { stdio: 'inherit', cwd: ROOT });
