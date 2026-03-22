@@ -20,8 +20,8 @@ const PROGRESS_PATH  = path.join(process.cwd(), 'data', 'curate_progress.json');
 // but 60K chars keeps token cost low and avoids edge-case failures.
 const TRANSCRIPT_MAX_CHARS = 60_000;
 
-// 7 000ms between requests → ~8.5 RPM, safely under gemini-2.5-flash free tier (10 RPM).
-const DELAY_MS = 7_000;
+// 1 000ms between requests — paid tier supports 1000+ RPM; 1s is a safe conservative pace.
+const DELAY_MS = 1_000;
 
 // These are the only values the transcript_chunks.topic CHECK constraint allows.
 // Keep in sync with 001_initial_schema.sql until 003_drop_topic_check.sql is run.
