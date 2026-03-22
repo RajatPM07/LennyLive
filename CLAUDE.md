@@ -411,12 +411,15 @@ node scripts/embed.js
 - [x] 40 MP3s pre-generated via ElevenLabs, stored in Supabase Storage bucket `tts-audio` (public)
 - [x] Service worker lazy cache — CDN audio (~1-2s) with real-time TTS fallback
 - [x] `scripts/seed-audio.js` — idempotent TTS seeder with `--dry-run` flag
+- [x] curate.js scaling — all 303 episodes processed, 280 moments curated and embedded
+- [x] `scripts/curate.js` — gemini-2.5-flash, resume support, quota polling, 280 moments output
+- [x] `scripts/finalize-corpus.js` — validate → backup → swap JSON → wipe DB → re-embed pipeline
+- [x] `scripts/watch-and-finalize.js` — auto-triggers finalize when curate.js sets `complete: true`
 
 ## What's Next 🔨
 
 - [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
 - [ ] Update ELEVENLABS_VOICE_ID in config.js when clone is ready
-- [ ] curate.js scaling — drop DB CHECK constraint, remove slice(0,5), enforce pull_quote char limit, add merge pipeline
 - [ ] Clippy UX fix — replace keyword chip with ambient glow dot
 - [ ] Gamification — streaks, scores, saved library (popup UI)
 - [ ] Demo video (2 minutes)
@@ -463,6 +466,9 @@ node scripts/embed.js
 - [2026-03-21] — `ctx.resume()` returns a Promise — unhandled rejection surfaces AudioContext autoplay warning even inside try/catch → Always `.catch(() => {})` on `ctx.resume()`
 - [2026-03-22] — `Promise.race([fetch, timeout])` dangling rejection: when the fetch wins, the `setTimeout` inside the timeout promise is never cleared — 8s later it rejects as unhandled → Always extract `setTimeout` to a variable and call `clearTimeout(id)` in `.finally()` on the outer promise chain
 - [2026-03-22] — `CREATE OR REPLACE FUNCTION` fails when adding columns to `RETURNS TABLE` — Postgres cannot change return type of existing function → Always `DROP FUNCTION IF EXISTS fn(arg_types)` before recreating with a different return type
+- [2026-03-22] — Google AI returns "Your project has exceeded its spending cap" as a spurious/transient error even when no cap is actually hit — check AI Studio before taking action; it may resolve on retry without any billing change
+- [2026-03-22] — `curate_progress.json` `complete: true` flag must be manually reset to `false` before relaunching curate.js for a partial resume — otherwise watch-and-finalize.js triggers finalize immediately on start
+- [2026-03-22] — curate.js spending-cap errors are not handled by `waitForQuotaReset()` (which only catches `PerDay`/`limit: 0`) — failed episodes are not marked processed, so they will be retried on next run automatically
 
 ---
 
