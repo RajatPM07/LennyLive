@@ -37,10 +37,19 @@ export async function embedQuery(text) {
 /**
  * Search Supabase pgvector for the top 3 transcript chunks
  * most similar to the given embedding.
+ * Uses the default fast-path threshold (0.45).
  * Returns array of chunk objects (may be empty if no results above threshold).
  * Throws on non-2xx HTTP response.
  */
 export async function searchChunks(embedding) {
+  return searchChunksAt(embedding, 0.45);
+}
+
+/**
+ * Search Supabase pgvector with a custom similarity threshold.
+ * Used by the abstraction fallback path (threshold: 0.35).
+ */
+export async function searchChunksAt(embedding, threshold) {
   const url = `${SUPABASE_URL}/rest/v1/rpc/match_transcript_chunks`;
   const res = await fetch(url, {
     method: 'POST',
@@ -51,7 +60,7 @@ export async function searchChunks(embedding) {
     },
     body: JSON.stringify({
       query_embedding: embedding,
-      match_threshold: 0.45,
+      match_threshold: threshold,
       match_count: 3,
     }),
   });

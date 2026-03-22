@@ -37,12 +37,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - For ANY non-trivial task, use the Superpowers workflow:
   1. `/superpowers:brainstorm` — refine what you're building
   2. `/superpowers:write-plan` — break it into bite-sized tasks
-  3. `/superpowers:execute-plan` — execute with subagents + review
+  3. `/superpowers:executing-plans` — execute with subagents + review
 - Always check `LENNY_LIVE_PRD.md` before implementing a feature
 - If something goes sideways mid-execution, STOP and re-plan — don't keep pushing
 
 ### 2. Subagent Strategy
-- Superpowers `/superpowers:execute-plan` manages subagent dispatch automatically
+- Superpowers `/superpowers:executing-plans` manages subagent dispatch automatically
 - Each subagent gets one task + a two-stage review (spec compliance, then code quality)
 - For research or exploration outside the plan, still spin up manual subagents freely
 - One task per subagent — keep context windows clean and focused
@@ -157,29 +157,36 @@ CLAUDE_API_KEY=                              # For query understanding
 
 ---
 
-## Architecture — How It All Connects
+## Architecture — How It All Connects (V2)
 
 ```
 User double-taps Ctrl anywhere in Chrome
         ↓
 content-script.js — detects double-tap (300ms window)
         ↓
-Web Speech API — listens for user query
+3 signals captured:
+  transcript  — Web Speech API (spoken query)
+  selection   — window.getSelection() (highlighted text, ≤500 chars)
+  pageContext — extractPageContext() cascade:
+                  1. document.activeElement (contenteditable/textarea/input)
+                  2. article / main / [role="main"] container
+                  3. document.title fallback
         ↓
-Query sent to service-worker.js via chrome.runtime.sendMessage
+QUERY message → service-worker.js
         ↓
-Google AI gemini-embedding-001 — generates query embedding (768 dims)
+cleanQuery(transcript) + selection + pageContext → gemini-embedding-001 (768 dims)
         ↓
-Supabase pgvector — semantic search → top 3 transcript chunks returned
+Supabase pgvector search (threshold: 0.45)
+        ↓ match found                    ↓ no match
+Push 1: RESPONSE → Postcard       Groq llama3-8b-8192 (<200ms)
+Push 2: AUDIO → ElevenLabs TTS    maps niche → PM fundamentals
+        ↓                                  ↓
+Audio plays in browser            Re-embed → re-search (threshold: 0.35)
+                                           ↓ match found
+                                  Push 1: RESPONSE (abstracted: true)
+                                  Push 2: AUDIO
         ↓
-Chunks injected as [DOCUMENT CONTEXT: ...] into ElevenLabs agent
-        ↓
-ElevenLabs agent responds with Lenny's cloned voice
-        ↓
-Audio plays in browser + Postcard renders in sidebar
-        ↓
-User saves insight → Supabase user_data table updated
-        ↓
+User saves insight → chrome.storage.local
 Gamification: streak + score updated in chrome.storage.local
 ```
 
@@ -415,13 +422,30 @@ node scripts/embed.js
 - [x] `scripts/curate.js` — gemini-2.5-flash, resume support, quota polling, 280 moments output
 - [x] `scripts/finalize-corpus.js` — validate → backup → swap JSON → wipe DB → re-embed pipeline
 - [x] `scripts/watch-and-finalize.js` — auto-triggers finalize when curate.js sets `complete: true`
+- [x] V2 Contextual Fallback Architecture — 3-signal injection + Groq abstraction fallback
+- [x] `extractPageContext()` — 3-priority cascade (active cursor / semantic container / title)
+- [x] `background/abstraction.js` — Groq `llama3-8b-8192`, maps niche domains to PM fundamentals
+- [x] `background/rag.js` — `searchChunksAt(embedding, threshold)` for variable-threshold re-search
+- [x] DB topic CHECK constraint removed — topic is now free-form display label only
+- [x] `abstracted: true` flag on insight object — ready for honest mentor UI framing
+- [x] Conversational query guard — regex + Groq `NOT_PM` classifier rejects small talk before any API call
+- [x] Lenny Formula spoken text — `buildSpokenText()` constructs Hook + Source → Core Insight → Push Question; real-time TTS only (audio_url cache bypassed until re-seeded with formula format)
+- [x] Groq model updated to `llama-3.1-8b-instant` — `llama3-8b-8192` decommissioned
+- [x] `network_error` status + toast — Groq/ElevenLabs/Supabase failures now surface "Network error. Lenny needs a second to reconnect." (previously silent)
+- [x] Groq echo bug fixed — prompt now says "Do NOT repeat the input query. Do NOT use arrow notation." (was echoing `claim settlement → "..."`)
+- [x] `docs/query-pipeline-explained.md` — 15 worked examples across all query states with similarity score reference
 
 ## What's Next 🔨
 
+- [ ] **Dynamic topic re-tag** — `scripts/retag-topics.js` Groq batch re-labels all 280 rows with free-form 2-3 word PM topics (~$0.08); update `curate.js` forward pipe. Full spec in `tasks/todo.md`
 - [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
 - [ ] Update ELEVENLABS_VOICE_ID in config.js when clone is ready
 - [ ] Clippy UX fix — replace keyword chip with ambient glow dot
 - [ ] Gamification — streaks, scores, saved library (popup UI)
+- [ ] Postcard output redesign — teaser text + "Read more" CTA (~800 chars expanded)
+- [ ] Honest mentor framing UI — use `abstracted: true` flag to add "bridging" copy on postcard
+- [ ] Dynamic push question — inject page context into Sentence 3 of Lenny Formula (generic version shipped)
+- [ ] Re-seed audio_url cache with Lenny Formula formatted text (currently bypassed — real-time TTS only)
 - [ ] Demo video (2 minutes)
 - [ ] Submit to competition
 
@@ -447,6 +471,7 @@ node scripts/embed.js
 - ElevenLabs agent voice swap: update voice_id field via ElevenLabs dashboard or API
 - Chrome Manifest V3 service workers are ephemeral — don't store state in memory, use chrome.storage
 - Double-tap Ctrl may conflict on some Mac keyboard layouts — test on Rajat's MacBook Air
+- Groq `NOT_PM` gate must be paired with the regex guard — neither alone is sufficient. Regex catches obvious social patterns at zero cost; Groq catches the long tail (travel, jokes, personal). Removing either breaks the system in opposite directions.
 
 ---
 
@@ -469,6 +494,19 @@ node scripts/embed.js
 - [2026-03-22] — Google AI returns "Your project has exceeded its spending cap" as a spurious/transient error even when no cap is actually hit — check AI Studio before taking action; it may resolve on retry without any billing change
 - [2026-03-22] — `curate_progress.json` `complete: true` flag must be manually reset to `false` before relaunching curate.js for a partial resume — otherwise watch-and-finalize.js triggers finalize immediately on start
 - [2026-03-22] — curate.js spending-cap errors are not handled by `waitForQuotaReset()` (which only catches `PerDay`/`limit: 0`) — failed episodes are not marked processed, so they will be retried on next run automatically
+- [2026-03-22] — URL and page title are useless as context signals in modern SPAs (Notion, Linear, Google Docs) — URLs are opaque hashes, titles are often "Untitled" → use `pageContext` (actual DOM text) instead
+- [2026-03-22] — gemini-embedding-001 peaks at ~0.62 similarity for related content — never set fast-path threshold above 0.50 or nearly everything will fall through to the abstraction layer
+- [2026-03-22] — `document.body.innerText` is polluted with nav/sidebar/menu text on SPAs → always use `document.activeElement` first, then semantic containers (`article`/`main`/`[role="main"]`)
+- [2026-03-22] — Claude API adds 500–1500ms latency — unacceptable for an ambient tool; use Groq `llama3-8b-8192` (<200ms) for any real-time inference in the extension pipeline
+- [2026-03-22] — ElevenLabs REST TTS has no system prompt or reasoning — it reads whatever text you pass verbatim; the "Lenny Formula" must be constructed in service-worker.js via `buildSpokenText()`, not in the ElevenLabs dashboard
+- [2026-03-22] — Pre-seeded `audio_url` cache becomes stale when spoken text format changes; bypass cache entirely until it's re-seeded with the new format — never mix cached audio (old format) with real-time TTS (new format)
+- [2026-03-22] — Non-PM queries ("how are you?") must be rejected before RAG — without an intent guard, the abstraction layer maps social phrases to interpersonal PM topics (e.g. "how are you" → stakeholder management); add regex guard first, Groq `NOT_PM` check second
+- [2026-03-22] — Groq `NOT_PM` classification has a narrow correct scope: ONLY pure social/emotional/entertainment phrases with no business noun (e.g. "it's time to disco", "I'm hungry"). ANY query with a business domain noun must be abstracted, never rejected — "insurance claim" is NOT_PM=false even though it sounds non-PM
+- [2026-03-22] — Removing `NOT_PM` from Groq entirely is wrong — it causes entertainment phrases ("it's time to disco") to abstract into PM insights. The regex guard handles obvious social patterns; Groq `NOT_PM` handles the long tail (travel questions, jokes, personal statements). Both gates are needed.
+- [2026-03-22] — Query-specific empathetic rejection messages require Groq to generate the response text (not just classify) — significant complexity for marginal gain. Use a single warm catchall toast instead: acknowledges the user was heard, pivots to PM territory. Query-specific empathy is V3.
+- [2026-03-22] — Groq `llama3-8b-8192` was decommissioned → use `llama-3.1-8b-instant` (same speed, same quality). Check Groq model availability before hardcoding any model name.
+- [2026-03-22] — Groq echoes the input when system prompt examples use arrow notation (`"insurance claim" → "conversion funnel..."`) — model imitates the format and prefixes output with the input query → always add explicit "Do NOT repeat the input query. Do NOT use arrow notation." to any Groq prompt that uses examples with arrows.
+- [2026-03-22] — Silent API failures (Groq timeout, ElevenLabs 5xx) are invisible to the user — they think the extension is broken → always map every catch block to a `network_error` status push, never just `console.warn`. Push 2 (audio) failures must also push `network_error` since the postcard is already visible and audio silence is confusing.
 
 ---
 

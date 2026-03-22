@@ -127,6 +127,39 @@ style.textContent = `
 `;
 shadow.appendChild(style);
 
+// ── Toast notification styles ──────────────────────────────────────────────
+style.textContent += `
+  #ll-toast {
+    display: none;
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    color: #e5e7eb;
+    z-index: 2147483647;
+    pointer-events: none;
+    max-width: 280px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+  }
+  #ll-toast.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #ll-toast.fading {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+`;
+
 // Append postcard styles to the existing shadow DOM style element
 style.textContent += `
 
@@ -267,6 +300,11 @@ const chip = document.createElement('div');
 chip.id = 'll-chip';
 chip.innerHTML = '<div id="ll-chip-dot"></div><span>Lenny on <span id="ll-chip-topic"></span> →</span>';
 shadow.appendChild(chip);
+
+// Create toast notification
+const toast = document.createElement('div');
+toast.id = 'll-toast';
+shadow.appendChild(toast);
 
 // Create postcard — injected at load time with .hidden; shown/hidden by showPostcard/hidePostcard
 const postcard = document.createElement('div');
@@ -497,6 +535,118 @@ function playPing() {
   }
 }
 
+// ─── Page Context Extraction ──────────────────────────────────────────────────
+// Captures the semantic text the user is actually reading/writing.
+// Avoids document.body.innerText — polluted with nav bars, sidebars, menus.
+// Three-priority cascade: active cursor block → semantic container → title fallback.
+
+function extractPageContext() {
+  const MAX_CHARS = 500;
+
+  // Priority 1: Active cursor block
+  // If the user's cursor is inside a contenteditable, textarea, or input,
+  // that element contains exactly what they're writing/editing right now.
+  const active = document.activeElement;
+  if (active && active !== document.body) {
+    const tag = active.tagName.toLowerCase();
+    const isEditable = active.isContentEditable || tag === 'textarea' || tag === 'input';
+    if (isEditable) {
+      let text = (active.innerText || active.value || '').trim();
+      // If the block is very short, grab the parent's text for more context
+      if (text.length < 100 && active.parentElement) {
+        const parentText = (active.parentElement.innerText || '').trim();
+        if (parentText.length > text.length) text = parentText;
+      }
+      if (text.length > 0) {
+        console.log('[LennyLive] pageContext: active cursor block');
+        return text.slice(0, MAX_CHARS);
+      }
+    }
+  }
+
+  // Priority 2: Semantic container
+  // article, main, or [role="main"] contains the page's primary content.
+  // Avoids nav/sidebar/footer noise.
+  const container = document.querySelector('article, main, [role="main"]');
+  if (container) {
+    const text = (container.innerText || '').trim();
+    if (text.length > 0) {
+      console.log('[LennyLive] pageContext: semantic container');
+      return text.slice(0, MAX_CHARS);
+    }
+  }
+
+  // Priority 3: Title fallback
+  // Last resort — page title is better than nothing (e.g. canvas-rendered pages).
+  const title = document.title.trim();
+  if (title) {
+    console.log('[LennyLive] pageContext: title fallback');
+    return title.slice(0, MAX_CHARS);
+  }
+
+  return ''; // no context available
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+
+let toastTimer = null;
+
+function showToast(message, durationMs = 3000) {
+  clearTimeout(toastTimer);
+  const t = shadow.getElementById('ll-toast');
+  t.textContent = message;
+  t.classList.remove('fading');
+  t.classList.add('visible');
+
+  toastTimer = setTimeout(() => {
+    t.classList.add('fading');
+    setTimeout(() => t.classList.remove('visible', 'fading'), 150);
+  }, durationMs);
+}
+
+// Friendly ascending bloop — played on chitchat/non-PM rejection.
+// Two tones: low → high, conveys "acknowledged but redirecting".
+function playBloop() {
+  try {
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    [[440, 0], [660, 0.12]].forEach(([freq, delay]) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.18, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.25);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.25);
+    });
+    setTimeout(() => ctx.close(), 600);
+  } catch (_) {}
+}
+
+// Soft descending bump — played on genuine no_results (silence, off-topic).
+// Single low tone: conveys "nothing found, try again".
+function playBump() {
+  try {
+    const ctx = new AudioContext();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(300, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.3);
+    osc.onended = () => ctx.close();
+  } catch (_) {}
+}
+
 // ─── Selection Capture + Keyboard Handler ────────────────────────────────────
 
 let lastCtrlPress = 0;
@@ -551,15 +701,18 @@ let processingTimeout = null;
 
 function processQuery(transcript) {
   // currentSelection was captured at activation time — do not re-read here
+  // pageContext is captured now: the active block / main content at the moment of query
+  const pageContext = extractPageContext();
   state = 'loading';
   showIndicator('loading');
-  console.log('[LennyLive] Sending query:', { transcript, selection: currentSelection });
+  console.log('[LennyLive] Sending query:', { transcript, selection: currentSelection, pageContext: pageContext.slice(0, 60) });
 
   // Fire-and-forget — no callback. RESPONSE arrives via chrome.runtime.onMessage listener below.
   chrome.runtime.sendMessage({
     type: 'QUERY',
-    transcript,            // field name matches service-worker expectation — do not rename
-    selection: currentSelection, // field name matches service-worker expectation — do not rename
+    transcript,                   // field name matches service-worker expectation — do not rename
+    selection: currentSelection,  // field name matches service-worker expectation — do not rename
+    pageContext,                  // new: semantic page content for richer RAG context
   });
 
   // Safety timeout: if RESPONSE never arrives (e.g. service worker crashed),
@@ -581,10 +734,23 @@ function handleResponse(message) {
 
   if (message.status === 'ok' && message.insight) {
     showPostcard(message.insight);
+  } else if (message.status === 'chitchat') {
+    // Non-PM query — warm acknowledgement, zero ElevenLabs cost
+    playBloop();
+    showToast("That's outside my PM brain — try asking me about retention, pricing, growth, or any product challenge you're facing.");
+    console.log('[LennyLive] Chitchat rejected — toast shown');
   } else if (message.status === 'no_results') {
-    console.log('[LennyLive] No results found for query');
+    // Genuine no match — soft nudge to retry
+    playBump();
+    showToast("Didn't quite catch a question. Double-tap Ctrl to try again.");
+    console.log('[LennyLive] No results — toast shown');
+  } else if (message.status === 'network_error') {
+    // Groq, ElevenLabs, or Supabase call failed — surface it immediately
+    playBump();
+    showToast('Network error. Lenny needs a second to reconnect.');
+    console.warn('[LennyLive] Network error — toast shown');
   } else {
-    console.warn('[LennyLive] RAG error or null insight:', message.status);
+    console.warn('[LennyLive] Unhandled status:', message.status);
   }
 }
 
