@@ -1,10 +1,10 @@
 // scripts/finalize-corpus.js
-// Run AFTER curate.js completes successfully.
-// 1. Validates new_curated_moments.json
-// 2. Backs up curated_moments.json → curated_moments.backup.json
-// 3. Copies new_curated_moments.json → curated_moments.json
-// 4. Wipes all rows from transcript_chunks via Supabase service role
-// 5. Runs embed.js to re-embed the full new corpus
+// Merges podcast + newsletter corpora, wipes DB, and re-embeds everything.
+// Sources:
+//   data/curated_moments_v2.json       — podcast moments (curate-v2.js output)
+//   data/curated_moments_newsletters.json — newsletter moments (curate-newsletters.js output)
+// Output:
+//   data/curated_moments.json          — merged canonical corpus (backup of previous saved first)
 //
 // Run: node scripts/finalize-corpus.js
 
@@ -29,19 +29,38 @@ const supabase = createClient(
 );
 
 async function main() {
-  // --- Step 1: Validate new_curated_moments.json ---
-  console.log('[finalize] Step 1: Validating new_curated_moments.json...');
-  const newPath = join(DATA_DIR, 'new_curated_moments.json');
-  const moments = JSON.parse(await readFile(newPath, 'utf8'));
-  if (!Array.isArray(moments) || moments.length === 0) {
-    throw new Error('new_curated_moments.json is empty or invalid — run curate.js first');
-  }
-  console.log(`[finalize] ✓ ${moments.length} moments found`);
+  // --- Step 1: Load and merge podcast + newsletter corpora ---
+  console.log('[finalize] Step 1: Loading and merging corpora...');
 
-  // Warn about any pull_quotes over 250 chars
-  const longQuotes = moments.filter(m => m.pull_quote?.length > 250);
+  const podcastPath    = join(DATA_DIR, 'curated_moments_v2.json');
+  const newsletterPath = join(DATA_DIR, 'curated_moments_newsletters.json');
+
+  const podcastMoments = JSON.parse(await readFile(podcastPath, 'utf8'));
+  if (!Array.isArray(podcastMoments) || podcastMoments.length === 0) {
+    throw new Error('curated_moments_v2.json is empty — run curate-v2.js first');
+  }
+  console.log(`[finalize] ✓ Podcast moments: ${podcastMoments.length}`);
+
+  let newsletterMoments = [];
+  try {
+    const raw = JSON.parse(await readFile(newsletterPath, 'utf8'));
+    if (Array.isArray(raw) && raw.length > 0) {
+      newsletterMoments = raw;
+      console.log(`[finalize] ✓ Newsletter moments: ${newsletterMoments.length}`);
+    } else {
+      console.warn('[finalize] ⚠ curated_moments_newsletters.json is empty — proceeding with podcasts only');
+    }
+  } catch {
+    console.warn('[finalize] ⚠ curated_moments_newsletters.json not found — proceeding with podcasts only');
+  }
+
+  const moments = [...podcastMoments, ...newsletterMoments];
+  console.log(`[finalize] ✓ Total merged: ${moments.length} moments`);
+
+  // Warn about any pull_quotes over 350 chars
+  const longQuotes = moments.filter(m => m.pull_quote?.length > 350);
   if (longQuotes.length > 0) {
-    console.warn(`[finalize] ⚠ ${longQuotes.length} pull_quotes exceed 250 chars — included as-is`);
+    console.warn(`[finalize] ⚠ ${longQuotes.length} pull_quotes exceed 350 chars — included as-is`);
   }
 
   // --- Step 2: Backup and replace curated_moments.json ---

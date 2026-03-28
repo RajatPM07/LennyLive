@@ -20,10 +20,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Not a chatbot. A mentor.**
 
-- **Competition deadline:** April 15, 2026
+- **Launch date:** April 15, 2026 (also the competition deadline)
 - **Full PRD:** See `LENNY_LIVE_PRD.md` in this folder — read it for full product context
 - **Built with Lenny Rachitsky's explicit permission** to use his voice and likeness
 - **Primary user:** Early-stage PM / APM (0–3 years experience)
+
+> **CRITICAL:** This is a full product for real users — not a demo or prototype. Real users will use this after April 15th. There is NO phase 2. Every feature needed for a good user experience must ship in V1. Never defer essential features to "post-competition" or "phase 2". Build it right the first time.
 
 ---
 
@@ -102,42 +104,53 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 LennyLive/
 ├── CLAUDE.md                          # This file — read FIRST every session
 ├── LENNY_LIVE_PRD.md                  # Full PRD — read for complete product context
-├── .env                               # Environment variables — NEVER commit
-├── .gitignore                         # Must include .env
+├── .env                               # API keys for scripts/ toolchain — NEVER commit
+├── .gitignore                         # Must include .env and background/config.js
 ├── manifest.json                      # Chrome Extension Manifest V3
 ├── background/
-│   └── service-worker.js              # Background tasks, Supabase RAG queries
+│   ├── service-worker.js              # Entry point — RAG pipeline orchestrator (push model)
+│   ├── config.js                      # Hardcoded API keys for Chrome extension — gitignored, NEVER commit
+│   ├── rag.js                         # embedQuery(), searchChunks(), searchChunksAt()
+│   ├── abstraction.js                 # Groq llama-3.1-8b-instant — maps niche domains to PM concepts
+│   └── tts.js                         # ElevenLabs REST TTS — returns base64 audio blob
 ├── content/
-│   └── content-script.js             # Page reader, keyword detection, double-tap Ctrl
+│   └── content-script.js             # Page reader, keyword detection, double-tap Ctrl, shadow DOM postcard
 ├── popup/
 │   ├── popup.html
 │   ├── popup.js
 │   └── popup.css
-├── sidebar/
-│   ├── sidebar.html                   # Postcard + gamification UI
-│   ├── sidebar.js
-│   └── sidebar.css
-├── utils/
-│   ├── supabase.js                    # Supabase client + RAG semantic search
-│   ├── elevenlabs.js                  # ElevenLabs agent integration
-│   ├── speech.js                      # Web Speech API wrapper
-│   └── gamification.js               # Score/streak/library logic
 ├── data/
-│   ├── curated_moments.json           # 25-30 curated PM insights (hand-picked)
-│   └── pm_buzzwords.js               # PM keyword detection list
+│   ├── curated_moments.json           # Canonical corpus — source for embedding pipeline
+│   └── pm_buzzwords.js               # PM keyword list for passive detection
 ├── scripts/
-│   └── embed.js                       # Node.js: reads curated_moments.json, embeds via Google AI, upserts to Supabase
+│   ├── embed.js                       # Embed curated_moments.json → Supabase pgvector (idempotent)
+│   ├── curate.js                      # Gemini-2.5-flash: process transcripts → curated_moments
+│   ├── finalize-corpus.js             # Validate → backup → swap JSON → wipe DB → re-embed
+│   ├── watch-and-finalize.js          # Auto-trigger finalize when curate.js sets complete:true
+│   ├── seed-audio.js                  # Pre-generate ElevenLabs MP3s → Supabase Storage (idempotent)
+│   └── create-icons.js               # Generate extension icon PNGs
 ├── supabase/
 │   └── migrations/
-│       └── 001_initial_schema.sql     # Source of truth for DB schema — always read this, not the schema section below
-├── docs/superpowers/
-│   ├── plans/                         # Implementation plans (Superpowers output)
-│   └── specs/                         # Design specs (Superpowers output)
+│       └── 001_initial_schema.sql     # Source of truth for DB schema — always read this
+├── docs/
+│   ├── query-pipeline-explained.md   # 15 worked examples with similarity score reference
+│   └── superpowers/                   # Plans and specs from Superpowers workflow
 ├── package.json                       # Node.js ESM config for scripts/ toolchain only (not loaded by Chrome)
 └── tasks/
     ├── todo.md                        # Current sprint tasks
     └── lessons.md                     # Learnings from corrections
 ```
+
+### Credentials: two stores, not one
+
+- **`scripts/` toolchain** → reads from `.env` (dotenv) — for Node.js scripts only
+- **Chrome extension** → reads from `background/config.js` (hardcoded, gitignored) — Chrome cannot access `.env`
+
+`background/config.js` is the extension's credential file. It is gitignored and must never be committed. When adding a new API key to the extension, add it to `background/config.js` and export it; then import it in the module that needs it (e.g. `abstraction.js` imports `GROQ_API_KEY`).
+
+### Supported domains (manifest.json host_permissions)
+
+The extension activates on: **Notion**, **Linear**, **Atlassian/Jira** (`*.atlassian.net`), **Google Docs**. To add a new domain, update both `host_permissions` and `content_scripts.matches` in `manifest.json`.
 
 ---
 
@@ -177,14 +190,15 @@ QUERY message → service-worker.js
 cleanQuery(transcript) + selection + pageContext → gemini-embedding-001 (768 dims)
         ↓
 Supabase pgvector search (threshold: 0.45)
-        ↓ match found                    ↓ no match
-Push 1: RESPONSE → Postcard       Groq llama3-8b-8192 (<200ms)
-Push 2: AUDIO → ElevenLabs TTS    maps niche → PM fundamentals
         ↓                                  ↓
-Audio plays in browser            Re-embed → re-search (threshold: 0.35)
-                                           ↓ match found
-                                  Push 1: RESPONSE (abstracted: true)
-                                  Push 2: AUDIO
+similarity > 0.55 (high confidence)    similarity 0.45–0.55 (low confidence)
+ship directly                          OR no match → Groq llama-3.1-8b-instant (<200ms)
+        ↓                              maps niche domain → 2-3 PM concepts
+Push 1: RESPONSE → Postcard                    ↓
+Push 2: AUDIO → ElevenLabs TTS        Re-embed → re-search (threshold: 0.35)
+        ↓                                          ↓ match found
+Audio plays in browser                 Push 1: RESPONSE (abstracted: true)
+                                       Push 2: AUDIO
         ↓
 User saves insight → chrome.storage.local
 Gamification: streak + score updated in chrome.storage.local
@@ -434,31 +448,42 @@ node scripts/embed.js
 - [x] `network_error` status + toast — Groq/ElevenLabs/Supabase failures now surface "Network error. Lenny needs a second to reconnect." (previously silent)
 - [x] Groq echo bug fixed — prompt now says "Do NOT repeat the input query. Do NOT use arrow notation." (was echoing `claim settlement → "..."`)
 - [x] `docs/query-pipeline-explained.md` — 15 worked examples across all query states with similarity score reference
+- [x] `scripts/curate-v2.js` — V2 curation script, corpus expanded to **312 moments** across 303 episodes
+- [x] **Full UI redesign** — Newsreader/Inter editorial fonts, warm off-white (`#fdfcf6`), orange accent (`#ff6e40`), matches Lenny Newsletter aesthetic
+- [x] **Ambient glow dot** — replaces buzzword chip; pulsing orange dot, hover-expand pill "Lenny has thoughts on [topic]"
+- [x] **Postcard redesigned** — serif quote at 18px, Read more/collapse with gradient fade, honest mentor framing ("Connecting X to Y...") shown when `abstracted: true`
+- [x] **Popup gamification dashboard** — streak, score, saved insights list, mute toggle (shell complete, full XP logic pending)
+- [x] Mute toggle key fixed — popup and postcard now both use `voiceMuted` key (was `isMuted` vs `voiceMuted` mismatch)
+- [x] Google Fonts (`Inter` + `Newsreader`) injected into `document.head` — available inside shadow DOM
+- [x] `updateStreak()` — increments streak on each successful insight delivery; consecutive-day detection with yesterday comparison
+- [x] Score increments on deliver (+5) and save (+15) — upgraded from flat +10 on save only
+- [x] **Gamification PRD** written — full game-theory-grounded spec. Notion: 🎮 Gamification System — PRD
+- [x] **Analytics design** written — PostHog via REST API, dropout funnel, all events defined. Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
 
 ## What's Next 🔨
 
-- [ ] **Dynamic topic re-tag** — `scripts/retag-topics.js` Groq batch re-labels all 280 rows with free-form 2-3 word PM topics (~$0.08); update `curate.js` forward pipe. Full spec in `tasks/todo.md`
-- [ ] ElevenLabs Starter ($5) — clone Lenny's voice from podcast audio
-- [ ] Update ELEVENLABS_VOICE_ID in config.js when clone is ready
-- [ ] Clippy UX fix — replace keyword chip with ambient glow dot
-- [ ] Gamification — streaks, scores, saved library (popup UI)
-- [ ] Postcard output redesign — teaser text + "Read more" CTA (~800 chars expanded)
-- [ ] Honest mentor framing UI — use `abstracted: true` flag to add "bridging" copy on postcard
-- [ ] Dynamic push question — inject page context into Sentence 3 of Lenny Formula (generic version shipped)
-- [ ] Re-seed audio_url cache with Lenny Formula formatted text (currently bypassed — real-time TTS only)
-- [ ] Demo video (2 minutes)
-- [ ] Submit to competition
+> All items below are V1 requirements — real users ship on April 15th. Nothing here is optional or "phase 2".
+
+- [ ] **Full gamification system** — PM Levels + XP economy (+5 deliver/+15 save/+25 rare) + topic badges + streak milestones (3/7/14/30d) + streak shield + rare drops. See Notion: 🎮 Gamification System — PRD
+- [ ] **Onboarding commitment screen** — first-open popup moment, learning goal selection (behavioral commitment device — required for retention)
+- [ ] **Chrome notifications** — Streak Saver at 8pm if no activation that day (highest retention lever per Duolingo research)
+- [ ] **Saved insights YouTube clickthrough** — clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; add link on postcard footer too
+- [ ] **Analytics (PostHog)** — `background/analytics.js` + wire all events. Needs Rajat to create PostHog account (US region) and share `phc_...` API key. See Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
+- [ ] **ElevenLabs voice clone** — Starter plan ($5), clone Lenny's voice; update `ELEVENLABS_VOICE_ID` in `background/config.js`
+- [ ] **Re-seed audio_url cache** with Lenny Formula formatted text (currently bypassed — real-time TTS only)
+- [ ] **Dynamic push question** — inject page context into Sentence 3 of Lenny Formula (generic version shipped)
+- [ ] **Submit to competition** — April 15, 2026
 
 ---
 
-## 26-Day Timeline
+## Remaining Timeline (as of Mar 25, 2026)
 
-| Week | Dates | Focus |
+| Period | Dates | Focus |
 |---|---|---|
-| Week 1 | Mar 20–26 | Data + voice clone + transcript curation + embeddings |
-| Week 2 | Mar 27–Apr 2 | Extension shell + RAG pipeline + basic UI |
-| Week 3 | Apr 3–Apr 9 | Polish + gamification + selection review + testing |
-| Week 4 | Apr 10–Apr 15 | Bug fixes + demo video + submit |
+| Now → Apr 1 | Mar 25–Apr 1 | Voice clone + Full gamification system + Onboarding |
+| Apr 2–7 | Apr 2–7 | Chrome notifications + Analytics (PostHog) + Saved insights YouTube links |
+| Apr 8–12 | Apr 8–12 | Audio re-seed + Dynamic push question + Full E2E testing |
+| Buffer | Apr 13–15 | Bug fixes + submit |
 
 ---
 
@@ -507,6 +532,8 @@ node scripts/embed.js
 - [2026-03-22] — Groq `llama3-8b-8192` was decommissioned → use `llama-3.1-8b-instant` (same speed, same quality). Check Groq model availability before hardcoding any model name.
 - [2026-03-22] — Groq echoes the input when system prompt examples use arrow notation (`"insurance claim" → "conversion funnel..."`) — model imitates the format and prefixes output with the input query → always add explicit "Do NOT repeat the input query. Do NOT use arrow notation." to any Groq prompt that uses examples with arrows.
 - [2026-03-22] — Silent API failures (Groq timeout, ElevenLabs 5xx) are invisible to the user — they think the extension is broken → always map every catch block to a `network_error` status push, never just `console.warn`. Push 2 (audio) failures must also push `network_error` since the postcard is already visible and audio silence is confusing.
+- [2026-03-25] — Using different `chrome.storage.local` keys for the same setting in popup vs. content-script breaks sync silently — popup wrote `isMuted`, content-script read/wrote `voiceMuted`, so mute toggle did nothing → define all storage key names as comments at the top of the file that uses them; cross-check any key used in both popup.js and content-script.js.
+- [2026-03-25] — Scoping features as "good enough for demo" or deferring to "phase 2" is the wrong mental model — this is a full product for real users launching April 15th. If a feature is needed for a good user experience (onboarding, notifications, streak shield), it is V1, not V2. There is no phase 2.
 
 ---
 

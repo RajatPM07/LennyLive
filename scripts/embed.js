@@ -27,12 +27,12 @@ async function getEmbedding(text) {
   return result.embedding.values; // float[] of length 768
 }
 
-async function rowExists(episodeTitle, pullQuote) {
+async function rowExists(episodeTitle, insight) {
   const { data, error } = await supabase
     .from('transcript_chunks')
     .select('id')
     .eq('episode_title', normalize(episodeTitle))
-    .eq('pull_quote', normalize(pullQuote))
+    .eq('insight', normalize(insight))
     .limit(1);
   if (error) throw new Error(`Existence check failed: ${error.message}`);
   return data.length > 0;
@@ -53,7 +53,7 @@ async function main() {
     const m = moments[i];
     const label = `${i + 1}/${moments.length}: ${m.guest_name} — ${m.topic}`;
 
-    if (await rowExists(m.episode_title, m.pull_quote)) {
+    if (await rowExists(m.episode_title, m.insight)) {
       console.log(`[LennyLive] Skipped (exists) ${label}`);
       skipped++;
       continue;
@@ -65,12 +65,14 @@ async function main() {
       continue;
     }
 
-    const embedding = await getEmbedding(normalize(m.pull_quote));
+    // Embed topic + insight — anchors on PM concept AND guest's specific angle.
+    // pull_quote is narrative prose (poor retrieval signal); topic+insight matches query style.
+    const embedding = await getEmbedding(normalize(m.topic + ' ' + m.insight));
 
     const { error } = await supabase.from('transcript_chunks').insert({
-      topic:         normalize(m.topic),
-      guest_name:    normalize(m.guest_name),
-      insight:       normalize(m.insight),
+      topic: normalize(m.topic),
+      guest_name: normalize(m.guest_name),
+      insight: normalize(m.insight),
       pull_quote: normalize(m.pull_quote),
       episode_title: normalize(m.episode_title),
       youtube_url: m.youtube_url,

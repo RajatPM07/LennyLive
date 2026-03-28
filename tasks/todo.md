@@ -36,3 +36,4 @@
 - [ ] Honest mentor framing UI — `abstracted: true` → bridging copy on postcard
 - [ ] Dynamic push question — inject pageContext into Sentence 3 of Lenny Formula
 - [ ] Re-seed audio_url cache with Lenny Formula formatted text (currently bypassed)
+- [ ] **Session memory + deduplication** — conversational context chaining across activations (e.g. "retention" → "B2B retention" → "B2C retention" should give progressively refined, non-repeating insights). Needs brainstorming session before implementation: scope of session reset (per tab / per browser session / time-bounded), dedup strategy (exclude seen chunk IDs from Supabase RPC), and query context injection.
