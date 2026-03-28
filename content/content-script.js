@@ -584,6 +584,91 @@ shadow.getElementById('ll-btn-save').addEventListener('click', () => {
 
 let state = 'idle';
 
+// ─── Ambient Detection State ──────────────────────────────────────────────────
+// Separate from the voice state machine (idle|listening|loading).
+// Tracks which ambient UI element is currently active.
+
+let ambientState = 'none'; // 'none' | 'selection-dot' | 'write-pause-dot' | 'questions-panel'
+
+// Write+pause sensor state
+let lastPrintableKeystroke = 0;       // timestamp of last printable keydown
+let lastEagerFetchBlockContent = '';  // blockContent captured at eager fetch time
+let pendingQuestions = null;          // { keyword, questions, blockContent, timestamp } | null
+let eagerFetchTimer = null;           // 1.5s timer → triggers Groq fetch
+let dotAppearTimer = null;            // 3.5s timer → shows write+pause dot
+
+// Reading sensor gate
+const pageLoadTime = Date.now();      // used to enforce 20s minimum before reading sensor fires
+
+// Returns true if the user is actively editing (typing in an input/contenteditable).
+// Used to gate the reading sensor and write+pause sensor.
+//
+// IMPORTANT: Uses active.isContentEditable (not [contenteditable] attribute selector).
+// [contenteditable] matches contenteditable="false" on Notion read-only blocks — false positives.
+// isContentEditable is the DOM's computed boolean that correctly handles inheritance.
+function isUserEditing() {
+  const active = document.activeElement;
+  if (!active) return false;
+  if (active.isContentEditable || active.matches('input, textarea')) return true;
+  // Google Docs uses a canvas editor — activeElement is not contenteditable.
+  // Fall back to: has the user pressed a printable key in the last 5 seconds?
+  if (location.hostname === 'docs.google.com' && Date.now() - lastPrintableKeystroke < 5000) return true;
+  return false;
+}
+
+// ─── Ambient UI Stubs (implemented by UI agent) ───────────────────────────────
+
+function showSelectionDot(rect) {
+  // Capture selection NOW (before mousedown clears it)
+  const selectedText = window.getSelection()?.toString().trim() ?? '';
+  console.log('[LennyLive] showSelectionDot stub — selectedText:', selectedText, 'rect:', rect);
+  // TODO (UI agent): render dot at position, on click:
+  //   event.preventDefault(); event.stopPropagation();
+  //   chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText, pageContext: '' });
+  //   hideSelectionDot();
+  if (ambientState !== 'selection-dot') ambientState = 'selection-dot';
+}
+
+function hideSelectionDot() {
+  // TODO (UI agent): hide selection dot DOM element
+  if (ambientState === 'selection-dot') ambientState = 'none';
+}
+
+function showWritePauseDot(mode = 'ready') {
+  // TODO (UI agent): show write+pause dot bottom-right
+  // mode: 'ready' (questions available) | 'loading' (questions in flight)
+  ambientState = 'write-pause-dot';
+  console.log('[LennyLive] showWritePauseDot stub — mode:', mode);
+}
+
+function hideWritePauseDot() {
+  // TODO (UI agent): hide write+pause dot — safe to call when not visible (no-op)
+  if (ambientState === 'write-pause-dot') ambientState = 'none';
+}
+
+function showQuestionsPanel(questions) {
+  ambientState = 'questions-panel';
+  console.log('[LennyLive] showQuestionsPanel stub — questions:', questions);
+  // TODO (UI agent): render panel with chip buttons
+  // Each chip onClick: fireQuestionQuery(chipText)
+  // ✕ button onClick: hideAllAmbientUI()
+}
+
+function updateWritePauseDotReady() {
+  // TODO (UI agent): upgrade dot from loading spinner to ready state
+  console.log('[LennyLive] updateWritePauseDotReady stub');
+}
+
+function hideAllAmbientUI() {
+  hideSelectionDot();
+  hideWritePauseDot();
+  clearTimeout(eagerFetchTimer);
+  clearTimeout(dotAppearTimer);
+  pendingQuestions = null;
+  if (ambientState === 'questions-panel') ambientState = 'none';
+  // TODO (UI agent): hide questions panel element
+}
+
 // ─── Ping Tone (Web Audio API) ────────────────────────────────────────────────
 // Double-tap Ctrl is a keydown event — qualifies as a user gesture for autoplay.
 
@@ -975,6 +1060,18 @@ const TOPIC_MAP = {
 
 function getDisplayTopic(buzzword) {
   return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
+}
+
+// Lightweight scan for PM keywords. Called at the 1.5s mark of the write+pause sensor.
+// Reads document.body.innerText once per eager fetch trigger — not on every mutation.
+// Must be placed AFTER the PM_BUZZWORDS array declaration in this file.
+function detectPMKeywordInPage() {
+  const text = document.body.innerText.slice(0, 5000);
+  for (const word of PM_BUZZWORDS) {
+    const re = new RegExp(`\\b${word}\\b`, 'i');
+    if (re.test(text)) return word;
+  }
+  return null;
 }
 
 // ─── Buzzword Scanning ────────────────────────────────────────────────────────
