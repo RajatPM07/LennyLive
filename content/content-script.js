@@ -199,6 +199,56 @@ style.textContent = `
   .pc-related-guest { font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--text-muted); }
   .pc-related-link { font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--accent-orange); text-decoration: none; opacity: 0.85; transition: opacity 0.15s; }
   .pc-related-link:hover { opacity: 1; }
+
+  /* 7. Selection Dot */
+  #ll-selection-dot {
+    display: none; position: fixed; z-index: 2147483647; cursor: pointer;
+  }
+  #ll-selection-dot.visible { display: block; }
+
+  /* 8. Write+Pause Dot */
+  #ll-write-pause-dot {
+    display: none; position: fixed; bottom: 32px; right: 80px; z-index: 2147483647; cursor: pointer;
+  }
+  #ll-write-pause-dot.visible { display: block; }
+  .ll-spinner {
+    width: 20px; height: 20px; border: 3px solid var(--border-light);
+    border-top-color: var(--accent-orange); border-radius: 50%;
+    animation: ll-spin 1s linear infinite;
+  }
+  @keyframes ll-spin { to { transform: rotate(360deg); } }
+
+  /* 9. Questions Panel */
+  #ll-questions-panel {
+    display: none; position: fixed; bottom: 32px; right: 32px; width: 340px;
+    background: #ffffff; border: 1px solid rgba(222,192,184,0.2); border-radius: 12px;
+    box-shadow: 0 32px 32px -4px rgba(26,28,28,0.06); z-index: 2147483647;
+    flex-direction: column; overflow: hidden; font-family: var(--font-sans);
+    animation: ll-postcard-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #ll-questions-panel.visible { display: flex; }
+  #ll-questions-panel.hiding { animation: ll-postcard-out 0.2s ease-in forwards; }
+  .qp-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; background: #f3f3f3; border-bottom: 1px solid rgba(222,192,184,0.1);
+  }
+  .qp-title-area { display: flex; gap: 12px; align-items: center; }
+  .qp-logo-box { width: 32px; height: 32px; background: rgba(162,63,29,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-weight: 600; font-style: italic; color: #a23f1d; }
+  .qp-title { font-family: var(--font-serif); font-style: italic; font-size: 18px; color: #a23f1d; margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
+  .qp-subtitle { font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: #5e5e5e; margin: 2px 0 0; opacity: 0.7; }
+  .qp-close { background: none; border: none; font-size: 18px; color: #5e5e5e; cursor: pointer; padding: 4px; border-radius: 50%; transition: background 0.2s, color 0.2s; }
+  .qp-close:hover { background: #e8e8e8; color: #1a1c1c; }
+  .qp-content { padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #ffffff; }
+  .qp-chip {
+    width: 100%; text-align: left; padding: 14px 16px; border-radius: 12px;
+    border: 1px solid rgba(222,192,184,0.3); background: #f9f9f9;
+    cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between;
+    align-items: flex-start;
+  }
+  .qp-chip:hover { background: #ffffff; border-color: rgba(162,63,29,0.4); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+  .qp-chip-text { font-size: 14px; font-weight: 500; color: #1a1c1c; line-height: 1.4; padding-right: 16px; margin: 0; }
+  .qp-chip-icon { color: rgba(162,63,29,0.4); font-size: 16px; transition: color 0.2s; font-family: 'Inter', sans-serif; }
+  .qp-chip:hover .qp-chip-icon { color: #a23f1d; }
 `;
 shadow.appendChild(style);
 
@@ -269,6 +319,22 @@ postcard.innerHTML = `
   </div>
 `;
 shadow.appendChild(postcard);
+
+// 6. Selection Dot
+const selectionDot = document.createElement('div');
+selectionDot.id = 'll-selection-dot';
+selectionDot.innerHTML = '<div class="pulse-dot-wrapper"></div>';
+shadow.appendChild(selectionDot);
+
+// 7. Write+Pause Dot
+const wpDot = document.createElement('div');
+wpDot.id = 'll-write-pause-dot';
+shadow.appendChild(wpDot);
+
+// 8. Questions Panel
+const questionsPanel = document.createElement('div');
+questionsPanel.id = 'll-questions-panel';
+shadow.appendChild(questionsPanel);
 
 // ─── UI Helper Functions ──────────────────────────────────────────────────────
 
@@ -621,42 +687,97 @@ function isUserEditing() {
 function showSelectionDot(rect) {
   // Capture selection NOW (before mousedown clears it)
   const selectedText = window.getSelection()?.toString().trim() ?? '';
-  console.log('[LennyLive] showSelectionDot stub — selectedText:', selectedText, 'rect:', rect);
-  // TODO (UI agent): render dot at position, on click:
-  //   event.preventDefault(); event.stopPropagation();
-  //   chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText, pageContext: '' });
-  //   hideSelectionDot();
+  if (!selectedText) return;
+  
+  // Position dot just above-right of the selection
+  selectionDot.style.left = `${rect.right + 4}px`;
+  selectionDot.style.top = `${Math.max(0, rect.top - 16)}px`;
+  selectionDot.classList.add('visible');
+  
+  // Important: mousedown must preventDefault to preserve selection
+  selectionDot.onmousedown = (e) => {
+    e.preventDefault(); 
+    e.stopPropagation();
+  };
+  selectionDot.onclick = () => {
+    chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText, pageContext: '' });
+    hideSelectionDot();
+  };
+  
   if (ambientState !== 'selection-dot') ambientState = 'selection-dot';
 }
 
 function hideSelectionDot() {
-  // TODO (UI agent): hide selection dot DOM element
+  selectionDot.classList.remove('visible');
   if (ambientState === 'selection-dot') ambientState = 'none';
 }
 
 function showWritePauseDot(mode = 'ready') {
-  // TODO (UI agent): show write+pause dot bottom-right
-  // mode: 'ready' (questions available) | 'loading' (questions in flight)
+  if (mode === 'loading') {
+    wpDot.innerHTML = '<div class="ll-spinner"></div>';
+  } else {
+    wpDot.innerHTML = '<div class="pulse-dot-wrapper"></div>';
+  }
+  wpDot.classList.add('visible');
+  wpDot.onclick = () => {
+    if (ambientState === 'write-pause-dot' && mode === 'ready' && pendingQuestions) {
+      showQuestionsPanel(pendingQuestions.questions);
+    }
+  };
   ambientState = 'write-pause-dot';
-  console.log('[LennyLive] showWritePauseDot stub — mode:', mode);
 }
 
 function hideWritePauseDot() {
-  // TODO (UI agent): hide write+pause dot — safe to call when not visible (no-op)
+  wpDot.classList.remove('visible');
   if (ambientState === 'write-pause-dot') ambientState = 'none';
 }
 
 function showQuestionsPanel(questions) {
   ambientState = 'questions-panel';
-  console.log('[LennyLive] showQuestionsPanel stub — questions:', questions);
-  // TODO (UI agent): render panel with chip buttons
-  // Each chip onClick: fireQuestionQuery(chipText)
-  // ✕ button onClick: hideAllAmbientUI()
+  hideWritePauseDot(); // Replace dot with panel
+  
+  let chipsHtml = '';
+  questions.forEach((q, i) => {
+    chipsHtml += `
+      <button class="qp-chip" data-idx="${i}">
+        <span class="qp-chip-text">${q}</span>
+        <span class="qp-chip-icon">→</span>
+      </button>
+    `;
+  });
+
+  questionsPanel.innerHTML = `
+    <div class="qp-header">
+      <div class="qp-title-area">
+        <div class="qp-logo-box">L</div>
+        <div>
+          <h2 class="qp-title">Lenny has thoughts</h2>
+          <p class="qp-subtitle">Editorial Insights</p>
+        </div>
+      </div>
+      <button class="qp-close" id="ll-qp-close">✕</button>
+    </div>
+    <div class="qp-content">
+      ${chipsHtml}
+    </div>
+  `;
+  
+  questionsPanel.classList.remove('hiding');
+  questionsPanel.classList.add('visible');
+
+  // Attach handlers
+  shadow.getElementById('ll-qp-close').onclick = hideAllAmbientUI;
+  const chips = shadow.querySelectorAll('.qp-chip');
+  chips.forEach(chip => {
+    chip.onclick = () => {
+      const idx = chip.getAttribute('data-idx');
+      fireQuestionQuery(questions[idx]);
+    };
+  });
 }
 
 function updateWritePauseDotReady() {
-  // TODO (UI agent): upgrade dot from loading spinner to ready state
-  console.log('[LennyLive] updateWritePauseDotReady stub');
+  showWritePauseDot('ready');
 }
 
 function hideAllAmbientUI() {
@@ -665,8 +786,15 @@ function hideAllAmbientUI() {
   clearTimeout(eagerFetchTimer);
   clearTimeout(dotAppearTimer);
   pendingQuestions = null;
-  if (ambientState === 'questions-panel') ambientState = 'none';
-  // TODO (UI agent): hide questions panel element
+  
+  if (ambientState === 'questions-panel') {
+    questionsPanel.classList.add('hiding');
+    setTimeout(() => {
+      questionsPanel.classList.remove('hiding');
+      questionsPanel.classList.remove('visible');
+    }, 200);
+    ambientState = 'none';
+  }
 }
 
 // Called by the UI agent when a question chip is tapped.
