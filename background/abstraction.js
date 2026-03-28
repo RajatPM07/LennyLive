@@ -91,3 +91,55 @@ export async function abstractQuery(transcript, selection, pageContext) {
   console.log('[LennyLive] Abstraction:', transcript.slice(0, 60), '→', abstracted);
   return abstracted;
 }
+
+/**
+ * Generate 2-3 contextual PM questions for the write+pause sensor.
+ * Called when the user pauses typing for 1.5s in a block containing a PM keyword.
+ * Fast Groq call — no embedding, no Supabase.
+ *
+ * @param {string} keyword      - PM keyword detected in the active block
+ * @param {string} blockContent - Text of the active block (first 300 chars)
+ * @returns {Promise<string[]>} - Array of 2-3 question strings
+ */
+export async function generateQuestions(keyword, blockContent) {
+  const res = await fetch(GROQ_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.1-8b-instant',
+      temperature: 0.5,
+      max_tokens: 120,
+      messages: [
+        {
+          role: 'system',
+          content: `You are helping a junior PM who is stuck while writing.
+Generate exactly 3 short, specific questions they might want to ask about this topic.
+Questions must be answerable with a concrete product management insight.
+Output ONLY the 3 questions, one per line. No numbering. No preamble. No bullet points.`,
+        },
+        {
+          role: 'user',
+          content: `Topic: ${keyword}\nContext: ${blockContent.slice(0, 300)}`,
+        },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error(`Groq generateQuestions failed: ${res.status} — ${errBody}`);
+  }
+
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content?.trim() ?? '';
+
+  // Strip leading bullets/numbers — LLaMA occasionally ignores "no numbering" instruction
+  return text
+    .split('\n')
+    .map(q => q.replace(/^[-•\d.)\s]+/, '').trim())
+    .filter(q => q.length > 0)
+    .slice(0, 3);
+}
