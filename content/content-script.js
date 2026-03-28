@@ -964,10 +964,34 @@ function handleResponse(message) {
   }
 }
 
-// Single onMessage listener — handles both RESPONSE (Push 1) and AUDIO (Push 2)
+// Single onMessage listener — handles RESPONSE (Push 1), AUDIO (Push 2), and QUESTIONS_READY
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'RESPONSE') { handleResponse(message); }
   if (message.type === 'AUDIO')    { playAudio(message.audio); }
+  if (message.type === 'QUESTIONS_READY') {
+    if (message.error || !message.questions || message.questions.length === 0) {
+      // Groq failed — cancel dot appearance and reset silently
+      pendingQuestions = null;
+      clearTimeout(dotAppearTimer);
+      hideWritePauseDot(); // safe to call even if dot not yet shown
+      console.warn('[LennyLive] QUESTIONS_READY: Groq failed — dot suppressed');
+      return;
+    }
+
+    pendingQuestions = {
+      keyword: message.keyword,
+      questions: message.questions,
+      blockContent: lastEagerFetchBlockContent, // captured at eager fetch time
+      timestamp: Date.now(),
+    };
+
+    console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
+
+    // If dot is already visible in loading state, upgrade it to show questions
+    if (ambientState === 'write-pause-dot') {
+      updateWritePauseDotReady();
+    }
+  }
   // Return nothing (no return true) — we never send a response back to the SW
 });
 
