@@ -3,3 +3,4 @@ package-lock.json
 .env
 background/config.js
 .superpowers/
+.worktrees/
