@@ -883,6 +883,52 @@ function triggerEagerFetch() {
   }, 2000);
 }
 
+// ─── Selection Sensor ─────────────────────────────────────────────────────────
+// Fires when user highlights text. Shows a selection dot near the selection
+// if the selected text contains a PM keyword.
+// Disabled on Google Docs — getSelection() returns empty on canvas editors.
+
+let selectionDebounceTimer = null;
+
+document.addEventListener('selectionchange', () => {
+  clearTimeout(selectionDebounceTimer);
+  selectionDebounceTimer = setTimeout(() => {
+    // Don't interrupt active voice session or postcard
+    if (state !== 'idle') return;
+    const pc = shadow.getElementById('ll-postcard');
+    if (pc && !pc.classList.contains('hidden')) return;
+
+    const sel = window.getSelection();
+    const text = sel ? sel.toString().trim() : '';
+
+    // Hide dot if selection cleared or too short/long
+    if (text.length < 2 || text.length > 200) {
+      hideSelectionDot();
+      return;
+    }
+
+    // Check if selection contains a PM keyword
+    const hasPMKeyword = PM_BUZZWORDS.some(word => {
+      const re = new RegExp(`\\b${word}\\b`, 'i');
+      return re.test(text);
+    });
+
+    if (!hasPMKeyword) {
+      hideSelectionDot();
+      return;
+    }
+
+    // Position dot near selection
+    if (sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return; // empty rect (Google Docs canvas)
+
+    ambientState = 'selection-dot';
+    showSelectionDot(rect);
+  }, 150); // 150ms debounce — prevents flicker during drag-select
+});
+
 // ─── Activation ───────────────────────────────────────────────────────────────
 
 function activateLennyLive() {
