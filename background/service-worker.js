@@ -7,7 +7,7 @@
 
 import { embedQuery, searchChunks, searchChunksAt } from './rag.js';
 import { fetchTTS, fetchAndEncodeUrl } from './tts.js';
-import { abstractQuery } from './abstraction.js';
+import { abstractQuery, generateQuestions } from './abstraction.js';
 import { synthesizeResponse } from './synthesis.js';
 
 chrome.runtime.onMessage.addListener((message, sender) => {
@@ -27,6 +27,30 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 
     // Do NOT return true — we are NOT using sendResponse.
     // The response goes back via chrome.tabs.sendMessage after async work.
+  }
+
+  if (message.type === 'GENERATE_QUESTIONS') {
+    const tabId = sender.tab?.id;
+    if (!tabId) return;
+
+    generateQuestions(message.keyword, message.blockContent)
+      .then(questions => {
+        chrome.tabs.sendMessage(tabId, {
+          type: 'QUESTIONS_READY',
+          keyword: message.keyword,   // echo keyword so content script can cache it
+          questions,
+        });
+      })
+      .catch(err => {
+        console.warn('[LennyLive] generateQuestions failed:', err.message);
+        chrome.tabs.sendMessage(tabId, {
+          type: 'QUESTIONS_READY',
+          keyword: message.keyword,
+          questions: null,
+          error: true,
+        });
+      });
+    return; // no async response needed — response goes via chrome.tabs.sendMessage
   }
 
   // BUZZWORD_TRIGGERED handler removed — content-script does not send this message.
