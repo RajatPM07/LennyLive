@@ -9,319 +9,263 @@ host.id = 'lenny-live-root';
 const shadow = host.attachShadow({ mode: 'open' }); // open = inspectable in DevTools
 document.body.appendChild(host);
 
+// Load Google Fonts into the document (not shadow DOM) — fonts loaded here
+// are available inside shadow roots on the same page.
+if (!document.getElementById('lenny-live-fonts')) {
+  const fontLink = document.createElement('link');
+  fontLink.id = 'lenny-live-fonts';
+  fontLink.rel = 'stylesheet';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap';
+  document.head.appendChild(fontLink);
+}
+
 // Inject all styles into shadow root
 const style = document.createElement('style');
 style.textContent = `
-  /* ── Listening Indicator ── */
+  /* ── LennyLive Unified Theme ── */
+  :host {
+    --bg-surface: #fdfcf6;
+    --bg-surface-hover: #f3f0e6;
+    --bg-dark: #1a1c1c;
+    --text-dark: #1a1c1c;
+    --text-light: #ffffff;
+    --text-muted: #5e5e5e;
+    --accent-orange: #ff6e40;
+    --accent-orange-dark: #a23f1d;
+    --pill-bg: #fef3c7;
+    --pill-text: #92400e;
+    --border-light: rgba(0,0,0,0.05);
+    --error-bg: #1a1a1a;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-serif: 'Newsreader', Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+
+  /* 1. Listening Indicator */
   #ll-indicator {
     display: none;
     position: fixed;
     bottom: 32px;
     right: 32px;
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
     border-radius: 24px;
-    padding: 10px 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 13px;
-    color: #fff;
+    padding: 8px 16px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     z-index: 2147483647;
     pointer-events: none;
+    align-items: center;
+    gap: 12px;
   }
+  #ll-indicator:not(.hidden) { display: flex; }
   #ll-indicator.hidden { display: none !important; }
+  .ll-wave { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+  .ll-bar { width: 2px; background: var(--accent-orange); border-radius: 1px; animation: ll-bounce 1s ease-in-out infinite; }
+  .ll-bar:nth-child(1) { height: 8px; }
+  .ll-bar:nth-child(2) { height: 12px; animation-delay: 0.2s; }
+  .ll-bar:nth-child(3) { height: 6px; animation-delay: 0.4s; }
+  .ll-bar:nth-child(4) { height: 10px; animation-delay: 0.6s; }
+  @keyframes ll-bounce { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+  #ll-text { font-family: var(--font-sans); font-size: 13px; font-weight: 500; color: var(--text-dark); }
+  #ll-indicator.loading .ll-wave { display: none; }
+  #ll-indicator.loading #ll-text { animation: ll-pulse 1.5s infinite; }
+  @keyframes ll-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-  #ll-dot {
-    width: 8px;
-    height: 8px;
-    background: #a78bfa;
-    border-radius: 50%;
-    flex-shrink: 0;
-    animation: ll-pulse 1.5s infinite;
-  }
-  #ll-indicator.loading #ll-dot { animation: none; }
-
-  /* Skeleton shimmer for loading state */
-  #ll-indicator.loading #ll-text {
-    background: linear-gradient(90deg, #333 25%, #555 50%, #333 75%);
-    background-size: 200% 100%;
-    animation: ll-shimmer 1.2s infinite;
-    border-radius: 4px;
-    color: transparent;
-    min-width: 140px;
-    height: 14px;
-  }
-
-  @keyframes ll-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(1.3); }
-  }
-  @keyframes ll-shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* ── Mic Denied Tooltip ── */
-  #ll-tooltip {
-    display: none;
-    position: fixed;
-    bottom: 80px;
-    right: 32px;
-    background: #1a1a1a;
-    border: 1px solid #ef4444;
-    border-radius: 12px;
-    padding: 8px 14px;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 12px;
-    color: #fca5a5;
-    z-index: 2147483647;
-    pointer-events: none;
-    max-width: 260px;
-  }
-  #ll-tooltip.visible { display: block; }
-
-  /* ── Buzzword Chip ── */
-  #ll-chip {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(79,70,229,0.1));
-    border: 1px solid rgba(124,58,237,0.3);
-    border-radius: 12px;
-    padding: 10px 16px;
-    align-items: center;
-    gap: 10px;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 13px;
-    color: #e5e7eb;
-    z-index: 2147483647;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
-    opacity: 0;
-    white-space: nowrap;
-  }
-  #ll-chip.visible {
-    display: flex;
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-  #ll-chip.fading {
-    opacity: 0;
-    transform: translateX(-50%) translateY(10px);
-  }
-
-  #ll-chip-dot {
-    width: 6px;
-    height: 6px;
-    background: #a78bfa;
-    border-radius: 50%;
-    flex-shrink: 0;
-    animation: ll-pulse 1.5s infinite;
-  }
-  #ll-chip-topic { color: #a78bfa; font-weight: 600; }
-`;
-shadow.appendChild(style);
-
-// ── Toast notification styles ──────────────────────────────────────────────
-style.textContent += `
+  /* 2. Toast */
   #ll-toast {
     display: none;
     position: fixed;
     bottom: 32px;
     right: 32px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 10px 16px;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 13px;
-    color: #e5e7eb;
+    background: var(--error-bg);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--text-light);
     z-index: 2147483647;
     pointer-events: none;
     max-width: 280px;
     line-height: 1.4;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.15s ease-out, transform 0.15s ease-out;
   }
-  #ll-toast.visible {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
-  #ll-toast.fading {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-`;
+  #ll-toast.visible { display: block; opacity: 1; transform: translateY(0); }
+  #ll-toast.fading { opacity: 0; transform: translateY(8px); }
+  .toast-content { display: flex; align-items: center; gap: 12px; }
+  .toast-icon { color: #f87171; font-weight: bold; }
 
-// Append postcard styles to the existing shadow DOM style element
-style.textContent += `
-
-  /* ─── LennyLive Postcard Theme Config — edit here to restyle ──── */
-  /* All visual tokens are CSS variables. Change values here only.   */
-  #ll-postcard {
-    /* colours */
-    --ll-bg:               #1a1a1a;
-    --ll-border:           #333333;
-    --ll-accent:           #a78bfa;
-    --ll-accent-bg:        rgba(124, 58, 237, 0.15);
-    --ll-accent-border:    rgba(124, 58, 237, 0.3);
-    --ll-text-primary:     #e5e7eb;
-    --ll-text-secondary:   #6b7280;
-    /* typography */
-    --ll-font:             system-ui, -apple-system, sans-serif;
-    --ll-font-size-quote:  13px;
-    --ll-font-size-meta:   12px;
-    --ll-font-size-pill:   11px;
-    --ll-line-height:      1.5;
-    /* layout */
-    --ll-padding:          16px;
-    --ll-border-radius:    16px;
-    --ll-pill-radius:      20px;
-    --ll-width:            320px;
-    /* animation */
-    --ll-anim-duration:    0.2s;
-    --ll-anim-slide:       20px;
+  /* 3. Tooltip */
+  #ll-tooltip {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 32px;
+    background: var(--error-bg);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--text-light);
+    z-index: 2147483647;
+    pointer-events: none;
   }
-  /* ─────────────────────────────────────────────────────────────── */
+  #ll-tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 4px solid transparent; border-top-color: var(--error-bg);
+  }
+  #ll-tooltip.visible { display: block; }
 
-  /* Postcard layout — references theme variables above */
-  #ll-postcard {
+  /* 4. Ambient Glow Dot (replaces Chip) */
+  #ll-chip {
+    display: none;
     position: fixed;
     bottom: 32px;
-    right: 32px;
-    width: var(--ll-width);
-    max-height: 400px;
-    overflow-y: auto;
+    right: 370px;
     z-index: 2147483647;
-    pointer-events: auto;
-    background: var(--ll-bg);
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-border-radius);
-    font-family: var(--ll-font);
-    padding: var(--ll-padding);
-    box-sizing: border-box;
   }
+  #ll-chip.visible { display: block; }
+  .glow-wrapper { position: relative; display: flex; align-items: center; cursor: pointer; }
+  .pulse-dot-wrapper {
+    position: relative; width: 14px; height: 14px; background: var(--accent-orange);
+    border-radius: 50%; z-index: 10; box-shadow: 0 0 12px rgba(255,110,64,0.4); transition: transform 0.3s;
+  }
+  .pulse-dot-wrapper::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--accent-orange); border-radius: 50%;
+    animation: ll-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  @keyframes ll-pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+  .glow-wrapper:hover .pulse-dot-wrapper { transform: scale(1.1); animation: none; }
+  .pill-content {
+    position: absolute; right: 7px; height: 28px; background: var(--bg-dark); border-radius: 14px;
+    display: flex; align-items: center; overflow: hidden; opacity: 0; width: 0px;
+    transition: all 0.3s ease-out; pointer-events: none; white-space: nowrap;
+  }
+  .glow-wrapper:hover .pill-content { width: 260px; padding-left: 12px; padding-right: 20px; opacity: 1; pointer-events: auto; }
+  .pill-text { color: var(--text-light); font-family: var(--font-sans); font-size: 11px; font-weight: 500; }
 
+  /* 5. Postcard */
+  #ll-postcard {
+    position: fixed;
+    bottom: 32px; right: 32px; width: 320px;
+    background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    font-family: var(--font-sans); z-index: 2147483647; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
   #ll-postcard.hidden { display: none; }
+  #ll-postcard:not(.hidden):not(.ll-postcard-hiding) { animation: ll-postcard-in 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  #ll-postcard.ll-postcard-hiding { animation: ll-postcard-out 0.2s ease-in forwards; }
+  @keyframes ll-postcard-in { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes ll-postcard-out { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
 
-  #ll-postcard:not(.hidden):not(.ll-postcard-hiding) {
-    animation: ll-postcard-in var(--ll-anim-duration) ease-out;
-  }
+  .pc-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 8px; }
+  .pc-logo { font-family: var(--font-serif); font-size: 16px; font-weight: 600; font-style: italic; color: var(--text-dark); }
+  .pc-actions { display: flex; gap: 12px; }
+  .pc-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 14px; display: flex; align-items: center; transition: color 0.2s; padding: 0; }
+  .pc-btn:hover { color: var(--accent-orange); }
 
-  @keyframes ll-postcard-in {
-    from { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
-    to   { transform: translateY(0);                    opacity: 1; }
-  }
+  .pc-body { padding: 8px 24px 16px; display: flex; flex-direction: column; }
+  .pc-framing { font-family: var(--font-serif); font-style: italic; font-size: 13px; color: var(--text-muted); margin: 0 0 12px 0; display: none; }
+  .pc-topic { align-self: flex-start; background: var(--pill-bg); color: var(--pill-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 12px; margin-bottom: 16px; }
+  .pc-quote-wrapper { position: relative; max-height: 100px; overflow: hidden; transition: max-height 0.4s ease-in-out; }
+  .pc-quote { font-family: var(--font-serif); font-size: 18px; line-height: 1.4; color: var(--text-dark); font-style: italic; margin: 0; }
+  .pc-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 48px; background: linear-gradient(transparent, var(--bg-surface)); transition: opacity 0.4s; }
+  .pc-quote-wrapper.expanded { max-height: 1000px; }
+  .pc-quote-wrapper.expanded .pc-fade { opacity: 0; pointer-events: none; }
+  .pc-read-more { align-self: flex-start; margin-top: 12px; background: var(--bg-dark); color: var(--bg-surface); border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 16px; border-radius: 16px; cursor: pointer; transition: background 0.2s; }
+  .pc-read-more:hover { background: var(--accent-orange-dark); }
+  .pc-read-more.hidden { display: none; }
 
-  @keyframes ll-postcard-out {
-    from { transform: translateY(0);                    opacity: 1; }
-    to   { transform: translateY(var(--ll-anim-slide)); opacity: 0; }
-  }
+  .pc-footer { border-top: 1px solid var(--border-light); padding: 12px 24px 14px; background: rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; }
+  .pc-footer-meta { display: flex; flex-direction: column; gap: 2px; }
+  .pc-guest { font-family: var(--font-sans); font-weight: 700; font-size: 12px; color: var(--text-dark); }
+  .pc-episode { font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+  .pc-source-link { font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--accent-orange); text-decoration: none; white-space: nowrap; opacity: 0.85; transition: opacity 0.15s; }
+  .pc-source-link:hover { opacity: 1; }
+  .pc-source-link.hidden { display: none; }
 
-  #ll-postcard.ll-postcard-hiding {
-    animation: ll-postcard-out var(--ll-anim-duration) ease-out forwards;
-  }
-
-  .ll-postcard-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .ll-topic-pill {
-    background: var(--ll-accent-bg);
-    border: 1px solid var(--ll-accent-border);
-    color: var(--ll-accent);
-    border-radius: var(--ll-pill-radius);
-    padding: 2px 10px;
-    font-size: var(--ll-font-size-pill);
-    font-family: var(--ll-font);
-  }
-
-  .ll-postcard-actions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .ll-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ll-accent);
-    font-family: var(--ll-font);
-    font-size: var(--ll-font-size-meta);
-    padding: 2px 4px;
-  }
-
-  .ll-pull-quote {
-    color: var(--ll-text-primary);
-    font-size: var(--ll-font-size-quote);
-    font-style: italic;
-    line-height: var(--ll-line-height);
-    margin: 0 0 8px 0;
-  }
-
-  .ll-source {
-    color: var(--ll-text-secondary);
-    font-size: var(--ll-font-size-meta);
-    margin: 0 0 12px 0;
-  }
-
-  .ll-postcard-footer {
-    display: flex;
-    justify-content: flex-end;
-  }
+  /* 6. Related Insights (shown on Read more expand) */
+  .pc-related { margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .pc-related.hidden { display: none; }
+  .pc-related-header { font-family: var(--font-sans); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 2px; }
+  .pc-related-item { background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .pc-related-topic { font-family: var(--font-sans); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pill-text); background: var(--pill-bg); padding: 2px 7px; border-radius: 8px; align-self: flex-start; }
+  .pc-related-quote { font-family: var(--font-serif); font-style: italic; font-size: 12px; line-height: 1.45; color: var(--text-dark); }
+  .pc-related-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+  .pc-related-guest { font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--text-muted); }
+  .pc-related-link { font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--accent-orange); text-decoration: none; opacity: 0.85; transition: opacity 0.15s; }
+  .pc-related-link:hover { opacity: 1; }
 `;
+shadow.appendChild(style);
 
-// Create indicator
+// 1. Indicator
 const indicator = document.createElement('div');
 indicator.id = 'll-indicator';
 indicator.className = 'hidden';
-indicator.innerHTML = '<div id="ll-dot"></div><span id="ll-text">Lenny is listening...</span>';
+indicator.innerHTML = `
+  <div class="ll-wave">
+    <div class="ll-bar"></div><div class="ll-bar"></div><div class="ll-bar"></div><div class="ll-bar"></div>
+  </div>
+  <span id="ll-text">Lenny is listening...</span>
+`;
 shadow.appendChild(indicator);
 
-// Create mic denied tooltip
+// 2. Mic denied tooltip
 const tooltip = document.createElement('div');
 tooltip.id = 'll-tooltip';
-tooltip.textContent = 'Mic access needed — click the lock icon in your address bar.';
+tooltip.textContent = 'Microphone access denied.';
 shadow.appendChild(tooltip);
 
-// Create buzzword chip
+// 3. Ambient Glow Dot (replaces buzzword chip)
 const chip = document.createElement('div');
 chip.id = 'll-chip';
-chip.innerHTML = '<div id="ll-chip-dot"></div><span>Lenny on <span id="ll-chip-topic"></span> →</span>';
+chip.innerHTML = `
+  <div class="glow-wrapper" id="ll-chip-wrapper">
+    <div class="pill-content"><span class="pill-text">Lenny has thoughts on <span id="ll-chip-topic"></span></span></div>
+    <div class="pulse-dot-wrapper"></div>
+  </div>
+`;
 shadow.appendChild(chip);
 
-// Create toast notification
+// 4. Toast
 const toast = document.createElement('div');
 toast.id = 'll-toast';
+toast.innerHTML = '<div class="toast-content"><span class="toast-icon">✕</span><span id="ll-toast-text"></span></div>';
 shadow.appendChild(toast);
 
-// Create postcard — injected at load time with .hidden; shown/hidden by showPostcard/hidePostcard
+// 5. Postcard
 const postcard = document.createElement('div');
 postcard.id = 'll-postcard';
 postcard.className = 'hidden';
 postcard.innerHTML = `
-  <div class="ll-postcard-header">
-    <span class="ll-topic-pill">● <span id="ll-pc-topic"></span></span>
-    <div class="ll-postcard-actions">
-      <button id="ll-btn-mute" class="ll-btn">🔇 Mute</button>
-      <button id="ll-btn-dismiss" class="ll-btn">✕</button>
+  <div class="pc-header">
+    <span class="pc-logo">lennyLive</span>
+    <div class="pc-actions">
+      <button id="ll-btn-mute" class="pc-btn" title="Mute">🔇</button>
+      <button id="ll-btn-save" class="pc-btn" title="Save">🔖</button>
+      <button id="ll-btn-dismiss" class="pc-btn" title="Dismiss">✕</button>
     </div>
   </div>
-  <p id="ll-pc-quote" class="ll-pull-quote"></p>
-  <p id="ll-pc-source" class="ll-source"></p>
-  <div class="ll-postcard-footer">
-    <button id="ll-btn-save" class="ll-btn">🔖 Save</button>
+  <div class="pc-body">
+    <p id="ll-pc-framing" class="pc-framing">Connecting <span id="ll-pc-niche">this topic</span> to <span id="ll-pc-pm-topic"></span>...</p>
+    <div class="pc-topic" id="ll-pc-topic"></div>
+    <div class="pc-quote-wrapper" id="ll-quote-wrapper">
+      <p class="pc-quote" id="ll-pc-quote"></p>
+      <div class="pc-fade" id="ll-quote-fade"></div>
+    </div>
+    <button id="ll-btn-readmore" class="pc-read-more">Read more</button>
+    <div id="ll-related" class="pc-related hidden"></div>
+  </div>
+  <div class="pc-footer">
+    <div class="pc-footer-meta">
+      <span class="pc-guest" id="ll-pc-guest"></span>
+      <span class="pc-episode" id="ll-pc-source"></span>
+    </div>
+    <a id="ll-pc-link" class="pc-source-link hidden" target="_blank" rel="noopener noreferrer">↗ Source</a>
   </div>
 `;
 shadow.appendChild(postcard);
@@ -374,7 +318,7 @@ function showBuzzwordChip(topic) {
 let autoDismissTimer = null;
 let currentInsight = null; // held for Save button
 
-function showPostcard(insight) {
+function showPostcard(insight, relatedInsights = []) {
   currentInsight = insight;
   const pc = shadow.getElementById('ll-postcard');
   hideIndicator(); // always hide indicator — they share bottom-right corner
@@ -383,8 +327,76 @@ function showPostcard(insight) {
   // Populate content
   shadow.getElementById('ll-pc-topic').textContent = insight.topic;
   shadow.getElementById('ll-pc-quote').textContent = insight.pull_quote;
-  shadow.getElementById('ll-pc-source').textContent =
-    `${insight.guest_name} · ${insight.episode_title}`;
+  shadow.getElementById('ll-pc-guest').textContent = insight.guest_name;
+  const isNewsletter = insight.guest_name === 'Lenny Rachitsky';
+  shadow.getElementById('ll-pc-source').textContent = isNewsletter
+    ? 'Newsletter — lennysnewsletter.com'
+    : 'Ep: ' + insight.episode_title;
+
+  // Source link — podcast opens at exact timestamp, newsletter opens article
+  const linkEl = shadow.getElementById('ll-pc-link');
+  if (insight.youtube_url) {
+    const url = (!isNewsletter && insight.timestamp_secs)
+      ? `${insight.youtube_url}?t=${insight.timestamp_secs}`
+      : insight.youtube_url;
+    linkEl.href = url;
+    linkEl.textContent = isNewsletter ? '↗ Read' : '↗ Watch';
+    linkEl.classList.remove('hidden');
+  } else {
+    linkEl.classList.add('hidden');
+  }
+
+  const framingEl = shadow.getElementById('ll-pc-framing');
+  if (insight.abstracted) { 
+    framingEl.style.display = 'block';
+    shadow.getElementById('ll-pc-pm-topic').textContent = insight.topic.toLowerCase();
+  } else {
+    framingEl.style.display = 'none';
+  }
+
+  // Read more expand logic reset
+  shadow.getElementById('ll-quote-wrapper').classList.remove('expanded');
+  shadow.getElementById('ll-btn-readmore').textContent = 'Read more';
+  if (insight.pull_quote.length < 150) {
+    shadow.getElementById('ll-btn-readmore').classList.add('hidden');
+    shadow.getElementById('ll-quote-fade').style.display = 'none';
+  } else {
+    shadow.getElementById('ll-btn-readmore').classList.remove('hidden');
+    shadow.getElementById('ll-quote-fade').style.display = 'block';
+  }
+
+  // Populate related insights (hidden until "Read more" is clicked)
+  const relatedEl = shadow.getElementById('ll-related');
+  relatedEl.classList.add('hidden');
+  relatedEl.innerHTML = '';
+  if (relatedInsights && relatedInsights.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'pc-related-header';
+    header.textContent = 'Related insights';
+    relatedEl.appendChild(header);
+
+    relatedInsights.forEach(r => {
+      const isNews = r.guest_name === 'Lenny Rachitsky';
+      const url = (!isNews && r.timestamp_secs)
+        ? `${r.youtube_url}?t=${r.timestamp_secs}`
+        : r.youtube_url;
+      const snippet = r.pull_quote.length > 120
+        ? r.pull_quote.slice(0, 120).replace(/\s+\S*$/, '') + '…'
+        : r.pull_quote;
+
+      const item = document.createElement('div');
+      item.className = 'pc-related-item';
+      item.innerHTML = `
+        <div class="pc-related-topic">${r.topic}</div>
+        <div class="pc-related-quote">${snippet}</div>
+        <div class="pc-related-meta">
+          <span class="pc-related-guest">${r.guest_name}</span>
+          ${url ? `<a class="pc-related-link" href="${url}" target="_blank" rel="noopener noreferrer">${isNews ? '↗ Read' : '↗ Watch'}</a>` : ''}
+        </div>
+      `;
+      relatedEl.appendChild(item);
+    });
+  }
 
   // Set mute default synchronously so audio guard works even before storage returns
   pc.dataset.muted = 'false';
@@ -402,6 +414,23 @@ function showPostcard(insight) {
   pc.classList.remove('hidden');
   clearTimeout(autoDismissTimer);
   autoDismissTimer = setTimeout(hidePostcard, 30000);
+
+  // Update streak on each successful insight delivery
+  updateStreak();
+}
+
+function updateStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  chrome.storage.local.get(['streak', 'lastActiveDate'], (data) => {
+    if (chrome.runtime.lastError) return;
+    const last = data.lastActiveDate;
+    let streak = data.streak || 0;
+    if (last !== today) {
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      streak = (last === yesterday) ? streak + 1 : 1;
+      chrome.storage.local.set({ streak, lastActiveDate: today });
+    }
+  });
 }
 
 function hidePostcard() {
@@ -422,9 +451,20 @@ function updateMuteButton(muted) {
   if (btn) btn.textContent = muted ? '🔊 Unmute' : '🔇 Mute';
 }
 
+let currentAudio = null; // held so mute button can stop in-flight audio
+
+function stopCurrentAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+}
+
 function playAudio(base64) {
   const pc = shadow.getElementById('ll-postcard');
   if (pc && pc.dataset.muted === 'true') return;
+
+  stopCurrentAudio(); // stop any previous clip before starting a new one
 
   // data: URIs are blocked by strict CSP on sites like Notion.
   // Convert to a Blob and use a blob: URL — allowed by "media-src blob:".
@@ -435,15 +475,39 @@ function playAudio(base64) {
   const url = URL.createObjectURL(blob);
 
   const audio = new Audio(url);
+  currentAudio = audio;
   audio.play()
-    .then(() => { audio.onended = () => URL.revokeObjectURL(url); })
+    .then(() => {
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        if (currentAudio === audio) currentAudio = null;
+      };
+    })
     .catch(err => {
       URL.revokeObjectURL(url);
+      if (currentAudio === audio) currentAudio = null;
       console.warn('[LennyLive] Audio playback failed:', err.message);
     });
 }
 
 // ─── Postcard Event Listeners (set up once at load time) ──────────────────────
+
+shadow.getElementById('ll-btn-readmore').addEventListener('click', (e) => {
+  const wrapper = shadow.getElementById('ll-quote-wrapper');
+  const relatedEl = shadow.getElementById('ll-related');
+  if (wrapper.classList.contains('expanded')) {
+    wrapper.classList.remove('expanded');
+    relatedEl.classList.add('hidden');
+    e.target.textContent = 'Read more';
+  } else {
+    wrapper.classList.add('expanded');
+    // Show related only if there are items to display
+    if (relatedEl.children.length > 0) {
+      relatedEl.classList.remove('hidden');
+    }
+    e.target.textContent = 'Show less';
+  }
+});
 
 shadow.getElementById('ll-postcard').addEventListener('mouseenter', () => {
   clearTimeout(autoDismissTimer);
@@ -456,6 +520,7 @@ shadow.getElementById('ll-postcard').addEventListener('mouseleave', () => {
 
 shadow.getElementById('ll-btn-dismiss').addEventListener('click', () => {
   clearTimeout(autoDismissTimer);
+  stopCurrentAudio();
   hidePostcard();
 });
 
@@ -464,6 +529,8 @@ shadow.getElementById('ll-btn-mute').addEventListener('click', () => {
   const newMuted = pc.dataset.muted !== 'true';
   pc.dataset.muted = String(newMuted);
   updateMuteButton(newMuted);
+  // Stop any currently-playing audio immediately when muting
+  if (newMuted) stopCurrentAudio();
   chrome.storage.local.set({ voiceMuted: newMuted }, () => {
     if (chrome.runtime.lastError) {
       console.warn('[LennyLive] voiceMuted save failed:', chrome.runtime.lastError.message);
@@ -499,6 +566,12 @@ shadow.getElementById('ll-btn-save').addEventListener('click', () => {
           btn.textContent = '✓ Saved!';
           setTimeout(() => { btn.textContent = '🔖 Save'; }, 2000);
         }
+        // Increment knowledge score +10 per saved insight
+        chrome.storage.local.get(['knowledge_score'], (s) => {
+          if (!chrome.runtime.lastError) {
+            chrome.storage.local.set({ knowledge_score: (s.knowledge_score || 0) + 10 });
+          }
+        });
       }
     });
   });
@@ -594,7 +667,7 @@ let toastTimer = null;
 function showToast(message, durationMs = 3000) {
   clearTimeout(toastTimer);
   const t = shadow.getElementById('ll-toast');
-  t.textContent = message;
+  shadow.getElementById('ll-toast-text').textContent = message;
   t.classList.remove('fading');
   t.classList.add('visible');
 
@@ -668,8 +741,16 @@ document.addEventListener('keydown', (e) => {
     lastCtrlPress = now; // always update, regardless of state
   }
 
-  if (e.key === 'Escape' && state === 'listening') {
-    cancelLennyLive();
+  if (e.key === 'Escape') {
+    if (state === 'listening' || state === 'loading') {
+      cancelLennyLive();
+    }
+    // Also dismiss postcard if it's visible
+    const pc = shadow.getElementById('ll-postcard');
+    if (pc && !pc.classList.contains('hidden')) {
+      stopCurrentAudio();
+      hidePostcard();
+    }
   }
 });
 
@@ -733,7 +814,7 @@ function handleResponse(message) {
   hideIndicator();
 
   if (message.status === 'ok' && message.insight) {
-    showPostcard(message.insight);
+    showPostcard(message.insight, message.relatedInsights || []);
   } else if (message.status === 'chitchat') {
     // Non-PM query — warm acknowledgement, zero ElevenLabs cost
     playBloop();
