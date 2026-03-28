@@ -837,7 +837,51 @@ document.addEventListener('keydown', (e) => {
       hidePostcard();
     }
   }
+
+  // Write+pause sensor — track printable keystrokes
+  // e.key.length === 1 catches regular characters; excludes Ctrl, Shift, Alt, Enter, etc.
+  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    lastPrintableKeystroke = Date.now();
+
+    // User resumed typing — cancel any pending eager fetch and suppress dot.
+    // Reset unconditionally: harmless if already null, prevents stale chips.
+    clearTimeout(eagerFetchTimer);
+    clearTimeout(dotAppearTimer);
+    pendingQuestions = null;
+    hideWritePauseDot(); // no-op if dot not visible
+
+    // Start new 1.5s eager fetch timer
+    eagerFetchTimer = setTimeout(triggerEagerFetch, 1500);
+  }
 });
+
+// ─── Write+Pause Eager Fetch ──────────────────────────────────────────────────
+
+// Called 1.5s after the last printable keystroke.
+// Fires Groq silently to pre-generate question chips before the dot appears.
+function triggerEagerFetch() {
+  if (state !== 'idle') return;          // don't interrupt active voice session
+  if (!isUserEditing()) return;          // only fire during active editing
+
+  const keyword = detectPMKeywordInPage();
+  if (!keyword) return;                  // no PM keyword on page — nothing to do
+
+  const blockContent = extractPageContext(); // reuse existing 3-priority cascade
+  lastEagerFetchBlockContent = blockContent;
+
+  console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword);
+  chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword, blockContent });
+
+  // Schedule dot appearance 2s from now (= 3.5s total from last keystroke)
+  dotAppearTimer = setTimeout(() => {
+    if (state !== 'idle') return;
+    if (pendingQuestions) {
+      showWritePauseDot('ready');
+    } else {
+      showWritePauseDot('loading');  // questions still in flight
+    }
+  }, 2000);
+}
 
 // ─── Activation ───────────────────────────────────────────────────────────────
 
