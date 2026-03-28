@@ -3,26 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    <span class="logo-name">Lenny Live</span>
-  </div>
-
-  <div class="status-row">
-    <span class="status-label">Status</span>
-    <span class="status-value" id="status-value">Ready</span>
-  </div>
-
-  <div class="status-row">
-    <span class="status-label">Last topic</span>
-    <span class="status-value" id="last-topic">—</span>
-  </div>
-
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <span class="logo-name">lennyLive</span>
+    </div>
+  </header>
   <hr class="divider">
 
-  <p class="hint">Double-tap <kbd>Ctrl</kbd> to activate</p>
+  <!-- Status & Mute -->
+  <section class="status-section">
+    <div class="status-indicator">
+      <div class="pulse-dot"></div>
+      <span class="status-text">Status: Ready</span>
+    </div>
+    <label class="mute-toggle">
+      <input type="checkbox" id="mute-checkbox">
+      <span class="toggle-slider"></span>
+      <span class="mute-label">Mute</span>
+    </label>
+  </section>
+
+  <!-- Gamification Stats -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-title">🔥 Streak</span>
+      <span class="stat-value"><span id="streak-value">0</span> Days</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-title">🧠 Score</span>
+      <span class="stat-value" id="score-value">0</span>
+    </div>
+  </section>
+
+  <!-- Saved Insights -->
+  <section class="saved-insights-section">
+    <div class="saved-header">
+      <h2>Saved Insights</h2>
+    </div>
+    <div id="saved-list" class="saved-list">
+      <div class="empty-state">No saved insights yet.</div>
+    </div>
+  </section>
 
   <script src="popup.js"></script>
 </body>
