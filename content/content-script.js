@@ -1012,10 +1012,14 @@ function triggerEagerFetch() {
   if (state !== 'idle') return;          // don't interrupt active voice session
   if (!isUserEditing()) return;          // only fire during active editing
 
-  const keyword = detectPMKeywordInPage();
-  if (!keyword) return;                  // no PM keyword on page — nothing to do
+  // Extract active block first — keyword must be in what the user is writing NOW,
+  // not anywhere on the page (which would re-fire on old keywords from earlier lines).
+  const blockContent = extractPageContext();
+  if (!blockContent) return;
 
-  const blockContent = extractPageContext(); // reuse existing 3-priority cascade
+  const keyword = detectPMKeywordInText(blockContent);
+  if (!keyword) return;                  // no PM keyword in current block — nothing to do
+
   lastEagerFetchBlockContent = blockContent;
 
   console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword);
@@ -1326,14 +1330,14 @@ function getDisplayTopic(buzzword) {
   return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
 }
 
-// Lightweight scan for PM keywords. Called at the 1.5s mark of the write+pause sensor.
-// Reads document.body.innerText once per eager fetch trigger — not on every mutation.
+// Lightweight scan for PM keywords in the provided text.
+// Called at the 1.5s mark of the write+pause sensor on the active cursor block.
 // Must be placed AFTER the PM_BUZZWORDS array declaration in this file.
-function detectPMKeywordInPage() {
-  const text = document.body.innerText.slice(0, 5000);
+function detectPMKeywordInText(text) {
+  const sample = text.slice(0, 5000);
   for (const word of PM_BUZZWORDS) {
     const re = new RegExp(`\\b${word}\\b`, 'i');
-    if (re.test(text)) return word;
+    if (re.test(sample)) return word;
   }
   return null;
 }
