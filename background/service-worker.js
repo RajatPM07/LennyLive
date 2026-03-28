@@ -8,6 +8,7 @@
 import { embedQuery, searchChunks, searchChunksAt } from './rag.js';
 import { fetchTTS, fetchAndEncodeUrl } from './tts.js';
 import { abstractQuery } from './abstraction.js';
+import { synthesizeResponse } from './synthesis.js';
 
 chrome.runtime.onMessage.addListener((message, sender) => {
   console.log('[LennyLive] Message received:', message.type, message);
@@ -53,6 +54,10 @@ const CONVERSATIONAL_PATTERNS = [
   /^(go|come on|alright|right|ready|here we go)\b/i,
   /^(wow|whoa|oh|ah|uh|um|hmm)\b$/i,
   /^(testing|test|one two|check)\b/i,
+  // Date / time questions
+  /^what (is |'?s )?(the )?(day|date|time|year|month)\b/i,
+  /^what (day|date|time) is (it|today)\b/i,
+  /^(what|which) day (is (it|today)|of the week)\b/i,
   // Meta questions about the extension itself
   /^(what can you do|help me|how do(es)? (this|it) work)/i,
 ];
@@ -79,9 +84,14 @@ function cleanQuery(text) {
   return q.trim() || text.trim(); // fallback to original if we stripped everything
 }
 
+// Selection-reference phrases: user is pointing at the highlighted text, not asking standalone.
+// "tell me about the highlighted text" → after filler strip → "the highlighted text" → swap with selection.
+// Without this, "the highlighted text" embeds literally and returns random results.
+const SELECTION_REF_RE = /^(the highlighted text|the selected text|the selection|this|that|it|those|the text)$/i;
+
 async function handleQuery(message, tabId) {
   const { transcript, selection, pageContext = '' } = message;
-  const cleanedTranscript = cleanQuery(transcript);
+  let cleanedTranscript = cleanQuery(transcript);
 
   // Reject obvious conversational queries before hitting any API.
   // "how are you?" must never reach the RAG pipeline or abstraction layer.
@@ -89,6 +99,14 @@ async function handleQuery(message, tabId) {
     console.log('[LennyLive] Conversational query rejected (chitchat):', cleanedTranscript);
     pushResponse(tabId, { type: 'RESPONSE', status: 'chitchat', insight: null });
     return;
+  }
+
+  // If the cleaned query is just a pointer to the selection ("the highlighted text",
+  // "this", "that"), replace it with the actual selection text.
+  // e.g. "tell me about the highlighted text" + selection "Gamification" → embed "Gamification"
+  if (selection && SELECTION_REF_RE.test(cleanedTranscript)) {
+    console.log('[LennyLive] Selection reference detected — using selection as query:', selection);
+    cleanedTranscript = selection.trim();
   }
 
   // Fast-path embedding uses transcript + selection only — NOT pageContext.
@@ -101,7 +119,7 @@ async function handleQuery(message, tabId) {
   // pageContext's job is to help Groq understand niche domains, not to
   // override clear PM keyword queries.
   const parts = [cleanedTranscript];
-  if (selection) parts.push(`Context: ${selection}`);
+  if (selection && selection.trim() !== cleanedTranscript) parts.push(`Context: ${selection}`);
   const queryText = parts.join('\n\n');
 
   if (cleanedTranscript !== transcript) {
@@ -112,23 +130,26 @@ async function handleQuery(message, tabId) {
     console.log('[LennyLive] Embedding query:', queryText.slice(0, 120));
     const embedding = await embedQuery(queryText);
 
-    console.log('[LennyLive] Searching Supabase pgvector (threshold: 0.45)...');
+    console.log('[LennyLive] Searching Supabase pgvector (threshold: 0.45, fast-path: 0.62)...');
     const chunks = await searchChunks(embedding);
 
     // Three-tier confidence band:
-    //   > 0.55 → high confidence — ship it directly (fast path)
-    //   0.45–0.55 → low confidence — refine with Groq + pageContext before shipping
+    //   > 0.62 → high confidence — ship it directly (fast path)
+    //   0.45–0.62 → low confidence — refine with Groq + pageContext before shipping
     //   < 0.45 → no match — abstraction fallback (searchChunks already filtered these out)
     //
-    // Why not raise the threshold to 0.75? gemini-embedding-001 peaks at ~0.62
-    // for related content — 0.75 would return zero results for everything.
+    // Threshold raised from 0.55 → 0.62 to catch phonetic speech recognition errors
+    // (e.g. "attention" heard instead of "retention" scores ~0.608 — now goes through
+    // Groq abstraction which uses pageContext + selection to recover the correct topic).
+    // Genuine strong hits still clear 0.62 (e.g. "retention" → 0.713).
     if (chunks && Array.isArray(chunks) && chunks.length > 0) {
       const top = chunks[0];
-      if (top.similarity > 0.55) {
+      if (top.similarity > 0.62) {
         const insight = shapeInsight(top, false);
+        const relatedInsights = chunks.slice(1, 3).map(c => shapeInsight(c, false));
         console.log('[LennyLive] High confidence hit:', insight.guest_name, '| similarity:', top.similarity);
-        pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
-        pushAudio(insight, tabId);
+        pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight, relatedInsights });
+        pushAudio(insight, tabId, cleanedTranscript, chunks);
         return;
       }
       console.log('[LennyLive] Low confidence match (', top.similarity.toFixed(3), ') — refining with Groq + pageContext');
@@ -166,9 +187,10 @@ async function handleQuery(message, tabId) {
 
     const top = abstractedChunks[0];
     const insight = shapeInsight(top, true); // abstracted: true → honest mentor framing
+    const relatedInsights = abstractedChunks.slice(1, 3).map(c => shapeInsight(c, false));
     console.log('[LennyLive] Abstraction path hit:', insight.guest_name, '| similarity:', insight.similarity);
-    pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight });
-    pushAudio(insight, tabId);
+    pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight, relatedInsights });
+    pushAudio(insight, tabId, cleanedTranscript, abstractedChunks);
 
   } catch (err) {
     console.error('[LennyLive] RAG pipeline error:', err.message);
@@ -193,42 +215,52 @@ function shapeInsight(chunk, abstracted) {
   };
 }
 
-// Build the spoken text following the Lenny Formula cadence.
-// Three sentences: Hook + Source → Core Insight → Push Question.
-// This replaces speaking the raw `insight` field (one bare sentence with no context).
+// Build the spoken text from the pull_quote — the same text shown on the postcard.
+// This eliminates the audio/postcard mismatch: what the user reads = what they hear.
 //
-// NOTE: audio_url cache was seeded with the raw insight text — it won't match
-// this formatted output. Always use real-time TTS so the formula plays correctly.
-// Re-seed the audio cache with formatted text as a future task.
+// Framing prefix differs by source:
+//   Podcast:    "[Guest] on [topic]: [pull_quote]"
+//   Newsletter: "From my newsletter on [topic]: [pull_quote]"
 function buildSpokenText(insight) {
-  const hook = `When I spoke to ${insight.guest_name} about ${insight.topic},`;
-  const core = `their main point was that ${insight.insight}`;
-  const push = `How are you thinking about this in your current work?`;
-  return `${hook} ${core} ${push}`;
+  const isNewsletter = insight.guest_name === 'Lenny Rachitsky';
+  const framing = isNewsletter
+    ? `From my newsletter on ${insight.topic}:`
+    : `${insight.guest_name} on ${insight.topic}:`;
+  return `${framing} ${insight.pull_quote}`;
 }
 
 // Push 2 — fire-and-forget audio (never blocks Push 1 / postcard).
-// Always uses real-time TTS with the Lenny Formula spoken text.
-// (audio_url cache is stale for this format — skipped until re-seeded.)
-function pushAudio(insight, tabId) {
-  const spokenText = buildSpokenText(insight);
-  console.log('[LennyLive] Spoken text:', spokenText.slice(0, 120));
+// Uses Groq synthesis when top-3 chunks available (tailored to query),
+// falls back to buildSpokenText (pull_quote) if synthesis fails.
+function pushAudio(insight, tabId, query = '', allChunks = []) {
+  const synthesisAvailable = query && allChunks.length > 0;
 
-  let ttsTimeoutId;
-  const ttsTimeout = new Promise((_, reject) => {
-    ttsTimeoutId = setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000);
+  const getSpokenText = synthesisAvailable
+    ? synthesizeResponse(query, allChunks).catch(err => {
+        console.warn('[LennyLive] Synthesis failed, falling back:', err.message);
+        return buildSpokenText(insight);
+      })
+    : Promise.resolve(buildSpokenText(insight));
+
+  getSpokenText.then(spokenText => {
+    console.log('[LennyLive] Spoken text:', spokenText.slice(0, 120));
+
+    let ttsTimeoutId;
+    const ttsTimeout = new Promise((_, reject) => {
+      ttsTimeoutId = setTimeout(() => reject(new Error('TTS timeout (8s)')), 8000);
+    });
+
+    Promise.race([fetchTTS(spokenText), ttsTimeout])
+      .then(audio => {
+        console.log('[LennyLive] Audio ready:', insight.guest_name);
+        pushResponse(tabId, { type: 'AUDIO', audio });
+      })
+      .catch(err => {
+        console.warn('[LennyLive] Audio skipped:', err.message);
+        pushResponse(tabId, { type: 'RESPONSE', status: 'network_error', insight: null });
+      })
+      .finally(() => clearTimeout(ttsTimeoutId));
   });
-
-  Promise.race([fetchTTS(spokenText), ttsTimeout])
-    .then(audio => {
-      console.log('[LennyLive] Audio ready (real-time Lenny Formula):', insight.guest_name);
-      pushResponse(tabId, { type: 'AUDIO', audio });
-    })
-    .catch(err => {
-      console.warn('[LennyLive] Audio skipped:', err.message);
-      pushResponse(tabId, { type: 'RESPONSE', status: 'network_error', insight: null });
-    })
-    .finally(() => clearTimeout(ttsTimeoutId));
 }
 
 function pushResponse(tabId, response) {
