@@ -673,6 +673,11 @@ function hideAllAmbientUI() {
 // Fires the QUERY message with the chip text as transcript.
 function fireQuestionQuery(questionText) {
   if (!pendingQuestions) return;
+  // Spec requires 60s expiry — stale questions are no longer contextually relevant
+  if (Date.now() - pendingQuestions.timestamp > 60000) {
+    hideAllAmbientUI();
+    return;
+  }
   const blockContent = pendingQuestions.blockContent || '';
   hideAllAmbientUI();
   chrome.runtime.sendMessage({
