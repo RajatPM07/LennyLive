@@ -827,6 +827,7 @@ document.addEventListener('keydown', (e) => {
   }
 
   if (e.key === 'Escape') {
+    hideAllAmbientUI();   // always clear ambient UI on Escape
     if (state === 'listening' || state === 'loading') {
       cancelLennyLive();
     }
@@ -933,6 +934,7 @@ document.addEventListener('selectionchange', () => {
 
 function activateLennyLive() {
   if (state !== 'idle') return;
+  hideAllAmbientUI();   // clear any active ambient dots before voice activates
   state = 'listening';
   playPing();
   showIndicator('listening');
@@ -1195,6 +1197,8 @@ const topicCooldowns = new Map(); // topic → timestamp of last chip shown
 
 function scanForBuzzwords() {
   if (state !== 'idle') return; // never interrupt active session
+  if (isUserEditing()) return;                               // NEW: skip during active editing
+  if (Date.now() - pageLoadTime < 20 * 1000) return;        // NEW: 20s minimum on page
 
   const text = document.body.innerText.slice(0, 5000);
   const now = Date.now();
