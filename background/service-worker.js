@@ -115,6 +115,33 @@ const SELECTION_REF_RE = /^(the highlighted text|the selected text|the selection
 
 async function handleQuery(message, tabId) {
   const { transcript, selection, pageContext = '' } = message;
+
+  // Selection dot path: empty transcript + selection present → use selection directly.
+  // Must be the FIRST check — cleanQuery('') returns '' which would reach
+  // embedQuery('') and fail with a Gemini API error.
+  if (!transcript?.trim() && selection?.trim()) {
+    console.log('[LennyLive] Selection dot query — using selection:', selection.trim());
+    try {
+      const embedding = await embedQuery(selection.trim());
+      console.log('[LennyLive] Searching Supabase pgvector (threshold: 0.45, fast-path: 0.62)...');
+      const chunks = await searchChunks(embedding);
+      if (!chunks || chunks.length === 0) {
+        pushResponse(tabId, { type: 'RESPONSE', status: 'no_results', insight: null });
+        return;
+      }
+      const top = chunks[0];
+      const insight = shapeInsight(top, false);
+      const relatedInsights = chunks.slice(1, 3).map(c => shapeInsight(c, false));
+      console.log('[LennyLive] Selection dot hit:', insight.guest_name, '| similarity:', top.similarity);
+      pushResponse(tabId, { type: 'RESPONSE', status: 'ok', insight, relatedInsights });
+      pushAudio(insight, tabId, selection.trim(), chunks);
+    } catch (err) {
+      console.error('[LennyLive] Selection dot RAG error:', err.message);
+      pushResponse(tabId, { type: 'RESPONSE', status: 'network_error', insight: null });
+    }
+    return;
+  }
+
   let cleanedTranscript = cleanQuery(transcript);
 
   // Reject obvious conversational queries before hitting any API.
