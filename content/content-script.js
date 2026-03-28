@@ -669,6 +669,21 @@ function hideAllAmbientUI() {
   // TODO (UI agent): hide questions panel element
 }
 
+// Called by the UI agent when a question chip is tapped.
+// Fires the QUERY message with the chip text as transcript.
+function fireQuestionQuery(questionText) {
+  if (!pendingQuestions) return;
+  const blockContent = pendingQuestions.blockContent || '';
+  hideAllAmbientUI();
+  chrome.runtime.sendMessage({
+    type: 'QUERY',
+    transcript: questionText,
+    selection: '',
+    pageContext: blockContent,
+  });
+  console.log('[LennyLive] Question chip fired:', questionText);
+}
+
 // ─── Ping Tone (Web Audio API) ────────────────────────────────────────────────
 // Double-tap Ctrl is a keydown event — qualifies as a user gesture for autoplay.
 
