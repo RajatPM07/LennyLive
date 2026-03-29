@@ -847,20 +847,31 @@ function showChipsPanel(questions) {
   ambientState = 'questions-panel';
   const panel = shadow.getElementById('ll-chips-panel');
 
-  const chipsHtml = questions.map((q, i) => `
-    <button class="ll-chip-btn" data-idx="${i}" type="button">
-      <span class="ll-chip-btn-text">${q}</span>
-      <span class="ll-chip-btn-arrow">→</span>
-    </button>
-  `).join('');
-
+  // Build header with static innerHTML (no user-controlled variables — safe)
   panel.innerHTML = `
     <div class="ll-chips-header">
       <span class="ll-chips-title">What Lenny would ask</span>
       <button class="ll-chips-close" id="ll-chips-close-btn" type="button">✕</button>
     </div>
-    <div class="ll-chips-list">${chipsHtml}</div>
+    <div class="ll-chips-list" id="ll-chips-list-inner"></div>
   `;
+
+  // Build chips via DOM API — textContent prevents XSS from Groq-sourced question strings
+  const list = panel.querySelector('#ll-chips-list-inner');
+  questions.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'll-chip-btn';
+    btn.dataset.idx = i;
+    btn.type = 'button';
+    const textSpan = document.createElement('span');
+    textSpan.className = 'll-chip-btn-text';
+    textSpan.textContent = q;
+    const arrowSpan = document.createElement('span');
+    arrowSpan.className = 'll-chip-btn-arrow';
+    arrowSpan.textContent = '→';
+    btn.append(textSpan, arrowSpan);
+    list.appendChild(btn);
+  });
 
   panel.classList.add('visible');
 
@@ -877,6 +888,7 @@ function showChipsPanel(questions) {
 
 // Called when QUESTIONS_READY arrives and dot is already showing in loading state
 function updateWritePauseDotReady() {
+  if (!pendingQuestions) return;
   showWritePauseDot('ready');
 }
 
