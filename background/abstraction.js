@@ -102,6 +102,7 @@ export async function abstractQuery(transcript, selection, pageContext) {
  * @returns {Promise<string[]>} - Array of 2-3 question strings, or [] if NOT_PM
  */
 export async function generateQuestions(keyword, blockContent) {
+  keyword = keyword || '';
   const res = await fetch(GROQ_API_URL, {
     method: 'POST',
     headers: {
@@ -139,7 +140,8 @@ Output 3 short, specific questions a senior PM mentor would ask to deepen thinki
   const text = data.choices?.[0]?.message?.content?.trim() ?? '';
 
   // NOT_PM response — return empty array so service worker suppresses the badge
-  if (text === 'NOT_PM') {
+  // Use startsWith (case-insensitive) to handle variants like "NOT_PM.", "Not_PM", "not_pm"
+  if (text.toUpperCase().startsWith('NOT_PM')) {
     console.log('[LennyLive] generateQuestions: NOT_PM — badge suppressed');
     return [];
   }
