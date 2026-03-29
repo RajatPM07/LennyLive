@@ -1306,25 +1306,44 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'RESPONSE') { handleResponse(message); }
   if (message.type === 'AUDIO')    { playAudio(message.audio); }
   if (message.type === 'QUESTIONS_READY') {
-    if (message.error || !message.questions || message.questions.length === 0) {
-      // Groq failed — cancel dot appearance and reset silently
+    // NOT_PM: model identified non-professional content — suppress badge silently
+    if (message.notPm || (!message.error && (!message.questions || message.questions.length === 0))) {
       pendingQuestions = null;
       clearTimeout(dotAppearTimer);
-      hideWritePauseDot(); // safe to call even if dot not yet shown
-      console.warn('[LennyLive] QUESTIONS_READY: Groq failed — dot suppressed');
+      hideWritePauseDot();
+      console.log('[LennyLive] QUESTIONS_READY: NOT_PM — badge suppressed');
       return;
     }
 
+    // Groq error: fail-open — local gates already validated PM intent, don't go dark.
+    // Serve template chips so the badge still appears and the chip fires the RAG pipeline.
+    if (message.error) {
+      const kw = message.keyword || 'this topic';
+      pendingQuestions = {
+        keyword: kw,
+        questions: [
+          `What's the most common mistake PMs make around ${kw}?`,
+          `How do the best product teams think about ${kw}?`,
+          `What should I know about ${kw} at my stage?`,
+        ],
+        blockContent: lastEagerFetchBlockContent,
+        timestamp: Date.now(),
+      };
+      console.warn('[LennyLive] QUESTIONS_READY: Groq error — serving template chips (fail-open)');
+      if (ambientState === 'write-pause-dot') updateWritePauseDotReady();
+      return;
+    }
+
+    // Happy path: real chips from Groq
     pendingQuestions = {
       keyword: message.keyword,
       questions: message.questions,
-      blockContent: lastEagerFetchBlockContent, // captured at eager fetch time
+      blockContent: lastEagerFetchBlockContent,
       timestamp: Date.now(),
     };
 
     console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
 
-    // If dot is already visible in loading state, upgrade it to show questions
     if (ambientState === 'write-pause-dot') {
       updateWritePauseDotReady();
     }

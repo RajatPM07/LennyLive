@@ -35,10 +35,12 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 
     generateQuestions(message.keyword, message.blockContent)
       .then(questions => {
+        // Empty array = NOT_PM — send back with null so content script suppresses badge
         chrome.tabs.sendMessage(tabId, {
           type: 'QUESTIONS_READY',
-          keyword: message.keyword,   // echo keyword so content script can cache it
-          questions,
+          keyword: message.keyword,
+          questions: questions.length > 0 ? questions : null,
+          notPm: questions.length === 0,
         });
       })
       .catch(err => {
@@ -50,7 +52,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
           error: true,
         });
       });
-    return; // no async response needed — response goes via chrome.tabs.sendMessage
+    return;
   }
 
   // BUZZWORD_TRIGGERED handler removed — content-script does not send this message.

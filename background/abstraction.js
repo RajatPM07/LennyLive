@@ -93,13 +93,13 @@ export async function abstractQuery(transcript, selection, pageContext) {
 }
 
 /**
- * Generate 2-3 contextual PM questions for the write+pause sensor.
- * Called when the user pauses typing for 1.5s in a block containing a PM keyword.
- * Fast Groq call — no embedding, no Supabase.
+ * Generate 2-3 contextual PM question chips for the write+pause badge pill.
+ * Single Groq call: detects PM context AND generates chips simultaneously.
+ * Returns empty array if content is NOT PM work.
  *
  * @param {string} keyword      - PM keyword detected in the active block
  * @param {string} blockContent - Text of the active block (first 300 chars)
- * @returns {Promise<string[]>} - Array of 2-3 question strings
+ * @returns {Promise<string[]>} - Array of 2-3 question strings, or [] if NOT_PM
  */
 export async function generateQuestions(keyword, blockContent) {
   const res = await fetch(GROQ_API_URL, {
@@ -110,19 +110,21 @@ export async function generateQuestions(keyword, blockContent) {
     },
     body: JSON.stringify({
       model: 'llama-3.1-8b-instant',
-      temperature: 0.5,
-      max_tokens: 120,
+      temperature: 0.4,
+      max_tokens: 150,
       messages: [
         {
           role: 'system',
-          content: `You are helping a junior PM who is stuck while writing.
-Generate exactly 3 short, specific questions they might want to ask about this topic.
-Questions must be answerable with a concrete product management insight.
-Output ONLY the 3 questions, one per line. No numbering. No preamble. No bullet points.`,
+          content: `Is the text below clearly personal, social, or completely unrelated to professional product or business work — e.g., a personal email, social chat message, or content with no business subject?
+If YES: output exactly NOT_PM on a single line and nothing else.
+If there is ANY ambiguity or professional context: output 3 chips.
+When in doubt, output 3 chips.
+
+Output 3 short, specific questions a senior PM mentor would ask to deepen thinking on this topic. One question per line. No numbering. No bullets. No preamble. Do NOT repeat the keyword verbatim as the full question.`,
         },
         {
           role: 'user',
-          content: `Topic: ${keyword}\nContext: ${blockContent.slice(0, 300)}`,
+          content: `Keyword detected: ${keyword}\nContent: ${blockContent.slice(0, 300)}`,
         },
       ],
     }),
@@ -136,10 +138,16 @@ Output ONLY the 3 questions, one per line. No numbering. No preamble. No bullet 
   const data = await res.json();
   const text = data.choices?.[0]?.message?.content?.trim() ?? '';
 
+  // NOT_PM response — return empty array so service worker suppresses the badge
+  if (text === 'NOT_PM') {
+    console.log('[LennyLive] generateQuestions: NOT_PM — badge suppressed');
+    return [];
+  }
+
   // Strip leading bullets/numbers — LLaMA occasionally ignores "no numbering" instruction
   return text
     .split('\n')
     .map(q => q.replace(/^[-•\d.)\s]+/, '').trim())
-    .filter(q => q.length > 0)
+    .filter(q => q.length > 5) // filter out any accidental empty or single-word lines
     .slice(0, 3);
 }
