@@ -1,15 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Lenny Live",
-  "version": "0.1.0",
-  "description": "Your ambient PM mentor — Lenny Rachitsky's voice in your workflow",
+  "version": "0.2.0",
+  "description": "Compounded experience. Borrowed intuition.",
   "permissions": ["activeTab", "storage", "scripting", "tabs"],
   "host_permissions": [
-    "*://docs.google.com/document/*",
-    "*://*.notion.so/*",
-    "*://*.atlassian.net/*",
-    "*://*.linear.app/*",
-    "https://api.elevenlabs.io/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background/service-worker.js",
@@ -17,12 +13,7 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://docs.google.com/document/*",
-        "*://*.notion.so/*",
-        "*://*.atlassian.net/*",
-        "*://*.linear.app/*"
-      ],
+      "matches": ["<all_urls>"],
       "js": ["content/content-script.js"],
       "run_at": "document_idle",
       "all_frames": false
