@@ -662,6 +662,7 @@ let lastEagerFetchBlockContent = '';  // blockContent captured at eager fetch ti
 let pendingQuestions = null;          // { keyword, questions, blockContent, timestamp } | null
 let eagerFetchTimer = null;           // 1.5s timer → triggers Groq fetch
 let dotAppearTimer = null;            // 3.5s timer → shows write+pause dot
+let activeSensorElement = null;       // element the write+pause sensor is currently attached to
 
 // Reading sensor gate
 const pageLoadTime = Date.now();      // used to enforce 20s minimum before reading sensor fires
@@ -681,6 +682,62 @@ function isUserEditing() {
   if (location.hostname === 'docs.google.com' && Date.now() - lastPrintableKeystroke < 5000) return true;
   return false;
 }
+
+// ─── Element-First Sensor Attachment ─────────────────────────────────────────
+// Attaches the write+pause keydown listener to the specific focused element.
+// This replaces the global keydown approach — sensor follows the cursor, not the URL.
+
+function onSensorKeydown(e) {
+  // Only track printable characters — ignore Ctrl, Shift, Alt, arrows, etc.
+  if (e.key.length !== 1 || e.ctrlKey || e.metaKey || e.altKey) return;
+
+  lastPrintableKeystroke = Date.now();
+
+  // User is typing — cancel any pending fetch and reset
+  clearTimeout(eagerFetchTimer);
+  clearTimeout(dotAppearTimer);
+  pendingQuestions = null;
+  hideWritePauseDot(); // no-op if not visible
+
+  // Schedule fresh eager fetch 1.5s from now
+  eagerFetchTimer = setTimeout(triggerEagerFetch, 1500);
+}
+
+function attachWritePauseSensor(el) {
+  // Detach from previous element first (covers focus-shift without blur)
+  detachWritePauseSensor();
+  activeSensorElement = el;
+  el.addEventListener('keydown', onSensorKeydown);
+  console.log('[LennyLive] Write+pause sensor attached to:', el.tagName, el.id || el.className.slice(0, 30));
+}
+
+function detachWritePauseSensor() {
+  if (activeSensorElement) {
+    activeSensorElement.removeEventListener('keydown', onSensorKeydown);
+    activeSensorElement = null;
+    // Cancel any pending timers — user left the field
+    clearTimeout(eagerFetchTimer);
+    clearTimeout(dotAppearTimer);
+    console.log('[LennyLive] Write+pause sensor detached');
+  }
+}
+
+// focusin fires when any element in the document gains focus (bubbles up).
+// We only care about contenteditable divs and form inputs.
+document.addEventListener('focusin', (e) => {
+  const el = e.target;
+  if (!el) return;
+  if (el.isContentEditable || el.matches('input, textarea')) {
+    attachWritePauseSensor(el);
+  }
+});
+
+// focusout fires when focus leaves any element.
+// Detach sensor — user is no longer typing in a monitored field.
+document.addEventListener('focusout', () => {
+  detachWritePauseSensor();
+  hideWritePauseDot();
+});
 
 // ─── Ambient UI Stubs (implemented by UI agent) ───────────────────────────────
 
@@ -987,21 +1044,6 @@ document.addEventListener('keydown', (e) => {
     }
   }
 
-  // Write+pause sensor — track printable keystrokes
-  // e.key.length === 1 catches regular characters; excludes Ctrl, Shift, Alt, Enter, etc.
-  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-    lastPrintableKeystroke = Date.now();
-
-    // User resumed typing — cancel any pending eager fetch and suppress dot.
-    // Reset unconditionally: harmless if already null, prevents stale chips.
-    clearTimeout(eagerFetchTimer);
-    clearTimeout(dotAppearTimer);
-    pendingQuestions = null;
-    hideWritePauseDot(); // no-op if dot not visible
-
-    // Start new 1.5s eager fetch timer
-    eagerFetchTimer = setTimeout(triggerEagerFetch, 1500);
-  }
 });
 
 // ─── Write+Pause Eager Fetch ──────────────────────────────────────────────────
