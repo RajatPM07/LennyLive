@@ -95,61 +95,84 @@ export async function abstractQuery(transcript, selection, pageContext) {
 /**
  * Generate 2-3 contextual PM question chips for the write+pause badge pill.
  * Single Groq call: detects PM context AND generates chips simultaneously.
- * Returns empty array if content is NOT PM work.
+ * Returns {concept: null, questions: []} if content is NOT PM work.
  *
  * @param {string} keyword      - PM keyword detected in the active block
  * @param {string} blockContent - Text of the active block (first 300 chars)
- * @returns {Promise<string[]>} - Array of 2-3 question strings, or [] if NOT_PM
+ * @returns {Promise<{concept: string, questions: string[]}|{concept: null, questions: []}>}
  */
 export async function generateQuestions(keyword, blockContent) {
   keyword = keyword || '';
-  const res = await fetch(GROQ_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
-      temperature: 0.4,
-      max_tokens: 150,
-      messages: [
-        {
-          role: 'system',
-          content: `Is the text below clearly personal, social, or completely unrelated to professional product or business work — e.g., a personal email, social chat message, or content with no business subject?
+  try {
+    const res = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        temperature: 0.4,
+        max_tokens: 150,
+        messages: [
+          {
+            role: 'system',
+            content: `Is the text below clearly personal, social, or completely unrelated to professional product or business work — e.g., a personal email, social chat message, or content with no business subject?
 If YES: output exactly NOT_PM on a single line and nothing else.
-If there is ANY ambiguity or professional context: output 3 chips.
+If there is ANY ambiguity or professional context: identify the most relevant PM concept and output 3 chips.
 When in doubt, output 3 chips.
 
-Output 3 short, specific questions a senior PM mentor would ask to deepen thinking on this topic. One question per line. No numbering. No bullets. No preamble. Do NOT repeat the keyword verbatim as the full question.`,
-        },
-        {
-          role: 'user',
-          content: `Keyword detected: ${keyword}\nContent: ${blockContent.slice(0, 300)}`,
-        },
-      ],
-    }),
-  });
+Output format when generating chips:
+CONCEPT: [2-4 word PM topic name, e.g. "Retention Strategy", "North Star Metrics", "GTM Motion"]
+[question 1]
+[question 2]
+[question 3]
 
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(`Groq generateQuestions failed: ${res.status} — ${errBody}`);
+Rules: One question per line. No numbering. No bullets. No preamble. Do NOT repeat the keyword verbatim as the full question. The CONCEPT line must be first.`,
+          },
+          {
+            role: 'user',
+            content: `Keyword detected: ${keyword}\nContent: ${blockContent.slice(0, 300)}`,
+          },
+        ],
+      }),
+    });
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      throw new Error(`Groq generateQuestions failed: ${res.status} — ${errBody}`);
+    }
+
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content?.trim() ?? '';
+
+    // NOT_PM response — return null concept so service worker suppresses the badge
+    // Use startsWith (case-insensitive) to handle variants like "NOT_PM.", "Not_PM", "not_pm"
+    if (text.toUpperCase().startsWith('NOT_PM')) {
+      console.log('[LennyLive] generateQuestions: NOT_PM — badge suppressed');
+      return { concept: null, questions: [] };
+    }
+
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+    // Extract CONCEPT line
+    let concept = '';
+    const conceptLineIdx = lines.findIndex(l => l.toUpperCase().startsWith('CONCEPT:'));
+    if (conceptLineIdx !== -1) {
+      concept = lines[conceptLineIdx].replace(/^CONCEPT:\s*/i, '').trim();
+      lines.splice(conceptLineIdx, 1); // remove concept line from question list
+    }
+    if (!concept) concept = 'PM Insights'; // fallback if Groq doesn't output CONCEPT line
+
+    // Strip leading bullets/numbers — LLaMA occasionally ignores "no numbering" instruction
+    const questions = lines
+      .map(q => q.replace(/^[-•\d.)\s]+/, '').trim())
+      .filter(q => q.length > 5)
+      .slice(0, 3);
+
+    return { concept, questions };
+  } catch (err) {
+    console.error('[LennyLive] generateQuestions error:', err);
+    return { concept: null, questions: [] };
   }
-
-  const data = await res.json();
-  const text = data.choices?.[0]?.message?.content?.trim() ?? '';
-
-  // NOT_PM response — return empty array so service worker suppresses the badge
-  // Use startsWith (case-insensitive) to handle variants like "NOT_PM.", "Not_PM", "not_pm"
-  if (text.toUpperCase().startsWith('NOT_PM')) {
-    console.log('[LennyLive] generateQuestions: NOT_PM — badge suppressed');
-    return [];
-  }
-
-  // Strip leading bullets/numbers — LLaMA occasionally ignores "no numbering" instruction
-  return text
-    .split('\n')
-    .map(q => q.replace(/^[-•\d.)\s]+/, '').trim())
-    .filter(q => q.length > 5) // filter out any accidental empty or single-word lines
-    .slice(0, 3);
 }
