@@ -663,6 +663,9 @@ let pendingQuestions = null;          // { keyword, questions, blockContent, tim
 let eagerFetchTimer = null;           // 1.5s timer → triggers Groq fetch
 let dotAppearTimer = null;            // 3.5s timer → shows write+pause dot
 let activeSensorElement = null;       // element the write+pause sensor is currently attached to
+// API cost reduction — three gates in triggerEagerFetch
+let lastEagerFetchParagraphHash = '';   // first 80 chars of last submitted paragraph
+const seenConceptsThisSession = new Set(); // concepts seen this tab session — avoid re-fetching
 
 // Reading sensor gate
 const pageLoadTime = Date.now();      // used to enforce 20s minimum before reading sensor fires
@@ -1050,28 +1053,64 @@ document.addEventListener('keydown', (e) => {
 
 // Called 1.5s after the last printable keystroke.
 // Fires Groq silently to pre-generate question chips before the dot appears.
+// ─── Write+Pause Eager Fetch ──────────────────────────────────────────────────
+// Called 1.5s after the last printable keystroke in a monitored element.
+// Three local gates run before any Groq call:
+//   1. 40-word minimum — conversational messages won't trigger
+//   2. PM keyword present — no keyword = nothing to surface
+//   3. Paragraph hash cache — same paragraph = serve cached chips
+//   4. Session concept dedup — same concept this session = serve cached chips
 function triggerEagerFetch() {
   if (state !== 'idle') return;          // don't interrupt active voice session
-  if (!isUserEditing()) return;          // only fire during active editing
 
-  // Extract active block first — prefer keyword in what the user is writing NOW.
-  // Fall back to semantic container so short/incomplete blocks still trigger.
-  // This avoids re-firing on stale keywords from earlier document sections.
+  // Extract paragraph — two-level: cursor block first, semantic container fallback
   const blockContent = extractPageContext();
   if (!blockContent) return;
 
+  // Gate 1: 40-word minimum — short messages are conversational, not PM work
+  const wordCount = blockContent.trim().split(/\s+/).filter(w => w.length > 0).length;
+  if (wordCount < 40) return;
+
+  // Gate 2: PM keyword present — fast local check, zero API cost
   let keyword = detectPMKeywordInText(blockContent);
   if (!keyword) {
-    // Cursor block too short — check semantic container (article/main) without nav pollution
+    // Cursor block may be short — check semantic container for broader keyword match
     const mainEl = document.querySelector('article, main, [role="main"]');
     const mainText = mainEl ? (mainEl.innerText || '').slice(0, 5000) : '';
     keyword = mainText ? detectPMKeywordInText(mainText) : null;
   }
-  if (!keyword) return;                  // no PM keyword anywhere relevant — nothing to do
+  if (!keyword) return;
 
+  // Gate 3: Paragraph hash cache — if paragraph hasn't changed meaningfully, serve cached chips
+  const paragraphHash = blockContent.slice(0, 80);
+  if (paragraphHash === lastEagerFetchParagraphHash && pendingQuestions) {
+    console.log('[LennyLive] Write+pause: paragraph unchanged — serving cached chips');
+    dotAppearTimer = setTimeout(() => {
+      if (state !== 'idle') return;
+      showWritePauseDot('ready');
+    }, 500); // shorter delay — chips already ready
+    return;
+  }
+
+  // Gate 4: Session concept dedup — same canonical concept seen this session = serve cached chips.
+  // Key on TOPIC_MAP[keyword] ?? keyword so "retention" and "churn" both map to "Retention"
+  // and don't fire duplicate Groq calls for the same PM domain.
+  const conceptKey = TOPIC_MAP[keyword] ?? keyword;
+  if (seenConceptsThisSession.has(conceptKey) && pendingQuestions?.keyword === keyword) {
+    console.log('[LennyLive] Write+pause: concept already seen this session — serving cached chips');
+    dotAppearTimer = setTimeout(() => {
+      if (state !== 'idle') return;
+      showWritePauseDot('ready');
+    }, 500);
+    return;
+  }
+
+  // All gates passed — proceed to Groq fetch
+  lastEagerFetchParagraphHash = paragraphHash;
   lastEagerFetchBlockContent = blockContent;
+  seenConceptsThisSession.add(conceptKey); // store canonical topic key, not raw keyword
 
-  console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword);
+  console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword, '| words:', wordCount);
   chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword, blockContent });
 
   // Schedule dot appearance 2s from now (= 3.5s total from last keystroke)
