@@ -2,6 +2,28 @@
 
 ---
 
+## Next Up — Platform Redesign (Element-First Detection)
+
+**Spec:** `docs/superpowers/specs/2026-03-29-platform-redesign.md`
+
+**Why:** Write+pause activation is unreliable on current architecture. URL-gating blocks the demo the moment a user opens Slack, Gmail, or any unlisted platform. This redesign fixes both with element-first detection + Grammarly-inspired badge pill.
+
+**Positioning locked:** "Compounded experience. Borrowed intuition."
+
+**Key decisions:**
+- `focusin`/`focusout` gate replaces global `keydown` listener
+- `<all_urls>` optional permissions with warm per-site onboarding
+- Fixed bottom-right badge pill ("3 patterns on retention →") — no inline DOM injection
+- 40-word threshold + paragraph hash cache + session concept dedup (cuts Groq calls ~70-80%)
+- Single progressive disclosure card (compact for chip tap, expanded for selection/double-tap)
+- Google Docs fallback: clipboard intercept (`document.oncopy`)
+
+**Files touched:** `manifest.json`, `content/content-script.js`, `background/service-worker.js`, `background/abstraction.js`
+
+**Next action:** `superpowers:writing-plans` on the spec, then `superpowers:subagent-driven-development`
+
+---
+
 ## Planned — Ready to Execute
 
 ### Dynamic Topic Re-tag (Groq Ingestion Layer)

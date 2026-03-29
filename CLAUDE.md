@@ -460,10 +460,21 @@ node scripts/embed.js
 - [x] **Gamification PRD** written — full game-theory-grounded spec. Notion: 🎮 Gamification System — PRD
 - [x] **Analytics design** written — PostHog via REST API, dropout funnel, all events defined. Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
 
+## Positioning (Locked 2026-03-29)
+
+**Tagline:** "Compounded experience. Borrowed intuition."
+
+**Core truth:** Senior PMs have gut instinct because they've lived this before. You haven't. Yet. Lenny Live gives you the compounded experience of 300 product leaders — borrowed as your intuition, arriving at the exact moment your brain is inside the problem.
+
+NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real people, real episodes.
+
+---
+
 ## What's Next 🔨
 
 > All items below are V1 requirements — real users ship on April 15th. Nothing here is optional or "phase 2".
 
+- [ ] **🔴 Platform Redesign (Element-First Detection)** — URL-gating kills the demo; write+pause unreliable on current arch. Spec: `docs/superpowers/specs/2026-03-29-platform-redesign.md`. Core: `focusin`/`focusout` gate, `<all_urls>` optional permissions, badge pill UX, hash cache + session dedup. Next: `superpowers:writing-plans` → `superpowers:subagent-driven-development`
 - [ ] **Full gamification system** — PM Levels + XP economy (+5 deliver/+15 save/+25 rare) + topic badges + streak milestones (3/7/14/30d) + streak shield + rare drops. See Notion: 🎮 Gamification System — PRD
 - [ ] **Onboarding commitment screen** — first-open popup moment, learning goal selection (behavioral commitment device — required for retention)
 - [ ] **Chrome notifications** — Streak Saver at 8pm if no activation that day (highest retention lever per Duolingo research)
@@ -476,14 +487,14 @@ node scripts/embed.js
 
 ---
 
-## Remaining Timeline (as of Mar 25, 2026)
+## Remaining Timeline (as of Mar 29, 2026)
 
 | Period | Dates | Focus |
 |---|---|---|
-| Now → Apr 1 | Mar 25–Apr 1 | Voice clone + Full gamification system + Onboarding |
-| Apr 2–7 | Apr 2–7 | Chrome notifications + Analytics (PostHog) + Saved insights YouTube links |
-| Apr 8–12 | Apr 8–12 | Audio re-seed + Dynamic push question + Full E2E testing |
-| Buffer | Apr 13–15 | Bug fixes + submit |
+| Now → Apr 3 | Mar 29–Apr 3 | Platform redesign (element-first detection + badge pill UX) |
+| Apr 4–8 | Apr 4–8 | Voice clone + Gamification + Onboarding |
+| Apr 9–12 | Apr 9–12 | Chrome notifications + Audio re-seed + Dynamic push question |
+| Buffer | Apr 13–15 | Full E2E testing + bug fixes + submit |
 
 ---
 
@@ -534,6 +545,8 @@ node scripts/embed.js
 - [2026-03-22] — Silent API failures (Groq timeout, ElevenLabs 5xx) are invisible to the user — they think the extension is broken → always map every catch block to a `network_error` status push, never just `console.warn`. Push 2 (audio) failures must also push `network_error` since the postcard is already visible and audio silence is confusing.
 - [2026-03-25] — Using different `chrome.storage.local` keys for the same setting in popup vs. content-script breaks sync silently — popup wrote `isMuted`, content-script read/wrote `voiceMuted`, so mute toggle did nothing → define all storage key names as comments at the top of the file that uses them; cross-check any key used in both popup.js and content-script.js.
 - [2026-03-25] — Scoping features as "good enough for demo" or deferring to "phase 2" is the wrong mental model — this is a full product for real users launching April 15th. If a feature is needed for a good user experience (onboarding, notifications, streak shield), it is V1, not V2. There is no phase 2.
+- [2026-03-29] — `triggerEagerFetch` keyword detection was too restrictive: `extractPageContext()` returns only the active Notion block (often one short sentence without PM keywords) → always use two-level detection: cursor block first, fall back to semantic container (`article`/`main`/`[role="main"]`). Symptom: `pageContext: active cursor block` logs but `Write+pause: eager Groq fetch` never appears.
+- [2026-03-29] — URL-gating (`manifest.json` hardcoding 4 platforms) is wrong for an ambient tool — it kills demos on unlisted platforms and means every new platform requires a code change + Web Store re-review → rebuild with element-first detection: `focusin`/`focusout` gate on any contenteditable/textarea, `<all_urls>` optional permissions with per-site opt-in onboarding.
 
 ---
 

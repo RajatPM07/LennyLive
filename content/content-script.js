@@ -1012,13 +1012,20 @@ function triggerEagerFetch() {
   if (state !== 'idle') return;          // don't interrupt active voice session
   if (!isUserEditing()) return;          // only fire during active editing
 
-  // Extract active block first — keyword must be in what the user is writing NOW,
-  // not anywhere on the page (which would re-fire on old keywords from earlier lines).
+  // Extract active block first — prefer keyword in what the user is writing NOW.
+  // Fall back to semantic container so short/incomplete blocks still trigger.
+  // This avoids re-firing on stale keywords from earlier document sections.
   const blockContent = extractPageContext();
   if (!blockContent) return;
 
-  const keyword = detectPMKeywordInText(blockContent);
-  if (!keyword) return;                  // no PM keyword in current block — nothing to do
+  let keyword = detectPMKeywordInText(blockContent);
+  if (!keyword) {
+    // Cursor block too short — check semantic container (article/main) without nav pollution
+    const mainEl = document.querySelector('article, main, [role="main"]');
+    const mainText = mainEl ? (mainEl.innerText || '').slice(0, 5000) : '';
+    keyword = mainText ? detectPMKeywordInText(mainText) : null;
+  }
+  if (!keyword) return;                  // no PM keyword anywhere relevant — nothing to do
 
   lastEagerFetchBlockContent = blockContent;
 

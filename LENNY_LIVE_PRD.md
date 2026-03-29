@@ -1,13 +1,15 @@
 # 🎙️ Lenny Live — Product Requirements Document
-> Version 2.1 | March 22, 2026 | Rajat Sharma
+> Version 2.2 | March 29, 2026 | Rajat Sharma
 
 ---
 
 ## Overview
 
-**Lenny Live** is an ambient Chrome extension that brings Lenny Rachitsky's voice and wisdom directly into a PM's workflow — contextually, non-intrusively, exactly when needed.
+**Lenny Live** is a Chrome extension that surfaces the compounded experience of 300+ product leaders as borrowed intuition — arriving while you write, on any platform, exactly when your brain is still inside the problem.
 
-**Not a chatbot. A mentor.**
+**Compounded experience. Borrowed intuition.**
+
+**Not a chatbot. Not a mentor. Not generated advice.** 100% real stories, real people, real episodes — surfaced by AI at the moment you need them.
 
 **Competition deadline:** April 15, 2026
 **Built with Lenny Rachitsky's explicit permission** to use his voice and likeness.
@@ -505,10 +507,10 @@ GROQ_API_KEY=     # For llama-3.1-8b-instant abstraction fallback — groq.com
 
 **Project name:** Lenny Live
 
-**One-liner:** An ambient PM mentor Chrome extension that brings Lenny's voice and wisdom into your workflow — exactly when you need it.
+**One-liner:** The compounded experience of 300 product leaders, borrowed as your intuition while you write — on any platform, exactly when you need it.
 
 **Submission text:**
-> "I built Lenny Live — a Chrome extension that brings your voice and wisdom into a PM's workflow, contextually, exactly when they need it. Built with your blessing, for the early PMs who feel behind. Double tap Ctrl anywhere you're writing and Lenny shows up. Grounded in your real transcripts via RAG. No chatbot. A mentor."
+> "I built Lenny Live — a Chrome extension that surfaces the compounded experience of 300+ product leaders as borrowed intuition, exactly when an early PM is forming a thought. Write anywhere — Notion, Linear, Slack, Gmail — pause for a second, and Lenny surfaces who's already solved what you're wrestling with. Built with your blessing, grounded in your real transcripts via RAG. Not a chatbot. Not generated advice. The right story, from someone who's been there, arriving while your brain is still inside the problem."
 
 ---
 
