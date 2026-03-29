@@ -684,6 +684,7 @@ let activeSensorElement = null;       // element the write+pause sensor is curre
 // API cost reduction — three gates in triggerEagerFetch
 let lastEagerFetchParagraphHash = '';   // first 80 chars of last submitted paragraph
 const sessionChipsCache = new Map();   // conceptKey → {keyword, questions} — survives pendingQuestions=null
+let lastKnownConcept = null; // concept from last successful QUESTIONS_READY — persists across keystrokes
 
 // Reading sensor gate
 const pageLoadTime = Date.now();      // used to enforce 20s minimum before reading sensor fires
@@ -1133,8 +1134,8 @@ function triggerEagerFetch() {
   const paragraphHash = blockContent.slice(0, 80);
   if (paragraphHash === lastEagerFetchParagraphHash) {
     // Restore cached chips if available (from prior Groq call for this paragraph)
-    if (pendingQuestions) {
-      const cached = sessionChipsCache.get(pendingQuestions.keyword);
+    if (lastKnownConcept) {
+      const cached = sessionChipsCache.get(lastKnownConcept);
       if (cached) {
         pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
         console.log('[LennyLive] Write+pause: paragraph unchanged — restoring cached chips');
@@ -1145,9 +1146,8 @@ function triggerEagerFetch() {
   }
 
   // Gate 3: session concept dedup — same concept this session = serve cached chips
-  const lastConcept = pendingQuestions?.keyword;
-  if (lastConcept && sessionChipsCache.has(lastConcept)) {
-    const cached = sessionChipsCache.get(lastConcept);
+  if (lastKnownConcept && sessionChipsCache.has(lastKnownConcept)) {
+    const cached = sessionChipsCache.get(lastKnownConcept);
     pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
     lastEagerFetchParagraphHash = paragraphHash;
     lastEagerFetchBlockContent = blockContent;
@@ -1342,6 +1342,7 @@ chrome.runtime.onMessage.addListener((message) => {
     // Cache chips so re-focus on same/related content doesn't re-call Groq
     const ck = TOPIC_MAP[message.keyword] ?? message.keyword;
     sessionChipsCache.set(ck, { keyword: message.keyword, questions: message.questions });
+    lastKnownConcept = message.keyword; // persist for cache gate anchoring across keystrokes
 
     console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
 
