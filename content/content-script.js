@@ -829,7 +829,8 @@ function showWritePauseDot(mode = 'ready') {
           console.log('[LennyLive] Badge clicked — paragraph drifted, re-fetching');
           showWritePauseDot('loading');
           const blockContent = extractPageContext();
-          const keyword2 = detectPMKeywordInText(blockContent) || pendingQuestions.keyword;
+          // Use existing concept as hint — Groq will re-identify if paragraph has shifted
+          const keyword2 = pendingQuestions.keyword || '';
           pendingQuestions = null;
           lastEagerFetchParagraphHash = currentHash;
           lastEagerFetchBlockContent = blockContent;
@@ -1113,10 +1114,10 @@ document.addEventListener('keydown', (e) => {
 // ─── Write+Pause Eager Fetch ──────────────────────────────────────────────────
 // Called 1.5s after the last printable keystroke in a monitored element.
 // Three local gates run before any Groq call:
-//   1. 40-word minimum — conversational messages won't trigger
-//   2. PM keyword present — no keyword = nothing to surface
-//   3. Paragraph hash cache — same paragraph = serve cached chips
-//   4. Session concept dedup — same concept this session = serve cached chips
+//   Gate 1: 40-word minimum — short messages won't trigger
+//   Gate 2: Paragraph hash cache — same paragraph = serve cached chips
+//   Gate 3: Session concept dedup — same concept this session = serve cached chips
+// No keyword gate — Groq owns PM detection for write+pause.
 function triggerEagerFetch() {
   if (state !== 'idle') return;          // don't interrupt active voice session
 
@@ -1128,40 +1129,29 @@ function triggerEagerFetch() {
   const wordCount = blockContent.trim().split(/\s+/).filter(w => w.length > 0).length;
   if (wordCount < 40) return;
 
-  // Gate 2: PM keyword present — fast local check, zero API cost
-  let keyword = detectPMKeywordInText(blockContent);
-  if (!keyword) {
-    // Cursor block may be short — check semantic container for broader keyword match
-    const mainEl = document.querySelector('article, main, [role="main"]');
-    const mainText = mainEl ? (mainEl.innerText || '').slice(0, 5000) : '';
-    keyword = mainText ? detectPMKeywordInText(mainText) : null;
-  }
-  if (!keyword) return;
-
-  // Canonical concept key — "retention" and "churn" both map to "Retention" via TOPIC_MAP
-  const conceptKey = TOPIC_MAP[keyword] ?? keyword;
-
-  // Gate 3: Paragraph hash cache — same paragraph = skip regardless of pendingQuestions state.
-  // pendingQuestions is cleared on every keystroke, so we can't rely on it here.
+  // Gate 2: same paragraph hash — skip
   const paragraphHash = blockContent.slice(0, 80);
   if (paragraphHash === lastEagerFetchParagraphHash) {
-    const cached = sessionChipsCache.get(conceptKey);
-    if (cached) {
-      pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
-      console.log('[LennyLive] Write+pause: paragraph unchanged — restoring cached chips');
-      dotAppearTimer = setTimeout(() => { if (state !== 'idle') return; showWritePauseDot('ready'); }, 500);
+    // Restore cached chips if available (from prior Groq call for this paragraph)
+    if (pendingQuestions) {
+      const cached = sessionChipsCache.get(pendingQuestions.keyword);
+      if (cached) {
+        pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
+        console.log('[LennyLive] Write+pause: paragraph unchanged — restoring cached chips');
+        dotAppearTimer = setTimeout(() => { if (state !== 'idle') return; showWritePauseDot('ready'); }, 500);
+      }
     }
-    return; // same paragraph, never re-fetch
+    return;
   }
 
-  // Gate 4: Session concept dedup — same canonical concept, different paragraph.
-  // Restore chips from cache so Groq is not called again.
-  if (sessionChipsCache.has(conceptKey)) {
-    const cached = sessionChipsCache.get(conceptKey);
+  // Gate 3: session concept dedup — same concept this session = serve cached chips
+  const lastConcept = pendingQuestions?.keyword;
+  if (lastConcept && sessionChipsCache.has(lastConcept)) {
+    const cached = sessionChipsCache.get(lastConcept);
     pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
     lastEagerFetchParagraphHash = paragraphHash;
     lastEagerFetchBlockContent = blockContent;
-    console.log('[LennyLive] Write+pause: concept cached — restoring chips without Groq call');
+    console.log('[LennyLive] Write+pause: concept cached — restoring chips');
     dotAppearTimer = setTimeout(() => { if (state !== 'idle') return; showWritePauseDot('ready'); }, 500);
     return;
   }
@@ -1171,8 +1161,8 @@ function triggerEagerFetch() {
   lastEagerFetchBlockContent = blockContent;
   // sessionChipsCache updated in QUESTIONS_READY happy path after Groq responds
 
-  console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword, '| words:', wordCount);
-  chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword, blockContent });
+  console.log('[LennyLive] Write+pause: sending to Groq for concept detection | words:', wordCount);
+  chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword: '', blockContent });
 
   // Schedule dot appearance 2s from now (= 3.5s total from last keystroke)
   dotAppearTimer = setTimeout(() => {
