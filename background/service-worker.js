@@ -34,13 +34,15 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     if (!tabId) return;
 
     generateQuestions(message.keyword, message.blockContent)
-      .then(questions => {
-        // Empty array = NOT_PM — send back with null so content script suppresses badge
+      .then(result => {
+        // result = { concept, questions } or { concept: null, questions: [] }
+        // Empty questions = NOT_PM — send back with null so content script suppresses badge
+        const isEmpty = !result.questions || result.questions.length === 0;
         chrome.tabs.sendMessage(tabId, {
           type: 'QUESTIONS_READY',
-          keyword: message.keyword,
-          questions: questions.length > 0 ? questions : null,
-          notPm: questions.length === 0,
+          keyword: result.concept || '',    // concept from Groq drives badge label
+          questions: isEmpty ? null : result.questions,
+          notPm: isEmpty,
         });
       })
       .catch(err => {

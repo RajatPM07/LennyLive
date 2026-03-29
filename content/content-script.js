@@ -1339,10 +1339,11 @@ chrome.runtime.onMessage.addListener((message) => {
       timestamp: Date.now(),
     };
 
-    // Cache chips so re-focus on same/related content doesn't re-call Groq
-    const ck = TOPIC_MAP[message.keyword] ?? message.keyword;
+    // Cache chips so re-focus on same/related content doesn't re-call Groq.
+    // concept from Groq is already canonical (e.g. "Retention Strategy") — no normalization needed.
+    const ck = message.keyword || 'unknown';
     sessionChipsCache.set(ck, { keyword: message.keyword, questions: message.questions });
-    lastKnownConcept = ck; // persist normalized cache key for cache gate anchoring across keystrokes
+    lastKnownConcept = ck; // persist cache key for cache gate anchoring across keystrokes
 
     console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
 
@@ -1454,32 +1455,6 @@ function stopListening() {
 // Multi-word phrases use [\s\-]+ as separators (NOT . which matches any char).
 // NOTE: write+pause does NOT use this — Groq owns that detection path (Task 3).
 const PM_ROOTS = /retent|retain(?!er)|churn|activat|growth[\s-]+loop|viral[\s-]+growth|acquisi|referral|network[\s-]+effect|funnel|cohort|north[\s-]+star|KPI|OKR|NPS|CSAT|DAU|MAU|WAU|LTV|CAC|ARR|MRR|product[\s-]+market|PMF|strateg|position(?:ing)?|competit|differenti|moat|roadmap|prioriti|pricing|monetiz|freemium|paywall|upsell|subscript|free[\s-]+trial|revenue[\s-]+model|onboard|aha[\s-]+moment|time[\s-]+to[\s-]+value|user[\s-]+journey|drop[\s-]+off|go[\s-]+to[\s-]+market|GTM|product[\s-]+led|PLG|sprint|backlog|epic|user[\s-]+stor|feature[\s-]+flag|dogfood|rollout|post[\s-]+mortem|user[\s-]+research|jobs[\s-]+to[\s-]+be|JTBD|A[\/\s]B[\s-]+test|experiment|persona(?!l\b)|stakehold|cross[\s-]+func|buy[\s-]+in|one[\s-]+pager|customer[\s-]+develop|feedback[\s-]+loop|feature[\s-]+request|power[\s-]+user|win[\s-]+loss|marketplac|cold[\s-]+start|MVP|zero[\s-]+to[\s-]+one|0[\s-]+to[\s-]+1|early[\s-]+stage|pre[\s-]+PMF|founding/i;
-
-const TOPIC_MAP = {
-  'retention': 'Retention', 'churn': 'Retention', 'DAU': 'Retention',
-  'MAU': 'Retention', 'WAU': 'Retention', 'activation': 'Retention',
-  'GTM': 'GTM Strategy', 'go-to-market': 'GTM Strategy',
-  'acquisition': 'GTM Strategy', 'growth loop': 'GTM Strategy',
-  'PLG': 'GTM Strategy', 'product-led': 'GTM Strategy',
-  'PMF': 'Product-Market Fit', 'product market fit': 'Product-Market Fit',
-  'pre-PMF': 'Product-Market Fit', 'zero to one': 'Product-Market Fit',
-  '0 to 1': 'Product-Market Fit',
-  'north star': 'Metrics & North Star',
-  'KPI': 'Metrics & North Star', 'OKR': 'Metrics & North Star',
-  'funnel': 'Metrics & North Star', 'cohort': 'Metrics & North Star',
-  'conversion': 'Metrics & North Star',
-  'prioritization': 'Roadmap Prioritisation', 'prioritisation': 'Roadmap Prioritisation',
-  'roadmap': 'Roadmap Prioritisation', 'backlog': 'Roadmap Prioritisation',
-  'strategy': 'Roadmap Prioritisation', 'positioning': 'Roadmap Prioritisation',
-  'competitive': 'Roadmap Prioritisation', 'moat': 'Roadmap Prioritisation',
-  'differentiation': 'Roadmap Prioritisation',
-  'discovery': 'User Research', 'user research': 'User Research',
-  'jobs to be done': 'User Research', 'JTBD': 'User Research',
-};
-
-function getDisplayTopic(buzzword) {
-  return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
-}
 
 // Quick boolean PM root check — used by selection dot, reading sensor, and clipboard intercept.
 // Write+pause does NOT use this — it sends to Groq directly after the 40-word threshold.
