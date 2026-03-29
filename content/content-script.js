@@ -1559,4 +1559,41 @@ observer.observe(document.body, {
 
 console.log('[LennyLive] MutationObserver watching for PM buzzwords');
 
+// ─── Google Docs Clipboard Intercept ─────────────────────────────────────────
+// Google Docs uses a canvas renderer — getSelection() and contenteditable detection
+// both fail. Fallback: intercept copy events. When a PM copies text containing a
+// PM keyword on docs.google.com, treat it as a selection trigger.
+//
+// UX framing: "On Google Docs, highlight + copy to ask Lenny."
+// This is explicitly framed as a different interaction model, not a broken version
+// of the standard flow. The behavior is honest: copy is the trigger.
+
+if (location.hostname === 'docs.google.com') {
+  document.addEventListener('copy', (e) => {
+    // e.clipboardData.getData only available on cut/copy events, not paste
+    const clipText = e.clipboardData?.getData('text/plain')?.trim() ?? '';
+
+    if (clipText.length < 10 || clipText.length > 2000) return;
+
+    const keyword = detectPMKeywordInText(clipText);
+    if (!keyword) return;
+
+    console.log('[LennyLive] Google Docs clipboard intercept — keyword:', keyword, 'length:', clipText.length);
+
+    // Treat copied text as a selection — fire QUERY directly (same as selection dot click)
+    // Small delay so the copy completes before we show UI
+    setTimeout(() => {
+      if (state !== 'idle') return;
+      chrome.runtime.sendMessage({
+        type: 'QUERY',
+        transcript: '',
+        selection: clipText.slice(0, 500),
+        pageContext: '',
+      });
+    }, 100);
+  });
+
+  console.log('[LennyLive] Google Docs clipboard intercept active');
+}
+
 console.log('[LennyLive] Content script loaded — Shadow DOM ready');
