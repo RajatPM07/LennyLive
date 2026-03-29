@@ -9,15 +9,8 @@ host.id = 'lenny-live-root';
 const shadow = host.attachShadow({ mode: 'open' }); // open = inspectable in DevTools
 document.body.appendChild(host);
 
-// Load Google Fonts into the document (not shadow DOM) — fonts loaded here
-// are available inside shadow roots on the same page.
-if (!document.getElementById('lenny-live-fonts')) {
-  const fontLink = document.createElement('link');
-  fontLink.id = 'lenny-live-fonts';
-  fontLink.rel = 'stylesheet';
-  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap';
-  document.head.appendChild(fontLink);
-}
+// Fonts: use system font stack — injecting Google Fonts into document.head violates
+// font-src CSP on Notion, Linear, Jira, and most enterprise apps.
 
 // Inject all styles into shadow root
 const style = document.createElement('style');
@@ -36,8 +29,8 @@ style.textContent = `
     --pill-text: #92400e;
     --border-light: rgba(0,0,0,0.05);
     --error-bg: #1a1a1a;
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-serif: 'Newsreader', Georgia, serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-serif: Georgia, 'Times New Roman', serif;
   }
   * { box-sizing: border-box; }
 
@@ -690,7 +683,7 @@ let dotAppearTimer = null;            // 3.5s timer → shows write+pause dot
 let activeSensorElement = null;       // element the write+pause sensor is currently attached to
 // API cost reduction — three gates in triggerEagerFetch
 let lastEagerFetchParagraphHash = '';   // first 80 chars of last submitted paragraph
-const seenConceptsThisSession = new Set(); // concepts seen this tab session — avoid re-fetching
+const sessionChipsCache = new Map();   // conceptKey → {keyword, questions} — survives pendingQuestions=null
 
 // Reading sensor gate
 const pageLoadTime = Date.now();      // used to enforce 20s minimum before reading sensor fires
@@ -1130,34 +1123,38 @@ function triggerEagerFetch() {
   }
   if (!keyword) return;
 
-  // Gate 3: Paragraph hash cache — if paragraph hasn't changed meaningfully, serve cached chips
+  // Canonical concept key — "retention" and "churn" both map to "Retention" via TOPIC_MAP
+  const conceptKey = TOPIC_MAP[keyword] ?? keyword;
+
+  // Gate 3: Paragraph hash cache — same paragraph = skip regardless of pendingQuestions state.
+  // pendingQuestions is cleared on every keystroke, so we can't rely on it here.
   const paragraphHash = blockContent.slice(0, 80);
-  if (paragraphHash === lastEagerFetchParagraphHash && pendingQuestions) {
-    console.log('[LennyLive] Write+pause: paragraph unchanged — serving cached chips');
-    dotAppearTimer = setTimeout(() => {
-      if (state !== 'idle') return;
-      showWritePauseDot('ready');
-    }, 500); // shorter delay — chips already ready
-    return;
+  if (paragraphHash === lastEagerFetchParagraphHash) {
+    const cached = sessionChipsCache.get(conceptKey);
+    if (cached) {
+      pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
+      console.log('[LennyLive] Write+pause: paragraph unchanged — restoring cached chips');
+      dotAppearTimer = setTimeout(() => { if (state !== 'idle') return; showWritePauseDot('ready'); }, 500);
+    }
+    return; // same paragraph, never re-fetch
   }
 
-  // Gate 4: Session concept dedup — same canonical concept seen this session = serve cached chips.
-  // Key on TOPIC_MAP[keyword] ?? keyword so "retention" and "churn" both map to "Retention"
-  // and don't fire duplicate Groq calls for the same PM domain.
-  const conceptKey = TOPIC_MAP[keyword] ?? keyword;
-  if (seenConceptsThisSession.has(conceptKey) && pendingQuestions?.keyword === keyword) {
-    console.log('[LennyLive] Write+pause: concept already seen this session — serving cached chips');
-    dotAppearTimer = setTimeout(() => {
-      if (state !== 'idle') return;
-      showWritePauseDot('ready');
-    }, 500);
+  // Gate 4: Session concept dedup — same canonical concept, different paragraph.
+  // Restore chips from cache so Groq is not called again.
+  if (sessionChipsCache.has(conceptKey)) {
+    const cached = sessionChipsCache.get(conceptKey);
+    pendingQuestions = { ...cached, blockContent, timestamp: Date.now() };
+    lastEagerFetchParagraphHash = paragraphHash;
+    lastEagerFetchBlockContent = blockContent;
+    console.log('[LennyLive] Write+pause: concept cached — restoring chips without Groq call');
+    dotAppearTimer = setTimeout(() => { if (state !== 'idle') return; showWritePauseDot('ready'); }, 500);
     return;
   }
 
   // All gates passed — proceed to Groq fetch
   lastEagerFetchParagraphHash = paragraphHash;
   lastEagerFetchBlockContent = blockContent;
-  seenConceptsThisSession.add(conceptKey); // store canonical topic key, not raw keyword
+  // sessionChipsCache updated in QUESTIONS_READY happy path after Groq responds
 
   console.log('[LennyLive] Write+pause: eager Groq fetch for keyword:', keyword, '| words:', wordCount);
   chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword, blockContent });
@@ -1341,6 +1338,10 @@ chrome.runtime.onMessage.addListener((message) => {
       blockContent: lastEagerFetchBlockContent,
       timestamp: Date.now(),
     };
+
+    // Cache chips so re-focus on same/related content doesn't re-call Groq
+    const ck = TOPIC_MAP[message.keyword] ?? message.keyword;
+    sessionChipsCache.set(ck, { keyword: message.keyword, questions: message.questions });
 
     console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
 
