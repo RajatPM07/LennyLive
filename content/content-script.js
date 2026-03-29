@@ -206,49 +206,71 @@ style.textContent = `
   }
   #ll-selection-dot.visible { display: block; }
 
-  /* 8. Write+Pause Dot */
-  #ll-write-pause-dot {
-    display: none; position: fixed; bottom: 32px; right: 80px; z-index: 2147483647; cursor: pointer;
+  /* 8. Badge Pill (replaces Write+Pause Dot + Questions Panel) */
+  #ll-badge-pill {
+    display: none; position: fixed; bottom: 32px; right: 32px;
+    z-index: 2147483647; flex-direction: column; align-items: flex-end; gap: 8px;
   }
-  #ll-write-pause-dot.visible { display: block; }
-  .ll-spinner {
-    width: 20px; height: 20px; border: 3px solid var(--border-light);
-    border-top-color: var(--accent-orange); border-radius: 50%;
-    animation: ll-spin 1s linear infinite;
-  }
-  @keyframes ll-spin { to { transform: rotate(360deg); } }
+  #ll-badge-pill.visible { display: flex; }
 
-  /* 9. Questions Panel */
-  #ll-questions-panel {
-    display: none; position: fixed; bottom: 32px; right: 32px; width: 340px;
+  .ll-badge-trigger {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-dark); border-radius: 20px;
+    padding: 8px 16px 8px 12px;
+    cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: none; font-family: var(--font-sans);
+  }
+  .ll-badge-trigger:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+  .ll-badge-dot {
+    width: 8px; height: 8px; background: var(--accent-orange);
+    border-radius: 50%; flex-shrink: 0;
+    animation: ll-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  .ll-badge-dot.loading {
+    animation: ll-spin 1s linear infinite;
+    border: 2px solid rgba(255,110,64,0.3); border-top-color: var(--accent-orange);
+    background: transparent; width: 10px; height: 10px;
+  }
+  .ll-badge-text {
+    font-size: 12px; font-weight: 500; color: var(--text-light);
+    white-space: nowrap;
+  }
+  .ll-badge-arrow { font-size: 12px; color: rgba(255,255,255,0.5); margin-left: 2px; }
+
+  /* Chips panel — expands below badge pill */
+  .ll-chips-panel {
+    display: none; width: 320px;
     background: #ffffff; border: 1px solid rgba(222,192,184,0.2); border-radius: 12px;
-    box-shadow: 0 32px 32px -4px rgba(26,28,28,0.06); z-index: 2147483647;
+    box-shadow: 0 32px 32px -4px rgba(26,28,28,0.06);
     flex-direction: column; overflow: hidden; font-family: var(--font-sans);
-    animation: ll-postcard-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: ll-postcard-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  #ll-questions-panel.visible { display: flex; }
-  #ll-questions-panel.hiding { animation: ll-postcard-out 0.2s ease-in forwards; }
-  .qp-header {
+  .ll-chips-panel.visible { display: flex; }
+  .ll-chips-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 20px; background: #f3f3f3; border-bottom: 1px solid rgba(222,192,184,0.1);
+    padding: 14px 16px 10px; border-bottom: 1px solid rgba(0,0,0,0.05);
   }
-  .qp-title-area { display: flex; gap: 12px; align-items: center; }
-  .qp-logo-box { width: 32px; height: 32px; background: rgba(162,63,29,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-weight: 600; font-style: italic; color: #a23f1d; }
-  .qp-title { font-family: var(--font-serif); font-style: italic; font-size: 18px; color: #a23f1d; margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
-  .qp-subtitle { font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: #5e5e5e; margin: 2px 0 0; opacity: 0.7; }
-  .qp-close { background: none; border: none; font-size: 18px; color: #5e5e5e; cursor: pointer; padding: 4px; border-radius: 50%; transition: background 0.2s, color 0.2s; }
-  .qp-close:hover { background: #e8e8e8; color: #1a1c1c; }
-  .qp-content { padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #ffffff; }
-  .qp-chip {
-    width: 100%; text-align: left; padding: 14px 16px; border-radius: 12px;
-    border: 1px solid rgba(222,192,184,0.3); background: #f9f9f9;
-    cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between;
-    align-items: flex-start;
+  .ll-chips-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .ll-chips-close { background: none; border: none; font-size: 16px; color: var(--text-muted); cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+  .ll-chips-close:hover { background: rgba(0,0,0,0.05); color: var(--text-dark); }
+  .ll-chips-list { padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .ll-chip-btn {
+    width: 100%; text-align: left; padding: 12px 14px;
+    border-radius: 10px; border: 1px solid rgba(222,192,184,0.25);
+    background: #f9f9f9; cursor: pointer;
+    transition: all 0.15s; display: flex; justify-content: space-between; align-items: flex-start;
+    font-family: var(--font-sans);
   }
-  .qp-chip:hover { background: #ffffff; border-color: rgba(162,63,29,0.4); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-  .qp-chip-text { font-size: 14px; font-weight: 500; color: #1a1c1c; line-height: 1.4; padding-right: 16px; margin: 0; }
-  .qp-chip-icon { color: rgba(162,63,29,0.4); font-size: 16px; transition: color 0.2s; font-family: 'Inter', sans-serif; }
-  .qp-chip:hover .qp-chip-icon { color: #a23f1d; }
+  .ll-chip-btn:hover { background: #ffffff; border-color: rgba(162,63,29,0.35); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .ll-chip-btn-text { font-size: 13px; font-weight: 500; color: var(--text-dark); line-height: 1.4; padding-right: 12px; margin: 0; }
+  .ll-chip-btn-arrow { color: rgba(162,63,29,0.4); font-size: 14px; transition: color 0.15s; flex-shrink: 0; margin-top: 1px; }
+  .ll-chip-btn:hover .ll-chip-btn-arrow { color: #a23f1d; }
+
+  /* Loading state for chips panel */
+  .ll-chips-loading { padding: 20px 16px; display: flex; align-items: center; gap: 10px; }
+  .ll-chips-loading-text { font-size: 12px; color: var(--text-muted); font-style: italic; }
+  @keyframes ll-spin { to { transform: rotate(360deg); } }
 `;
 shadow.appendChild(style);
 
@@ -326,15 +348,18 @@ selectionDot.id = 'll-selection-dot';
 selectionDot.innerHTML = '<div class="pulse-dot-wrapper"></div>';
 shadow.appendChild(selectionDot);
 
-// 7. Write+Pause Dot
-const wpDot = document.createElement('div');
-wpDot.id = 'll-write-pause-dot';
-shadow.appendChild(wpDot);
-
-// 8. Questions Panel
-const questionsPanel = document.createElement('div');
-questionsPanel.id = 'll-questions-panel';
-shadow.appendChild(questionsPanel);
+// 7. Badge Pill (replaces Write+Pause Dot + Questions Panel)
+const badgePill = document.createElement('div');
+badgePill.id = 'll-badge-pill';
+badgePill.innerHTML = `
+  <div class="ll-chips-panel" id="ll-chips-panel"></div>
+  <button class="ll-badge-trigger" id="ll-badge-trigger" type="button">
+    <span class="ll-badge-dot" id="ll-badge-dot"></span>
+    <span class="ll-badge-text" id="ll-badge-text">Lenny has thoughts</span>
+    <span class="ll-badge-arrow">→</span>
+  </button>
+`;
+shadow.appendChild(badgePill);
 
 // ─── UI Helper Functions ──────────────────────────────────────────────────────
 
@@ -772,87 +797,99 @@ function hideSelectionDot() {
   if (ambientState === 'selection-dot') ambientState = 'none';
 }
 
+// Show badge pill — either loading state or ready state with question count
 function showWritePauseDot(mode = 'ready') {
+  const dot = shadow.getElementById('ll-badge-dot');
+  const text = shadow.getElementById('ll-badge-text');
+  const trigger = shadow.getElementById('ll-badge-trigger');
+
   if (mode === 'loading') {
-    wpDot.innerHTML = '<div class="ll-spinner"></div>';
+    dot.className = 'll-badge-dot loading';
+    text.textContent = 'Lenny is thinking...';
+    trigger.onclick = null; // disabled while loading
   } else {
-    wpDot.innerHTML = '<div class="pulse-dot-wrapper"></div>';
+    // mode === 'ready'
+    dot.className = 'll-badge-dot';
+    const keyword = pendingQuestions?.keyword || '';
+    const count = pendingQuestions?.questions?.length || 3;
+    text.textContent = `${count} pattern${count !== 1 ? 's' : ''} on ${keyword}`;
+    trigger.onclick = () => {
+      if (ambientState === 'write-pause-dot' && pendingQuestions) {
+        // Check if paragraph changed since questions were generated — re-fetch if so
+        const currentHash = extractPageContext().slice(0, 80);
+        if (currentHash !== lastEagerFetchParagraphHash) {
+          console.log('[LennyLive] Badge clicked — paragraph drifted, re-fetching');
+          showWritePauseDot('loading');
+          const blockContent = extractPageContext();
+          const keyword2 = detectPMKeywordInText(blockContent) || pendingQuestions.keyword;
+          pendingQuestions = null;
+          lastEagerFetchParagraphHash = currentHash;
+          lastEagerFetchBlockContent = blockContent;
+          chrome.runtime.sendMessage({ type: 'GENERATE_QUESTIONS', keyword: keyword2, blockContent });
+          return;
+        }
+        showChipsPanel(pendingQuestions.questions);
+      }
+    };
   }
-  wpDot.classList.add('visible');
-  wpDot.onclick = () => {
-    if (ambientState === 'write-pause-dot' && mode === 'ready' && pendingQuestions) {
-      showQuestionsPanel(pendingQuestions.questions);
-    }
-  };
+
+  badgePill.classList.add('visible');
   ambientState = 'write-pause-dot';
 }
 
 function hideWritePauseDot() {
-  wpDot.classList.remove('visible');
+  badgePill.classList.remove('visible');
+  shadow.getElementById('ll-chips-panel').classList.remove('visible');
   if (ambientState === 'write-pause-dot') ambientState = 'none';
 }
 
-function showQuestionsPanel(questions) {
+function showChipsPanel(questions) {
   ambientState = 'questions-panel';
-  hideWritePauseDot(); // Replace dot with panel
-  
-  let chipsHtml = '';
-  questions.forEach((q, i) => {
-    chipsHtml += `
-      <button class="qp-chip" data-idx="${i}">
-        <span class="qp-chip-text">${q}</span>
-        <span class="qp-chip-icon">→</span>
-      </button>
-    `;
-  });
+  const panel = shadow.getElementById('ll-chips-panel');
 
-  questionsPanel.innerHTML = `
-    <div class="qp-header">
-      <div class="qp-title-area">
-        <div class="qp-logo-box">L</div>
-        <div>
-          <h2 class="qp-title">Lenny has thoughts</h2>
-          <p class="qp-subtitle">Editorial Insights</p>
-        </div>
-      </div>
-      <button class="qp-close" id="ll-qp-close">✕</button>
+  const chipsHtml = questions.map((q, i) => `
+    <button class="ll-chip-btn" data-idx="${i}" type="button">
+      <span class="ll-chip-btn-text">${q}</span>
+      <span class="ll-chip-btn-arrow">→</span>
+    </button>
+  `).join('');
+
+  panel.innerHTML = `
+    <div class="ll-chips-header">
+      <span class="ll-chips-title">What Lenny would ask</span>
+      <button class="ll-chips-close" id="ll-chips-close-btn" type="button">✕</button>
     </div>
-    <div class="qp-content">
-      ${chipsHtml}
-    </div>
+    <div class="ll-chips-list">${chipsHtml}</div>
   `;
-  
-  questionsPanel.classList.remove('hiding');
-  questionsPanel.classList.add('visible');
 
-  // Attach handlers
-  shadow.getElementById('ll-qp-close').onclick = hideAllAmbientUI;
-  const chips = shadow.querySelectorAll('.qp-chip');
+  panel.classList.add('visible');
+
+  shadow.getElementById('ll-chips-close-btn').onclick = hideAllAmbientUI;
+
+  const chips = panel.querySelectorAll('.ll-chip-btn');
   chips.forEach(chip => {
     chip.onclick = () => {
-      const idx = chip.getAttribute('data-idx');
+      const idx = parseInt(chip.getAttribute('data-idx'), 10);
       fireQuestionQuery(questions[idx]);
     };
   });
 }
 
+// Called when QUESTIONS_READY arrives and dot is already showing in loading state
 function updateWritePauseDotReady() {
   showWritePauseDot('ready');
 }
 
 function hideAllAmbientUI() {
   hideSelectionDot();
-  hideWritePauseDot();
+  hideWritePauseDot(); // handles badgePill + chips panel
   clearTimeout(eagerFetchTimer);
   clearTimeout(dotAppearTimer);
   pendingQuestions = null;
-  
+
   if (ambientState === 'questions-panel') {
-    questionsPanel.classList.add('hiding');
-    setTimeout(() => {
-      questionsPanel.classList.remove('hiding');
-      questionsPanel.classList.remove('visible');
-    }, 200);
+    const panel = shadow.getElementById('ll-chips-panel');
+    panel.classList.remove('visible');
     ambientState = 'none';
   }
 }
