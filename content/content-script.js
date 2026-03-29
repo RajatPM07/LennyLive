@@ -724,17 +724,31 @@ function onSensorKeydown(e) {
   eagerFetchTimer = setTimeout(triggerEagerFetch, 1500);
 }
 
+// Paste handler — Cmd+V is filtered by onSensorKeydown (metaKey guard), so paste
+// events never start the eager fetch timer. Handle separately.
+function onSensorPaste() {
+  lastPrintableKeystroke = Date.now();
+  clearTimeout(eagerFetchTimer);
+  clearTimeout(dotAppearTimer);
+  pendingQuestions = null;
+  hideWritePauseDot();
+  // Give the DOM time to reflect the pasted content before reading it
+  eagerFetchTimer = setTimeout(triggerEagerFetch, 1500);
+}
+
 function attachWritePauseSensor(el) {
   // Detach from previous element first (covers focus-shift without blur)
   detachWritePauseSensor();
   activeSensorElement = el;
   el.addEventListener('keydown', onSensorKeydown);
+  el.addEventListener('paste', onSensorPaste);
   console.log('[LennyLive] Write+pause sensor attached to:', el.tagName, el.id || el.className.slice(0, 30));
 }
 
 function detachWritePauseSensor() {
   if (activeSensorElement) {
     activeSensorElement.removeEventListener('keydown', onSensorKeydown);
+    activeSensorElement.removeEventListener('paste', onSensorPaste);
     activeSensorElement = null;
     // Cancel any pending timers — user left the field
     clearTimeout(eagerFetchTimer);
@@ -1188,8 +1202,8 @@ document.addEventListener('selectionchange', () => {
     const sel = window.getSelection();
     const text = sel ? sel.toString().trim() : '';
 
-    // Hide dot if selection cleared or too short/long
-    if (text.length < 2 || text.length > 200) {
+    // Hide dot if selection cleared or too short/long (2000 chars ≈ ~400 words — full paragraph fine)
+    if (text.length < 2 || text.length > 2000) {
       hideSelectionDot();
       return;
     }
