@@ -769,9 +769,10 @@ document.addEventListener('focusin', (e) => {
 
 // focusout fires when focus leaves any element.
 // Detach sensor — user is no longer typing in a monitored field.
+// Do NOT hide the badge pill here — user needs to be able to click it even after
+// leaving the text field. Badge persists until clicked, dismissed, or new typing starts.
 document.addEventListener('focusout', () => {
   detachWritePauseSensor();
-  hideWritePauseDot();
 });
 
 // ─── Ambient UI Stubs (implemented by UI agent) ───────────────────────────────
