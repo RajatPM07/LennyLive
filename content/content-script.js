@@ -1462,19 +1462,12 @@ function stopListening() {
 // ─── PM Buzzwords ─────────────────────────────────────────────────────────────
 // Inlined — MV3 content scripts cannot import external modules.
 
-const PM_BUZZWORDS = [
-  'retention', 'churn', 'DAU', 'MAU', 'WAU', 'activation',
-  'conversion', 'funnel', 'cohort', 'ARR', 'MRR', 'ARPU',
-  'LTV', 'CAC', 'NPS', 'CSAT', 'north star', 'KPI', 'OKR',
-  'PMF', 'product market fit', 'GTM', 'go-to-market', 'roadmap',
-  'prioritization', 'prioritisation', 'discovery', 'strategy',
-  'positioning', 'competitive', 'moat', 'differentiation',
-  'growth loop', 'viral', 'acquisition', 'referral', 'PLG',
-  'product-led', 'MVP', 'launch', 'zero to one', '0 to 1',
-  'early stage', 'pre-PMF', 'founding', 'user research',
-  'jobs to be done', 'JTBD', 'A/B test', 'experiment',
-  'stakeholder', 'cross-functional'
-];
+// PM_ROOTS — stem-based regex for instant local detection (selection dot, reading sensor, clipboard).
+// Uses word stems so morphological variants match: retent = retention/retentive,
+// activat = activation/activated/activating, strateg = strategy/strategic/strategize.
+// Multi-word phrases use [\s\-]+ as separators (NOT . which matches any char).
+// NOTE: write+pause does NOT use this — Groq owns that detection path (Task 3).
+const PM_ROOTS = /retent|retain(?!er)|churn|activat|growth[\s-]+loop|viral[\s-]+growth|acquisi|referral|network[\s-]+effect|funnel|cohort|north[\s-]+star|KPI|OKR|NPS|CSAT|DAU|MAU|WAU|LTV|CAC|ARR|MRR|product[\s-]+market|PMF|strateg|position(?:ing)?|competit|differenti|moat|roadmap|prioriti|pricing|monetiz|freemium|paywall|upsell|subscript|free[\s-]+trial|revenue[\s-]+model|onboard|aha[\s-]+moment|time[\s-]+to[\s-]+value|user[\s-]+journey|drop[\s-]+off|go[\s-]+to[\s-]+market|GTM|product[\s-]+led|PLG|sprint|backlog|epic|user[\s-]+stor|feature[\s-]+flag|dogfood|rollout|post[\s-]+mortem|user[\s-]+research|jobs[\s-]+to[\s-]+be|JTBD|A[\/\s]B[\s-]+test|experiment|persona(?!l\b)|stakehold|cross[\s-]+func|buy[\s-]+in|one[\s-]+pager|customer[\s-]+develop|feedback[\s-]+loop|feature[\s-]+request|power[\s-]+user|win[\s-]+loss|marketplac|cold[\s-]+start|MVP|zero[\s-]+to[\s-]+one|0[\s-]+to[\s-]+1|early[\s-]+stage|pre[\s-]+PMF|founding/i;
 
 const TOPIC_MAP = {
   'retention': 'Retention', 'churn': 'Retention', 'DAU': 'Retention',
@@ -1502,16 +1495,10 @@ function getDisplayTopic(buzzword) {
   return TOPIC_MAP[buzzword] ?? (buzzword.charAt(0).toUpperCase() + buzzword.slice(1));
 }
 
-// Lightweight scan for PM keywords in the provided text.
-// Called at the 1.5s mark of the write+pause sensor on the active cursor block.
-// Must be placed AFTER the PM_BUZZWORDS array declaration in this file.
-function detectPMKeywordInText(text) {
-  const sample = text.slice(0, 5000);
-  for (const word of PM_BUZZWORDS) {
-    const re = new RegExp(`\\b${word}\\b`, 'i');
-    if (re.test(sample)) return word;
-  }
-  return null;
+// Quick boolean PM root check — used by selection dot, reading sensor, and clipboard intercept.
+// Write+pause does NOT use this — it sends to Groq directly after the 40-word threshold.
+function textMatchesPMRoot(text) {
+  return PM_ROOTS.test(text.slice(0, 5000));
 }
 
 // ─── Buzzword Scanning ────────────────────────────────────────────────────────
