@@ -1342,7 +1342,7 @@ chrome.runtime.onMessage.addListener((message) => {
     // Cache chips so re-focus on same/related content doesn't re-call Groq
     const ck = TOPIC_MAP[message.keyword] ?? message.keyword;
     sessionChipsCache.set(ck, { keyword: message.keyword, questions: message.questions });
-    lastKnownConcept = message.keyword; // persist for cache gate anchoring across keystrokes
+    lastKnownConcept = ck; // persist normalized cache key for cache gate anchoring across keystrokes
 
     console.log('[LennyLive] QUESTIONS_READY:', message.keyword, message.questions);
 
