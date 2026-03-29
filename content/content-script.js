@@ -1210,12 +1210,7 @@ document.addEventListener('selectionchange', () => {
     }
 
     // Check if selection contains a PM keyword
-    const hasPMKeyword = PM_BUZZWORDS.some(word => {
-      const re = new RegExp(`\\b${word}\\b`, 'i');
-      return re.test(text);
-    });
-
-    if (!hasPMKeyword) {
+    if (!textMatchesPMRoot(text)) {
       hideSelectionDot();
       return;
     }
@@ -1514,32 +1509,28 @@ function scanForBuzzwords() {
   const text = document.body.innerText.slice(0, 5000);
   const now = Date.now();
 
-  for (const buzzword of PM_BUZZWORDS) {
-    const regex = new RegExp(`\\b${buzzword}\\b`, 'i');
-    if (!regex.test(text)) continue;
+  if (!textMatchesPMRoot(text)) return;
 
-    const displayTopic = getDisplayTopic(buzzword);
+  const displayTopic = 'PM concepts'; // generic label — Groq identifies specific topic on click
 
-    // General cooldown: any chip shown in last 3 minutes → skip
-    if (now - lastChipShownAt < 3 * 60 * 1000) {
-      console.log('[LennyLive] Buzzword match suppressed (general 3min cooldown):', buzzword);
-      return;
-    }
-
-    // Per-topic cooldown: same topic shown in last 30 minutes → skip
-    const topicLastShown = topicCooldowns.get(displayTopic) || 0;
-    if (now - topicLastShown < 30 * 60 * 1000) {
-      console.log('[LennyLive] Buzzword match suppressed (topic 30min cooldown):', displayTopic);
-      continue; // try next buzzword — different topic might not be suppressed
-    }
-
-    console.log('[LennyLive] Buzzword matched:', buzzword, '→', displayTopic);
-    lastChipShownAt = now;
-    topicCooldowns.set(displayTopic, now);
-    chrome.storage.local.set({ lastTopic: displayTopic });
-    showBuzzwordChip(displayTopic);
-    break; // show one chip at a time
+  // General cooldown: any chip shown in last 3 minutes → skip
+  if (now - lastChipShownAt < 3 * 60 * 1000) {
+    console.log('[LennyLive] PM root match suppressed (general 3min cooldown)');
+    return;
   }
+
+  // Per-topic cooldown: same topic shown in last 30 minutes → skip
+  const topicLastShown = topicCooldowns.get(displayTopic) || 0;
+  if (now - topicLastShown < 30 * 60 * 1000) {
+    console.log('[LennyLive] PM root match suppressed (topic 30min cooldown):', displayTopic);
+    return;
+  }
+
+  console.log('[LennyLive] PM root matched — showing chip');
+  lastChipShownAt = now;
+  topicCooldowns.set(displayTopic, now);
+  chrome.storage.local.set({ lastTopic: displayTopic });
+  showBuzzwordChip(displayTopic);
 }
 
 // ─── MutationObserver ─────────────────────────────────────────────────────────
@@ -1578,10 +1569,9 @@ if (location.hostname === 'docs.google.com') {
 
     if (clipText.length < 10 || clipText.length > 2000) return;
 
-    const keyword = detectPMKeywordInText(clipText);
-    if (!keyword) return;
+    if (!textMatchesPMRoot(clipText)) return;
 
-    console.log('[LennyLive] Google Docs clipboard intercept — keyword:', keyword, 'length:', clipText.length);
+    console.log('[LennyLive] Google Docs clipboard intercept — PM root match, length:', clipText.length);
 
     // Treat copied text as a selection — fire QUERY directly (same as selection dot click)
     // Small delay so the copy completes before we show UI
