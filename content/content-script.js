@@ -1076,11 +1076,13 @@ function showSelectionDot(rect) {
   const selectedText = window.getSelection()?.toString().trim() ?? '';
   if (!selectedText) return;
   
-  // Anchor to where the user released the mouse — below-right of cursor.
-  // Never above/on-top of text (obscures content). position:fixed uses
-  // viewport coords, which clientX/clientY already provide.
-  selectionDot.style.left = `${lastMouseUpX + 10}px`;
-  selectionDot.style.top = `${lastMouseUpY + 15}px`;
+  // Bottom-right anchor (Medium/Notion pattern): sit just below the last line
+  // of highlighted text, right-aligned with the selection's right edge.
+  // position:fixed uses viewport coords — rect from getBoundingClientRect() is
+  // already viewport-relative, no scrollX/scrollY offset needed.
+  // Dot is 14px wide (pulse-dot-wrapper) — align its right edge with rect.right.
+  selectionDot.style.left = `${rect.right - 14}px`;
+  selectionDot.style.top = `${rect.bottom + 5}px`;
   selectionDot.classList.add('visible');
   
   // Important: mousedown must preventDefault to preserve selection
@@ -1478,10 +1480,6 @@ function triggerEagerFetch() {
 // Disabled on Google Docs — getSelection() returns empty on canvas editors.
 
 let selectionDebounceTimer = null;
-// Track last mouseup position — used to anchor selection dot near where the user finished highlighting.
-let lastMouseUpX = 0;
-let lastMouseUpY = 0;
-document.addEventListener('mouseup', (e) => { lastMouseUpX = e.clientX; lastMouseUpY = e.clientY; });
 
 document.addEventListener('selectionchange', () => {
   clearTimeout(selectionDebounceTimer);
