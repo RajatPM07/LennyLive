@@ -659,6 +659,10 @@ function showPostcard(insight, relatedInsights = []) {
   currentInsight = insight;
   const pc = shadow.getElementById('ll-postcard');
   hideIndicator(); // always hide indicator — they share bottom-right corner
+  // Forcefully clear ALL ambient UI — widget and dots must never coexist on screen
+  hideSelectionDot();
+  hideNudge(true);
+  hideAllAmbientUI();
   pc.classList.remove('ll-postcard-hiding'); // cancel any in-flight exit animation
 
   // Populate content
@@ -1072,11 +1076,11 @@ function showSelectionDot(rect) {
   const selectedText = window.getSelection()?.toString().trim() ?? '';
   if (!selectedText) return;
   
-  // Position dot near where the user released the mouse (end of highlight).
-  // For long selections, the range bounding rect top is far from the cursor —
-  // anchoring to mouseup coordinates keeps the dot instantly accessible.
-  selectionDot.style.left = `${lastMouseUpX + 8}px`;
-  selectionDot.style.top = `${lastMouseUpY - 8}px`;
+  // Anchor to where the user released the mouse — below-right of cursor.
+  // Never above/on-top of text (obscures content). position:fixed uses
+  // viewport coords, which clientX/clientY already provide.
+  selectionDot.style.left = `${lastMouseUpX + 10}px`;
+  selectionDot.style.top = `${lastMouseUpY + 15}px`;
   selectionDot.classList.add('visible');
   
   // Important: mousedown must preventDefault to preserve selection
@@ -1857,8 +1861,10 @@ function showOnboarding(selectedText) {
   pendingOnboardingResult = null;
   onboardingSlide = 1;
 
-  // Instantly remove the nudge dot — must never be visible alongside the widget
+  // Forcefully clear ALL ambient UI — widget and dots must never coexist on screen
   hideNudge(true);
+  hideSelectionDot();
+  hideAllAmbientUI();
 
   // Spec §Arch-1: store selected text NOW — window.getSelection() is cleared on next click.
   onboardingSelection = selectedText;
