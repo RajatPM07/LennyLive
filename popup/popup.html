@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="popup.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <!-- No external font requests — MV3 CSP blocks them. System font stack used instead. -->
 </head>
 <body>
+
   <!-- Header -->
   <header>
     <div class="logo">
@@ -46,7 +47,9 @@
       <h2>Saved Insights</h2>
     </div>
     <div id="saved-list" class="saved-list">
-      <div class="empty-state">No saved insights yet.</div>
+      <div class="empty-state-card">
+        <p class="empty-state-text"><span class="empty-highlight">Highlight</span> any text on a webpage to get your first Lenny insight. Then hit 🔖 to save it here.</p>
+      </div>
     </div>
   </section>
 
