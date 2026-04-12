@@ -440,6 +440,48 @@ badgePill.innerHTML = `
 `;
 shadow.appendChild(badgePill);
 
+// 8. Onboarding Panel (slides into position on first PM highlight)
+const onboardingPanel = document.createElement('div');
+onboardingPanel.id = 'll-onboarding';
+onboardingPanel.className = 'hidden';
+onboardingPanel.innerHTML = `
+  <div class="ob-header">
+    <span class="ob-logo">lennyLive</span>
+    <button class="ob-close" id="ll-ob-close" type="button">✕</button>
+  </div>
+  <div class="ob-body">
+    <div class="ob-slide" id="ll-ob-slide-1">
+      <div class="ob-pulse-large"></div>
+      <p class="ob-headline">Lenny is finding something.</p>
+      <p class="ob-text" id="ll-ob-body-text">You highlighted some text. Lenny is matching it to real stories from 300+ product leaders.</p>
+    </div>
+    <div class="ob-slide hidden" id="ll-ob-slide-2">
+      <div class="ob-kbd-mock">
+        <div class="ob-kbd">
+          <span class="ob-key">Ctrl</span>
+          <span class="ob-key-sep">+</span>
+          <span class="ob-key">Ctrl</span>
+        </div>
+        <span class="ob-kbd-label">double-tap to activate</span>
+      </div>
+      <p class="ob-headline">Ask Lenny anything.</p>
+      <p class="ob-text">Double-tap <strong>Ctrl</strong>, speak your question, and Lenny responds in seconds — grounded in real guest stories and episodes.</p>
+      <p class="ob-note">Chrome will ask for microphone access. This lets Lenny hear your question.</p>
+    </div>
+  </div>
+  <div class="ob-footer">
+    <div class="ob-dots">
+      <div class="ob-dot-step active" id="ll-ob-dot-1"></div>
+      <div class="ob-dot-step" id="ll-ob-dot-2"></div>
+    </div>
+    <div class="ob-buttons">
+      <button class="ob-btn-skip hidden" id="ll-ob-skip" type="button">Skip</button>
+      <button class="ob-btn-primary" id="ll-ob-next" type="button">Next →</button>
+    </div>
+  </div>
+`;
+shadow.appendChild(onboardingPanel);
+
 // ─── UI Helper Functions ──────────────────────────────────────────────────────
 
 function showIndicator(mode) {
@@ -747,6 +789,35 @@ shadow.getElementById('ll-btn-save').addEventListener('click', () => {
   });
 });
 
+// ─── Onboarding Event Listeners ────────────────────────────────────────────────
+
+shadow.getElementById('ll-ob-next').addEventListener('click', () => {
+  if (onboardingSlide === 1) {
+    // Advance to slide 2
+    onboardingSlide = 2;
+    shadow.getElementById('ll-ob-slide-1').classList.add('hidden');
+    shadow.getElementById('ll-ob-slide-2').classList.remove('hidden');
+    shadow.getElementById('ll-ob-dot-1').classList.remove('active');
+    shadow.getElementById('ll-ob-dot-2').classList.add('active');
+    shadow.getElementById('ll-ob-skip').classList.remove('hidden');
+    shadow.getElementById('ll-ob-next').textContent = 'Get Started →';
+  } else {
+    // Get Started on slide 2 — dismiss
+    onboardingSlide = 1;
+    dismissOnboarding();
+  }
+});
+
+shadow.getElementById('ll-ob-skip').addEventListener('click', () => {
+  onboardingSlide = 1;
+  dismissOnboarding();
+});
+
+shadow.getElementById('ll-ob-close').addEventListener('click', () => {
+  onboardingSlide = 1;
+  dismissOnboarding();
+});
+
 // ─── State Machine ────────────────────────────────────────────────────────────
 // States: idle | listening | loading
 // Transitions: idle → listening → loading → idle
@@ -765,6 +836,7 @@ let isOnboarding = false;           // true while onboarding panel is visible
 let onboardingCancelled = false;    // true if voice fired during onboarding — discard pending RAG
 let pendingOnboardingResult = null; // { insight, relatedInsights } | null — buffered RAG result
 let onboardingSelection = '';       // selected text captured before window.getSelection() is cleared
+let onboardingSlide = 1; // tracks which slide is currently visible (1 or 2)
 
 // Write+pause sensor state
 let lastPrintableKeystroke = 0;       // timestamp of last printable keydown
