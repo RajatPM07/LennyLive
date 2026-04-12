@@ -1349,6 +1349,8 @@ let selectionDebounceTimer = null;
 document.addEventListener('selectionchange', () => {
   clearTimeout(selectionDebounceTimer);
   selectionDebounceTimer = setTimeout(() => {
+    // Spec §Arch-3: prevent duplicate queries or re-triggering UI while onboarding is open
+    if (isOnboarding) return;
     // Don't interrupt active voice session or postcard
     if (state !== 'idle') return;
     const pc = shadow.getElementById('ll-postcard');
@@ -1375,8 +1377,20 @@ document.addEventListener('selectionchange', () => {
     const rect = range.getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) return; // empty rect (Google Docs canvas)
 
-    ambientState = 'selection-dot';
-    showSelectionDot(rect);
+    // Check onboarding status — async read is ~1ms; text is already captured in closure above.
+    chrome.storage.local.get(['hasOnboarded'], (data) => {
+      if (isOnboarding) return; // guard again after async gap
+      if (!data.hasOnboarded) {
+        // First-time user: show onboarding panel instead of selection dot.
+        // text is in closure — safe; selection may already be cleared.
+        const conceptLabel = getOnboardingConceptLabel(text);
+        showOnboarding(text, conceptLabel);
+      } else {
+        // Returning user: normal selection dot behaviour.
+        ambientState = 'selection-dot';
+        showSelectionDot(rect);
+      }
+    });
   }, 150); // 150ms debounce — prevents flicker during drag-select
 });
 
