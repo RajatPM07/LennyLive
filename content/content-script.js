@@ -1072,9 +1072,11 @@ function showSelectionDot(rect) {
   const selectedText = window.getSelection()?.toString().trim() ?? '';
   if (!selectedText) return;
   
-  // Position dot just above-right of the selection
-  selectionDot.style.left = `${rect.right + 4}px`;
-  selectionDot.style.top = `${Math.max(0, rect.top - 16)}px`;
+  // Position dot near where the user released the mouse (end of highlight).
+  // For long selections, the range bounding rect top is far from the cursor —
+  // anchoring to mouseup coordinates keeps the dot instantly accessible.
+  selectionDot.style.left = `${lastMouseUpX + 8}px`;
+  selectionDot.style.top = `${lastMouseUpY - 8}px`;
   selectionDot.classList.add('visible');
   
   // Important: mousedown must preventDefault to preserve selection
@@ -1472,6 +1474,10 @@ function triggerEagerFetch() {
 // Disabled on Google Docs — getSelection() returns empty on canvas editors.
 
 let selectionDebounceTimer = null;
+// Track last mouseup position — used to anchor selection dot near where the user finished highlighting.
+let lastMouseUpX = 0;
+let lastMouseUpY = 0;
+document.addEventListener('mouseup', (e) => { lastMouseUpX = e.clientX; lastMouseUpY = e.clientY; });
 
 document.addEventListener('selectionchange', () => {
   clearTimeout(selectionDebounceTimer);
