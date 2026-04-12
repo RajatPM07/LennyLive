@@ -1626,6 +1626,111 @@ function textMatchesPMRoot(text) {
   return PM_ROOTS.test(text.slice(0, 5000));
 }
 
+// Returns a human-readable PM concept label for the onboarding concept pill,
+// extracted from the PM_ROOTS match in the highlighted text.
+// Returns null if no clean label is available (body text falls back to generic copy).
+function getOnboardingConceptLabel(text) {
+  const match = PM_ROOTS.exec(text);
+  if (!match) return null;
+  const stem = match[0].toLowerCase().replace(/[\s\-]+/g, '-');
+  const LABEL_MAP = {
+    'retent': 'Retention', 'retain': 'Retention', 'churn': 'Churn',
+    'activat': 'Activation', 'growth-loop': 'Growth Loops', 'viral-growth': 'Viral Growth',
+    'acquisi': 'Acquisition', 'referral': 'Referral', 'network-effect': 'Network Effects',
+    'funnel': 'Conversion Funnel', 'cohort': 'Cohort Analysis', 'north-star': 'North Star Metric',
+    'kpi': 'KPIs', 'okr': 'OKRs', 'nps': 'NPS', 'csat': 'CSAT',
+    'dau': 'DAU / MAU', 'mau': 'DAU / MAU', 'wau': 'WAU', 'ltv': 'LTV / CAC', 'cac': 'LTV / CAC',
+    'arr': 'ARR', 'mrr': 'MRR', 'product-market': 'Product-Market Fit', 'pmf': 'PMF',
+    'strateg': 'Strategy', 'position': 'Positioning', 'competit': 'Competitive Moat',
+    'differenti': 'Differentiation', 'moat': 'Moat', 'roadmap': 'Roadmap',
+    'prioriti': 'Prioritization', 'pricing': 'Pricing', 'monetiz': 'Monetization',
+    'freemium': 'Freemium', 'upsell': 'Upsell', 'subscript': 'Subscription',
+    'onboard': 'Onboarding', 'aha-moment': 'Aha Moment', 'time-to-value': 'Time to Value',
+    'user-journey': 'User Journey', 'drop-off': 'Drop-off', 'go-to-market': 'GTM Strategy',
+    'gtm': 'GTM Strategy', 'product-led': 'Product-Led Growth', 'plg': 'PLG',
+    'sprint': 'Agile / Sprint', 'backlog': 'Backlog', 'user-research': 'User Research',
+    'jobs-to-be': 'Jobs to Be Done', 'jtbd': 'JTBD', 'a/b-test': 'A/B Testing',
+    'experiment': 'Experimentation', 'persona': 'User Personas', 'stakehold': 'Stakeholders',
+    'cross-func': 'Cross-functional', 'mvp': 'MVP', 'zero-to-one': 'Zero to One',
+    '0-to-1': 'Zero to One', 'early-stage': 'Early Stage', 'pre-pmf': 'Pre-PMF',
+    'founding': 'Founding PM',
+  };
+  return LABEL_MAP[stem] || null;
+}
+
+// Shows the onboarding panel and fires RAG in the background.
+// selectedText: the highlighted string, already captured before selection can be cleared.
+// conceptLabel: human-readable PM concept from getOnboardingConceptLabel(), or null.
+function showOnboarding(selectedText, conceptLabel) {
+  isOnboarding = true;
+  onboardingCancelled = false;
+  pendingOnboardingResult = null;
+  onboardingSlide = 1;
+
+  // Spec §Arch-1: store selected text NOW — window.getSelection() is cleared on next click.
+  onboardingSelection = selectedText;
+
+  // Populate concept pill in slide 1 body text.
+  // Using DOM API (not innerHTML) to prevent XSS from page-sourced selectedText.
+  const bodyEl = shadow.getElementById('ll-ob-body-text');
+  bodyEl.textContent = '';
+  if (conceptLabel) {
+    bodyEl.appendChild(document.createTextNode('You highlighted text about '));
+    const pill = document.createElement('span');
+    pill.className = 'ob-concept-pill';
+    pill.textContent = conceptLabel;
+    bodyEl.appendChild(pill);
+    bodyEl.appendChild(document.createTextNode('. Lenny is matching it to real stories from 300+ product leaders.'));
+  } else {
+    bodyEl.textContent = 'You highlighted some text. Lenny is matching it to real stories from 300+ product leaders.';
+  }
+
+  // Reset slides to slide 1 state
+  shadow.getElementById('ll-ob-slide-1').classList.remove('hidden');
+  shadow.getElementById('ll-ob-slide-2').classList.add('hidden');
+  shadow.getElementById('ll-ob-dot-1').classList.add('active');
+  shadow.getElementById('ll-ob-dot-2').classList.remove('active');
+  shadow.getElementById('ll-ob-skip').classList.add('hidden');
+  shadow.getElementById('ll-ob-next').textContent = 'Next →';
+
+  // Show the panel
+  shadow.getElementById('ll-onboarding').classList.remove('hidden');
+
+  // Spec §Arch-1: fire RAG immediately using stored onboardingSelection, not live selection.
+  chrome.runtime.sendMessage({
+    type: 'QUERY',
+    transcript: '',
+    selection: onboardingSelection,
+    pageContext: '',
+  });
+
+  console.log('[LennyLive] Onboarding shown — RAG firing for:', onboardingSelection.slice(0, 60));
+}
+
+// Dismisses the onboarding panel (called by Skip, Get Started, or ✕).
+// If RAG result is already buffered, shows postcard immediately.
+// If RAG is still in flight, shows loading indicator — postcard follows when RESPONSE arrives.
+function dismissOnboarding() {
+  chrome.storage.local.set({ hasOnboarded: true });
+  isOnboarding = false;
+  onboardingSelection = '';
+
+  // Hide panel
+  shadow.getElementById('ll-onboarding').classList.add('hidden');
+
+  if (pendingOnboardingResult) {
+    // RAG already returned — show postcard immediately
+    showPostcard(pendingOnboardingResult.insight, pendingOnboardingResult.relatedInsights || []);
+    pendingOnboardingResult = null;
+  } else {
+    // RAG still in flight — show "Lenny is thinking…" indicator.
+    // When RESPONSE arrives, the normal handleResponse() path runs and shows the postcard.
+    showIndicator('loading');
+  }
+
+  console.log('[LennyLive] Onboarding dismissed');
+}
+
 // ─── Buzzword Scanning ────────────────────────────────────────────────────────
 
 let lastChipShownAt = 0;
