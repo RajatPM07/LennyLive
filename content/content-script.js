@@ -958,7 +958,9 @@ function showSelectionDot(rect) {
     e.stopPropagation();
   };
   selectionDot.onclick = () => {
-    chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText, pageContext: '' });
+    // Truncate to 2000 chars before sending — embedding API handles this fine,
+    // and full-page selections can be arbitrarily long.
+    chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText.slice(0, 2000), pageContext: '' });
     hideSelectionDot();
   };
   
@@ -1351,16 +1353,16 @@ document.addEventListener('selectionchange', () => {
   selectionDebounceTimer = setTimeout(() => {
     // Spec §Arch-3: prevent duplicate queries or re-triggering UI while onboarding is open
     if (isOnboarding) return;
-    // Don't interrupt active voice session or postcard
+    // Don't interrupt active voice session
     if (state !== 'idle') return;
-    const pc = shadow.getElementById('ll-postcard');
-    if (pc && !pc.classList.contains('hidden')) return;
+    // Postcard visible: allow new selection — user may want a different excerpt
 
     const sel = window.getSelection();
     const text = sel ? sel.toString().trim() : '';
 
-    // Hide dot if selection cleared or too short/long (2000 chars ≈ ~400 words — full paragraph fine)
-    if (text.length < 2 || text.length > 2000) {
+    // Hide dot if selection is too short. No upper cap — long selections are
+    // truncated when sent to the RAG pipeline, not blocked here.
+    if (text.length < 2) {
       hideSelectionDot();
       return;
     }
