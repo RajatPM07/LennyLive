@@ -264,6 +264,92 @@ style.textContent = `
   .ll-chips-loading { padding: 20px 16px; display: flex; align-items: center; gap: 10px; }
   .ll-chips-loading-text { font-size: 12px; color: var(--text-muted); font-style: italic; }
   @keyframes ll-spin { to { transform: rotate(360deg); } }
+
+  /* 9. Onboarding Panel */
+  #ll-onboarding {
+    position: fixed;
+    bottom: 32px; right: 32px; width: 320px;
+    background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    font-family: var(--font-sans); z-index: 2147483647; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  #ll-onboarding.hidden { display: none; }
+  #ll-onboarding:not(.hidden) { animation: ll-postcard-in 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  .ob-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 8px; }
+  .ob-logo { font-family: var(--font-serif); font-size: 16px; font-weight: 600; font-style: italic; color: var(--text-dark); }
+  .ob-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 14px; padding: 0; transition: color 0.2s; }
+  .ob-close:hover { color: var(--accent-orange); }
+
+  .ob-body { padding: 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .ob-slide { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+  .ob-slide.hidden { display: none; }
+
+  /* Slide 1 visual: large animated orange pulse dot */
+  .ob-pulse-large {
+    width: 48px; height: 48px;
+    background: var(--accent-orange); border-radius: 50%;
+    position: relative; flex-shrink: 0;
+  }
+  .ob-pulse-large::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--accent-orange); border-radius: 50%;
+    animation: ll-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+
+  /* Slide 2 visual: keyboard mock */
+  .ob-kbd-mock { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .ob-kbd { display: flex; align-items: center; gap: 6px; }
+  .ob-key {
+    background: #ffffff; border: 1px solid #d1d5db; border-bottom: 3px solid #9ca3af;
+    border-radius: 6px; padding: 6px 14px; font-size: 13px; font-weight: 600;
+    color: var(--text-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .ob-key-sep { font-size: 14px; color: var(--text-muted); }
+  .ob-kbd-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-orange); text-align: center; }
+
+  /* Text elements */
+  .ob-headline {
+    font-family: var(--font-serif); font-size: 18px; font-weight: 400;
+    line-height: 1.3; color: var(--text-dark); text-align: center; margin: 0;
+  }
+  .ob-text {
+    font-size: 13px; line-height: 1.55; color: var(--text-muted); text-align: center; margin: 0;
+  }
+  .ob-text strong { font-weight: 600; color: var(--text-dark); }
+  .ob-concept-pill {
+    background: var(--pill-bg); color: var(--pill-text); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 10px; border-radius: 12px;
+    display: inline-block; margin: 0 2px;
+  }
+  .ob-note {
+    font-size: 11px; line-height: 1.45; color: var(--text-muted);
+    background: rgba(255,110,64,0.06); border-left: 2px solid var(--accent-orange);
+    padding: 8px 10px; border-radius: 0 4px 4px 0; width: 100%; text-align: left;
+  }
+
+  /* Footer: progress dots + action buttons */
+  .ob-footer {
+    border-top: 1px solid var(--border-light); padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ob-dots { display: flex; gap: 6px; align-items: center; }
+  .ob-dot-step { width: 6px; height: 6px; border-radius: 50%; background: #e2e2e2; transition: background 0.2s, width 0.2s; }
+  .ob-dot-step.active { background: var(--accent-orange); width: 18px; border-radius: 3px; }
+  .ob-buttons { display: flex; gap: 8px; align-items: center; }
+  .ob-btn-skip {
+    background: none; border: none; cursor: pointer; font-size: 12px;
+    color: var(--text-muted); padding: 4px 8px; border-radius: 4px; font-family: var(--font-sans);
+  }
+  .ob-btn-skip:hover { color: var(--text-dark); }
+  .ob-btn-primary {
+    background: var(--text-dark); color: #ffffff; border: none; border-radius: 20px;
+    padding: 8px 18px; font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: var(--font-sans); transition: background 0.2s;
+  }
+  .ob-btn-primary:hover { background: var(--accent-orange-dark); }
 `;
 shadow.appendChild(style);
 
@@ -673,6 +759,12 @@ let state = 'idle';
 // Tracks which ambient UI element is currently active.
 
 let ambientState = 'none'; // 'none' | 'selection-dot' | 'write-pause-dot' | 'questions-panel'
+
+// ─── Onboarding State ─────────────────────────────────────────────────────────
+let isOnboarding = false;           // true while onboarding panel is visible
+let onboardingCancelled = false;    // true if voice fired during onboarding — discard pending RAG
+let pendingOnboardingResult = null; // { insight, relatedInsights } | null — buffered RAG result
+let onboardingSelection = '';       // selected text captured before window.getSelection() is cleared
 
 // Write+pause sensor state
 let lastPrintableKeystroke = 0;       // timestamp of last printable keydown
