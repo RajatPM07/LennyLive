@@ -108,10 +108,62 @@ No other storage changes. Existing keys (`streak`, `knowledge_score`, `savedInsi
 
 ```javascript
 let isOnboarding = false;              // true while onboarding panel is visible
-let pendingOnboardingResult = null;   // { insight, relatedInsights } or null
+let onboardingCancelled = false;       // true if voice mode fired during onboarding — discard pending RAG result
+let pendingOnboardingResult = null;    // { insight, relatedInsights } or null
+let onboardingSelection = '';          // selected text captured at highlight time — stored before selection can be cleared
 ```
 
 `isOnboarding = true` blocks the normal RESPONSE handler from calling `showPostcard()` directly — result is buffered into `pendingOnboardingResult` instead.
+
+---
+
+## Architectural Requirements (Mandatory)
+
+### 1. Capture selection text immediately (Selection Loss Trap)
+
+The postcard is `position: fixed` bottom-right and does not anchor to selection coordinates. However, `window.getSelection()` is cleared the moment the user clicks anywhere on the page (e.g., to click "Next →" on the onboarding panel). The `selectedText` string must be stored in `onboardingSelection` at the moment the highlight is detected — before RAG fires, before the onboarding panel appears.
+
+```javascript
+// In selectionchange handler, before firing RAG:
+onboardingSelection = selectedText; // store immediately
+chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: onboardingSelection, pageContext: '' });
+```
+
+`onboardingSelection` is cleared to `''` when onboarding is fully dismissed.
+
+### 2. Cancel pending RAG if voice mode fires (Voice Activation Race)
+
+If the user triggers double-tap Ctrl while `isOnboarding === true`:
+1. Set `onboardingCancelled = true`
+2. Dismiss the onboarding panel (no postcard)
+3. Proceed with voice activation normally
+
+In the `chrome.runtime.onMessage` RESPONSE handler:
+```javascript
+if (isOnboarding) {
+  // Buffer result — onboarding still visible
+  pendingOnboardingResult = { insight: message.insight, relatedInsights: message.relatedInsights };
+  return;
+}
+if (onboardingCancelled) {
+  // Voice mode took over — silently discard this text RAG result
+  onboardingCancelled = false;
+  return;
+}
+```
+
+This prevents the text RAG result from colliding with an active voice session UI.
+
+### 3. Guard selectionchange while onboarding is open (Double-Selection Concurrency)
+
+The `selectionchange` listener must return immediately if onboarding is already visible:
+
+```javascript
+document.addEventListener('selectionchange', () => {
+  if (isOnboarding) return; // prevent duplicate queries or re-triggering UI
+  // ... rest of handler
+});
+```
 
 ---
 
@@ -121,9 +173,11 @@ let pendingOnboardingResult = null;   // { insight, relatedInsights } or null
 |---|---|
 | RAG returns no results | Onboarding dismisses cleanly, no postcard, no error |
 | RAG errors (network) | Same as no results — silent during onboarding |
-| User dismisses before RAG completes | `isOnboarding = false`; when RESPONSE arrives later, `showPostcard()` fires normally |
+| User dismisses before RAG completes | `isOnboarding = false`; when RESPONSE arrives, `showPostcard()` fires normally |
 | User highlights non-PM text (PM_ROOTS no match) | Normal behaviour — no onboarding trigger, no selection dot |
-| User triggers double-tap Ctrl during onboarding | Onboarding dismisses first, then voice activation proceeds |
+| User triggers double-tap Ctrl during onboarding | `onboardingCancelled = true`; panel dismissed; text RAG result silently discarded when it arrives; voice activation proceeds |
+| User clicks page (clears selection) during onboarding | Safe — `onboardingSelection` already captured; RAG already fired with correct text |
+| User highlights new text while onboarding open | `selectionchange` guard fires `return` immediately — no duplicate query, no UI re-trigger |
 
 ---
 
