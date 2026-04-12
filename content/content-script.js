@@ -514,7 +514,7 @@ onboardingPanel.innerHTML = `
     <div class="ob-slide" id="ll-ob-slide-1">
       <div class="ob-pulse-large"></div>
       <p class="ob-headline">Lenny is finding something.</p>
-      <p class="ob-text" id="ll-ob-body-text">You highlighted some text. Lenny is matching it to real stories from 300+ product leaders.</p>
+      <p class="ob-text" id="ll-ob-body-text">Analyzing your highlight. Lenny is cross-referencing this against frameworks and stories from 300+ top product leaders.</p>
     </div>
     <div class="ob-slide hidden" id="ll-ob-slide-2">
       <div class="ob-kbd-mock">
@@ -610,10 +610,16 @@ function showNudge() {
   }, 3000);
 }
 
-function hideNudge() {
+function hideNudge(instant = false) {
   clearTimeout(nudgeAutoCollapseTimer);
-  nudge.classList.add('fade-out');
-  setTimeout(() => nudge.classList.add('hidden'), 400);
+  if (instant) {
+    // Remove immediately — no fade, no delay
+    nudge.classList.add('hidden');
+    nudge.classList.remove('fade-out');
+  } else {
+    nudge.classList.add('fade-out');
+    setTimeout(() => nudge.classList.add('hidden'), 400);
+  }
 }
 
 function pulseNudge() {
@@ -1504,8 +1510,7 @@ document.addEventListener('selectionchange', () => {
       if (!data.hasOnboarded) {
         // First-time user: show onboarding panel instead of selection dot.
         // text is in closure — safe; selection may already be cleared.
-        const conceptLabel = getOnboardingConceptLabel(text);
-        showOnboarding(text, conceptLabel);
+        showOnboarding(text);
       } else {
         // Returning user: normal selection dot behaviour.
         ambientState = 'selection-dot';
@@ -1840,33 +1845,21 @@ function getOnboardingConceptLabel(text) {
 
 // Shows the onboarding panel and fires RAG in the background.
 // selectedText: the highlighted string, already captured before selection can be cleared.
-// conceptLabel: human-readable PM concept from getOnboardingConceptLabel(), or null.
-function showOnboarding(selectedText, conceptLabel) {
+function showOnboarding(selectedText) {
   isOnboarding = true;
   onboardingCancelled = false;
   pendingOnboardingResult = null;
   onboardingSlide = 1;
 
-  // Fade out the nudge dot — user discovered highlighting
-  hideNudge();
+  // Instantly remove the nudge dot — must never be visible alongside the widget
+  hideNudge(true);
 
   // Spec §Arch-1: store selected text NOW — window.getSelection() is cleared on next click.
   onboardingSelection = selectedText;
 
-  // Populate concept pill in slide 1 body text.
-  // Using DOM API (not innerHTML) to prevent XSS from page-sourced selectedText.
-  const bodyEl = shadow.getElementById('ll-ob-body-text');
-  bodyEl.textContent = '';
-  if (conceptLabel) {
-    bodyEl.appendChild(document.createTextNode('You highlighted text about '));
-    const pill = document.createElement('span');
-    pill.className = 'ob-concept-pill';
-    pill.textContent = conceptLabel;
-    bodyEl.appendChild(pill);
-    bodyEl.appendChild(document.createTextNode('. Lenny is matching it to real stories from 300+ product leaders.'));
-  } else {
-    bodyEl.textContent = 'You highlighted some text. Lenny is matching it to real stories from 300+ product leaders.';
-  }
+  // Static loading copy — no dynamic topic injection
+  shadow.getElementById('ll-ob-body-text').textContent =
+    'Analyzing your highlight. Lenny is cross-referencing this against frameworks and stories from 300+ top product leaders.';
 
   // Reset slides to slide 1 state
   shadow.getElementById('ll-ob-slide-1').classList.remove('hidden');
