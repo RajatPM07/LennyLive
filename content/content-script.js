@@ -1398,11 +1398,23 @@ document.addEventListener('selectionchange', () => {
 
 function activateLennyLive() {
   if (state !== 'idle') return;
-  hideAllAmbientUI();   // clear any active ambient dots before voice activates
+
+  // Spec §Arch-2: voice fired while onboarding is open — cancel onboarding.
+  // Set onboardingCancelled so the in-flight text RAG result is silently discarded when it arrives.
+  if (isOnboarding) {
+    onboardingCancelled = true;
+    isOnboarding = false;
+    onboardingSelection = '';
+    pendingOnboardingResult = null;
+    shadow.getElementById('ll-onboarding').classList.add('hidden');
+    console.log('[LennyLive] Double-tap Ctrl during onboarding — onboarding cancelled, voice takes over');
+  }
+
+  hideAllAmbientUI();
   state = 'listening';
   playPing();
   showIndicator('listening');
-  startListening(); // defined below
+  startListening();
 }
 
 function cancelLennyLive() {
@@ -1478,7 +1490,25 @@ function handleResponse(message) {
 
 // Single onMessage listener — handles RESPONSE (Push 1), AUDIO (Push 2), and QUESTIONS_READY
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'RESPONSE') { handleResponse(message); }
+  if (message.type === 'RESPONSE') {
+    // Spec §Arch-2: buffer result while onboarding is visible — don't call showPostcard yet.
+    if (isOnboarding) {
+      if (message.status === 'ok' && message.insight) {
+        pendingOnboardingResult = { insight: message.insight, relatedInsights: message.relatedInsights || [] };
+        console.log('[LennyLive] Onboarding: RAG result buffered — will show on dismiss');
+      } else {
+        pendingOnboardingResult = null; // no results or error — dismiss cleanly
+      }
+      return;
+    }
+    // Spec §Arch-2: voice mode took over — silently discard this text RAG result.
+    if (onboardingCancelled) {
+      onboardingCancelled = false;
+      console.log('[LennyLive] Discarding stale onboarding RAG result (voice took over)');
+      return;
+    }
+    handleResponse(message);
+  }
   if (message.type === 'AUDIO')    { playAudio(message.audio); }
   if (message.type === 'QUESTIONS_READY') {
     // NOT_PM: model identified non-professional content — suppress badge silently
