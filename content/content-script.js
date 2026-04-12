@@ -1511,7 +1511,18 @@ chrome.runtime.onMessage.addListener((message) => {
     }
     handleResponse(message);
   }
-  if (message.type === 'AUDIO')    { playAudio(message.audio); }
+  if (message.type === 'AUDIO') {
+    // Suppress audio during onboarding — buffer it for playback after dismiss.
+    if (isOnboarding) {
+      if (pendingOnboardingResult) {
+        pendingOnboardingResult.audio = message.audio;
+      }
+      console.log('[LennyLive] Onboarding: audio buffered — will play on dismiss');
+      return;
+    }
+    if (onboardingCancelled) return; // voice took over — discard
+    playAudio(message.audio);
+  }
   if (message.type === 'QUESTIONS_READY') {
     // NOT_PM: model identified non-professional content — suppress badge silently
     if (message.notPm || (!message.error && (!message.questions || message.questions.length === 0))) {
@@ -1767,6 +1778,8 @@ function dismissOnboarding() {
   if (pendingOnboardingResult) {
     // RAG already returned — show postcard immediately
     showPostcard(pendingOnboardingResult.insight, pendingOnboardingResult.relatedInsights || []);
+    // Play buffered audio now that postcard is visible
+    if (pendingOnboardingResult.audio) playAudio(pendingOnboardingResult.audio);
     pendingOnboardingResult = null;
   } else {
     // RAG still in flight — show "Lenny is thinking…" indicator.
