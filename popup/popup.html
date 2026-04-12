@@ -7,6 +7,29 @@
 </head>
 <body>
 
+  <!-- ─── Teaching State (first-time users) ────────────────────── -->
+  <div id="teaching-state" class="teaching-state hidden">
+    <header>
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <span class="logo-name">lennyLive</span>
+      </div>
+    </header>
+    <hr class="divider">
+
+    <div class="teaching-body">
+      <div class="teaching-animation-placeholder">
+        Placeholder: Lottie animation of cursor highlighting text
+      </div>
+      <h1 class="teaching-headline">Lenny is ready.</h1>
+      <p class="teaching-text">Whenever you're reading about product management, just highlight the text. Lenny will automatically jump in with context, frameworks, and related insights.</p>
+      <button id="teaching-cta" class="teaching-cta" type="button">Got it, let me try</button>
+    </div>
+  </div>
+
+  <!-- ─── Dashboard (returning users) ─────────────────────────── -->
+  <div id="dashboard">
+
   <!-- Header -->
   <header>
     <div class="logo">
@@ -52,6 +75,8 @@
       </div>
     </div>
   </section>
+
+  </div><!-- /#dashboard -->
 
   <script src="popup.js"></script>
 </body>

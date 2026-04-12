@@ -275,3 +275,68 @@ header {
 .empty-highlight {
   color: var(--accent-orange);
 }
+
+/* ─── Teaching State (first-time users) ──────────────────────── */
+
+.teaching-state { width: 320px; background: var(--bg-color); }
+.teaching-state.hidden { display: none; }
+
+.teaching-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.teaching-animation-placeholder {
+  width: 100%;
+  height: 120px;
+  border: 2px dashed var(--card-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 12px;
+  background: rgba(0,0,0,0.02);
+}
+
+.teaching-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  margin: 0;
+  text-align: center;
+}
+
+.teaching-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.teaching-cta {
+  width: 100%;
+  background: var(--text-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  transition: background 0.2s;
+  margin-top: 4px;
+}
+
+.teaching-cta:hover {
+  background: var(--accent-orange-dark, #a23f1d);
+}

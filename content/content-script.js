@@ -350,6 +350,67 @@ style.textContent = `
     font-family: var(--font-sans); transition: background 0.2s;
   }
   .ob-btn-primary:hover { background: var(--accent-orange-dark); }
+
+  /* 10. Onboarding Nudge Dot — teaches the highlight action */
+  #ll-nudge {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  #ll-nudge.hidden { display: none; }
+  #ll-nudge.fade-out { opacity: 0; transition: opacity 0.4s ease-out; pointer-events: none; }
+
+  .nudge-dot {
+    width: 14px; height: 14px;
+    background: var(--accent-orange);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 0 0 12px rgba(255,110,64,0.4);
+  }
+  .nudge-dot::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--accent-orange); border-radius: 50%;
+    animation: ll-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  #ll-nudge.prominent .nudge-dot::before {
+    animation: ll-nudge-prominent 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 3;
+  }
+  @keyframes ll-nudge-prominent {
+    0% { transform: scale(0.8); opacity: 1; box-shadow: 0 0 0 0 rgba(255,110,64,0.7); }
+    50% { transform: scale(2.8); opacity: 0.6; box-shadow: 0 0 20px rgba(255,110,64,0.4); }
+    100% { transform: scale(3.5); opacity: 0; box-shadow: 0 0 0 0 rgba(255,110,64,0); }
+  }
+
+  .nudge-tooltip {
+    position: absolute;
+    right: 22px;
+    white-space: nowrap;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    pointer-events: none;
+  }
+  .nudge-tooltip::after {
+    content: ''; position: absolute; top: 50%; right: -6px; transform: translateY(-50%);
+    border: 6px solid transparent; border-left-color: var(--bg-dark); border-right: none;
+  }
+  .nudge-tooltip.visible { opacity: 1; transform: translateX(0); }
 `;
 shadow.appendChild(style);
 
@@ -482,6 +543,16 @@ onboardingPanel.innerHTML = `
 `;
 shadow.appendChild(onboardingPanel);
 
+// 9. Onboarding Nudge Dot (teaches the highlight action on first visit)
+const nudge = document.createElement('div');
+nudge.id = 'll-nudge';
+nudge.className = 'hidden';
+nudge.innerHTML = `
+  <span class="nudge-tooltip" id="ll-nudge-tooltip">✨ Highlight any text to get PM insights from Lenny.</span>
+  <div class="nudge-dot"></div>
+`;
+shadow.appendChild(nudge);
+
 // ─── UI Helper Functions ──────────────────────────────────────────────────────
 
 function showIndicator(mode) {
@@ -524,6 +595,54 @@ function showBuzzwordChip(topic) {
     activateLennyLive();
   };
 }
+
+// ─── Onboarding Nudge ─────────────────────────────────────────────────────────
+
+let nudgeAutoCollapseTimer = null;
+
+function showNudge() {
+  nudge.classList.remove('hidden', 'fade-out');
+  const tooltip = shadow.getElementById('ll-nudge-tooltip');
+  // Auto-expand tooltip for 3s on first appearance
+  tooltip.classList.add('visible');
+  nudgeAutoCollapseTimer = setTimeout(() => {
+    tooltip.classList.remove('visible');
+  }, 3000);
+}
+
+function hideNudge() {
+  clearTimeout(nudgeAutoCollapseTimer);
+  nudge.classList.add('fade-out');
+  setTimeout(() => nudge.classList.add('hidden'), 400);
+}
+
+function pulseNudge() {
+  nudge.classList.add('prominent');
+  const tooltip = shadow.getElementById('ll-nudge-tooltip');
+  tooltip.classList.add('visible');
+  // After 3 prominent pulses (~3s), return to normal
+  setTimeout(() => {
+    nudge.classList.remove('prominent');
+    tooltip.classList.remove('visible');
+  }, 3000);
+}
+
+// Hover: re-expand tooltip
+nudge.addEventListener('mouseenter', () => {
+  clearTimeout(nudgeAutoCollapseTimer);
+  shadow.getElementById('ll-nudge-tooltip').classList.add('visible');
+});
+nudge.addEventListener('mouseleave', () => {
+  shadow.getElementById('ll-nudge-tooltip').classList.remove('visible');
+});
+
+// Inject nudge on page load if user has not onboarded
+chrome.storage.local.get(['hasOnboarded'], (data) => {
+  if (!data.hasOnboarded) {
+    showNudge();
+    console.log('[LennyLive] Nudge dot shown — first-time user');
+  }
+});
 
 // ─── Postcard ─────────────────────────────────────────────────────────────────
 
@@ -1572,6 +1691,10 @@ chrome.runtime.onMessage.addListener((message) => {
       updateWritePauseDotReady();
     }
   }
+  // Popup CTA: "Got it, let me try" sends this to make the nudge dot pulse prominently
+  if (message.type === 'NUDGE_PULSE') {
+    pulseNudge();
+  }
   // Return nothing (no return true) — we never send a response back to the SW
 });
 
@@ -1723,6 +1846,9 @@ function showOnboarding(selectedText, conceptLabel) {
   onboardingCancelled = false;
   pendingOnboardingResult = null;
   onboardingSlide = 1;
+
+  // Fade out the nudge dot — user discovered highlighting
+  hideNudge();
 
   // Spec §Arch-1: store selected text NOW — window.getSelection() is cleared on next click.
   onboardingSelection = selectedText;
