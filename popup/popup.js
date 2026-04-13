@@ -110,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <div class="km-row">
           <div class="km-bars">${bars}</div>
-          <span class="km-label">${topic} (${count})</span>
+          <span class="km-label">${topic}</span>
+          <span class="km-count">${count}</span>
           ${check ? `<span class="km-check">${check}</span>` : ''}
         </div>
       `;
