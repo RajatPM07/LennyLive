@@ -188,18 +188,48 @@ document.addEventListener('DOMContentLoaded', () => {
               : insight.youtube_url)
           : null;
 
+        const quote = insight.pull_quote || insight.topic || 'Saved Insight';
+        const guest = insight.guest_name || 'Lenny Rachitsky';
+
         item.innerHTML = `
           <div class="item-content">
-            <div class="item-title">${insight.pull_quote || insight.topic || 'Saved Insight'}</div>
-            <div class="item-meta">From ${insight.guest_name || 'Lenny Rachitsky'}</div>
+            <div class="item-title">${quote}</div>
+            <div class="item-meta">From ${guest}</div>
           </div>
-          ${ytUrl ? '<div class="item-arrow">↗</div>' : ''}
+          <div class="item-actions">
+            <button class="item-action-btn copy-btn" title="Copy insight">⎘</button>
+            ${ytUrl ? '<button class="item-action-btn link-btn" title="Open source">↗</button>' : ''}
+          </div>
         `;
 
-        if (ytUrl) {
-          item.title = 'Open source episode';
-          item.addEventListener('click', () => chrome.tabs.create({ url: ytUrl }));
+        // Copy: "Quote" — Guest Name, Lenny's Podcast
+        item.querySelector('.copy-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          const copyText = `"${quote}" — ${guest}, Lenny's Podcast`;
+          navigator.clipboard.writeText(copyText).then(() => {
+            const btn = e.currentTarget;
+            const tooltip = document.createElement('span');
+            tooltip.className = 'copied-tooltip';
+            tooltip.textContent = 'Copied!';
+            btn.appendChild(tooltip);
+            requestAnimationFrame(() => tooltip.classList.add('visible'));
+            setTimeout(() => { tooltip.remove(); }, 1200);
+          });
+        });
+
+        // Link: open YouTube at exact timestamp
+        const linkBtn = item.querySelector('.link-btn');
+        if (linkBtn && ytUrl) {
+          linkBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chrome.tabs.create({ url: ytUrl });
+          });
         }
+
+        // Card body click: also opens source
+        item.addEventListener('click', () => {
+          if (ytUrl) chrome.tabs.create({ url: ytUrl });
+        });
 
         itemsDiv.appendChild(item);
       });
