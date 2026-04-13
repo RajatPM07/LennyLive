@@ -741,20 +741,27 @@ function showPostcard(insight, relatedInsights = []) {
   clearTimeout(autoDismissTimer);
   autoDismissTimer = setTimeout(hidePostcard, 30000);
 
-  // Update streak on each successful insight delivery
-  updateStreak();
+  // +5 XP on insight delivery (PRD v2 §2.2)
+  chrome.storage.local.get(['knowledge_score'], (s) => {
+    if (!chrome.runtime.lastError) {
+      chrome.storage.local.set({ knowledge_score: (s.knowledge_score || 0) + 5 });
+    }
+  });
 }
 
 function updateStreak() {
   const today = new Date().toISOString().split('T')[0];
-  chrome.storage.local.get(['streak', 'lastActiveDate'], (data) => {
+  chrome.storage.local.get(['streak', 'lastActiveDate', 'longest_streak', 'knowledge_score'], (data) => {
     if (chrome.runtime.lastError) return;
     const last = data.lastActiveDate;
     let streak = data.streak || 0;
     if (last !== today) {
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
       streak = (last === yesterday) ? streak + 1 : 1;
-      chrome.storage.local.set({ streak, lastActiveDate: today });
+      const longest = Math.max(streak, data.longest_streak || 0);
+      const streakBonus = streak * 2;
+      const newScore = (data.knowledge_score || 0) + streakBonus;
+      chrome.storage.local.set({ streak, lastActiveDate: today, longest_streak: longest, knowledge_score: newScore });
     }
   });
 }
@@ -869,35 +876,61 @@ shadow.getElementById('ll-btn-save').addEventListener('click', () => {
   const entry = {
     topic:         currentInsight.topic,
     pull_quote:    currentInsight.pull_quote,
+    insight:       currentInsight.insight || '',
     guest_name:    currentInsight.guest_name,
     episode_title: currentInsight.episode_title,
     youtube_url:   currentInsight.youtube_url,
+    timestamp_secs: currentInsight.timestamp_secs,
     saved_at:      new Date().toISOString(),
   };
-  // Read-modify-write to avoid overwriting concurrent saves
-  chrome.storage.local.get(['savedInsights'], (result) => {
+  chrome.storage.local.get(['savedInsights', 'knowledge_score', 'topicCounts'], (result) => {
     if (chrome.runtime.lastError) {
       console.warn('[LennyLive] Save read failed:', chrome.runtime.lastError.message);
       return;
     }
     const existing = result.savedInsights || [];
+
+    // Duplicate check — match on pull_quote + guest_name (PRD v2 §1.3)
+    const isDuplicate = existing.some(
+      e => e.pull_quote === entry.pull_quote && e.guest_name === entry.guest_name
+    );
+    if (isDuplicate) {
+      const btn = shadow.getElementById('ll-btn-save');
+      if (btn) { btn.textContent = 'Already saved'; setTimeout(() => { btn.textContent = '🔖 Save'; }, 2000); }
+      return;
+    }
+
     existing.push(entry);
-    chrome.storage.local.set({ savedInsights: existing }, () => {
+
+    // Update topicCounts for PM Knowledge Map (PRD v2 §2.3)
+    const topicCounts = result.topicCounts || {};
+    const topic = entry.topic || 'PM Insights';
+    topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+
+    // Micro-celebration toast text (PRD v2 §1.2)
+    const totalSaves = existing.length;
+    const topicCount = topicCounts[topic];
+    let toastText = `✓ Saved to ${topic}`;
+    if (totalSaves === 1) {
+      toastText = 'Your PM library starts here.';
+    } else if (topicCount === 1) {
+      toastText = `New topic: ${topic}`;
+    } else if (topicCount === 5) {
+      toastText = `${topic} explored — 5 insights deep.`;
+    } else if (totalSaves === 10) {
+      toastText = '10 insights. You\'re building a real PM library.';
+    }
+
+    chrome.storage.local.set({ savedInsights: existing, topicCounts, knowledge_score: (result.knowledge_score || 0) + 15 }, () => {
       if (chrome.runtime.lastError) {
         console.warn('[LennyLive] Save write failed:', chrome.runtime.lastError.message);
       } else {
-        console.log('[LennyLive] Insight saved:', entry.topic);
+        console.log('[LennyLive] Insight saved:', entry.topic, '| topicCounts:', topicCounts);
         const btn = shadow.getElementById('ll-btn-save');
         if (btn) {
-          btn.textContent = '✓ Saved!';
-          setTimeout(() => { btn.textContent = '🔖 Save'; }, 2000);
+          btn.textContent = toastText;
+          setTimeout(() => { btn.textContent = '🔖 Save'; }, toastText.length > 20 ? 3000 : 2000);
         }
-        // Increment knowledge score +10 per saved insight
-        chrome.storage.local.get(['knowledge_score'], (s) => {
-          if (!chrome.runtime.lastError) {
-            chrome.storage.local.set({ knowledge_score: (s.knowledge_score || 0) + 10 });
-          }
-        });
       }
     });
   });
@@ -1070,8 +1103,11 @@ function showSelectionDot(rect) {
   // position:fixed uses viewport coords — rect from getBoundingClientRect() is
   // already viewport-relative, no scrollX/scrollY offset needed.
   // Dot is 14px wide (pulse-dot-wrapper) — align its right edge with rect.right.
-  selectionDot.style.left = `${rect.right - 14}px`;
-  selectionDot.style.top = `${rect.bottom + 5}px`;
+  // Clamp to viewport with 40px padding (PRD v2 §4.4)
+  const dotX = Math.min(rect.right - 14, window.innerWidth - 40);
+  const dotY = Math.min(rect.bottom + 5, window.innerHeight - 40);
+  selectionDot.style.left = `${Math.max(8, dotX)}px`;
+  selectionDot.style.top = `${Math.max(8, dotY)}px`;
   selectionDot.classList.add('visible');
   
   // Important: mousedown must preventDefault to preserve selection
@@ -1080,6 +1116,7 @@ function showSelectionDot(rect) {
     e.stopPropagation();
   };
   selectionDot.onclick = () => {
+    updateStreak(); // Streak fires on activation, not success
     // Truncate to 2000 chars before sending — embedding API handles this fine,
     // and full-page selections can be arbitrarily long.
     chrome.runtime.sendMessage({ type: 'QUERY', transcript: '', selection: selectedText.slice(0, 2000), pageContext: '' });
@@ -1573,6 +1610,8 @@ function processQuery(transcript) {
   state = 'loading';
   showIndicator('loading');
   console.log('[LennyLive] Sending query:', { transcript, selection: currentSelection, pageContext: pageContext.slice(0, 60) });
+
+  updateStreak(); // Streak fires on activation, not success
 
   // Fire-and-forget — no callback. RESPONSE arrives via chrome.runtime.onMessage listener below.
   chrome.runtime.sendMessage({
