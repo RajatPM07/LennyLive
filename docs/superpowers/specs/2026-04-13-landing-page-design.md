@@ -67,7 +67,7 @@ A conversion-focused landing page for Lenny Live — a Chrome extension that bri
 
 **Interactions:**
 - Empty submit → playful shake + inline error "Enter your email first!"
-- Invalid email → inline validation, orange error text
+- Invalid email → inline validation, burnt orange (`#a23f1d`) error text (WCAG AA compliant on cream)
 - Success → confetti burst animation + "You're in! We'll be in touch." message
 - Duplicate email → "You're already on the list!" with checkmark (not an error)
 
@@ -137,13 +137,15 @@ A conversion-focused landing page for Lenny Live — a Chrome extension that bri
 
 **Content:**
 - **Headline:** "Wisdom from the best in product" (centered, serif)
-- **Guest name pills:** 15–20 floating/bouncing pill badges with real guest names from the corpus. Each pill drifts with a gentle sine-wave motion on different phases (organic, not robotic).
+- **Anchor quote:** One large, powerful pull quote centered prominently — sourced from the real corpus (e.g., a Shreyas Doshi insight on product sense). Georgia italic, 24px+, with guest attribution below. This grounds the floating pills with actual authority.
+- **Guest name pills:** 15–20 floating/bouncing pill badges with real guest names from the corpus. Each pill drifts with a gentle sine-wave motion on different phases (organic, not robotic). Pills orbit around the anchor quote.
 - **Stats row (3 big numbers):**
   - "300+" — episodes indexed
   - "280+" — curated PM moments
   - "50+" — product leaders featured
 
 **Animations:**
+- Anchor quote: fade-in + slight scale-up on scroll
 - Guest pills: gentle sine-wave floating motion (randomized phases)
 - Stats: count-up animation when scrolled into view (0 → target over 1.5s)
 - Section: soft fade-in
@@ -166,7 +168,7 @@ A conversion-focused landing page for Lenny Live — a Chrome extension that bri
 
 **Implementation:** Pure CSS/Framer Motion animation — no video, no GIF. Crisp at any resolution.
 
-**Style:** Browser window has subtle drop shadow + rounded corners. Notion page inside is abstract (gray blocks for text, no real content). Postcard is the star.
+**Style:** Browser window has subtle drop shadow + rounded corners. The Notion page inside must show **real, legible PM text** (e.g., a draft titled "Improving Day-30 Retention" with visible paragraph content about cohort analysis). This creates the "aha" moment — the user sees *why* Lenny appeared based on the visible context. The postcard insight should directly relate to the visible text (retention topic).
 
 ---
 
@@ -176,7 +178,8 @@ A conversion-focused landing page for Lenny Live — a Chrome extension that bri
 
 **Content:**
 - **Headline:** "Be the first to borrow Lenny's intuition" (white, serif, large)
-- **Subtitle:** "Launching April 15, 2026. Early access for waitlist members." (white, smaller)
+- **Dynamic counter:** "Join [N] PMs upgrading their workflow" — pulls real count from Supabase `waitlist` table. Starts at 0 honestly; grows into the most powerful social proof element on the page as signups accumulate.
+- **Subtitle:** "Launching April 15, 2026." (white, smaller)
 - **Email input + button:** White input field, dark button "Get early access"
 - **Trust line:** "Free forever. No spam. Just PM wisdom." (small, white, muted)
 
@@ -216,7 +219,9 @@ create table if not exists waitlist (
 ```
 
 - `email` has a unique constraint → duplicate submissions return a friendly message, not an error.
-- API route: `POST /api/waitlist` — validates email format server-side, inserts into Supabase, returns `{ status: 'success' | 'duplicate' | 'error' }`.
+- API routes:
+  - `POST /api/waitlist` — validates email format server-side, inserts into Supabase, returns `{ status: 'success' | 'duplicate' | 'error' }`.
+  - `GET /api/waitlist/count` — returns `{ count: N }` from Supabase. Used by the bottom CTA's dynamic counter. Cached with 60s revalidation.
 
 ---
 
@@ -225,7 +230,7 @@ create table if not exists waitlist (
 | Case | Behavior |
 |------|----------|
 | Empty email submit | Shake animation + "Enter your email first!" inline |
-| Invalid email format | Inline validation, orange error text, no submit |
+| Invalid email format | Inline validation, burnt orange (`#a23f1d`) error text for WCAG AA compliance, no submit |
 | Duplicate email | "You're already on the list!" + checkmark (not error) |
 | Mobile | All sections stack, guest pills reduced to 8–10, browser mockup scales down, 44px min tap targets |
 | Slow connection | Fonts async with system fallbacks, no layout shift, animations trigger after paint |
