@@ -459,6 +459,20 @@ node scripts/embed.js
 - [x] Score increments on deliver (+5) and save (+15) — upgraded from flat +10 on save only
 - [x] **Gamification PRD** written — full game-theory-grounded spec. Notion: 🎮 Gamification System — PRD
 - [x] **Analytics design** written — PostHog via REST API, dropout funnel, all events defined. Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
+- [x] **Platform Redesign (Element-First Detection)** — completed 2026-03-30. `<all_urls>` injection, `focusin`/`focusout` sensor gate, badge pill UI, 40-word threshold, `sessionChipsCache` Map dedup, combined NOT_PM + chip generation Groq prompt, fail-open on Groq errors, Google Docs clipboard intercept. Branch: `feature/platform-redesign`
+- [x] Google Fonts removed from `document.head` — replaced with system font stack (`-apple-system`/`Georgia`) to avoid CSP violations on Notion/Linear/Jira
+- [x] `sessionChipsCache` Map replaces `seenConceptsThisSession` Set — chips survive `pendingQuestions = null` resets, Groq dedup works correctly across focus changes
+- [x] Paste triggers write+pause sensor — `paste` event listener added to `attachWritePauseSensor`
+- [x] Selection cap raised 200 → 2000 chars — full paragraph selection now triggers selection dot
+- [x] `focusout` no longer hides badge pill — badge persists until user clicks it or starts typing
+- [x] **Smart PM Detection (Hybrid Architecture)** — completed 2026-03-30. `PM_ROOTS` stem regex replaces `PM_BUZZWORDS` array; `textMatchesPMRoot()` replaces `detectPMKeywordInText()`. Write+pause sends paragraph straight to Groq (no local keyword gate — zero false positives). Selection dot + reading sensor + clipboard use `PM_ROOTS` instant regex (<100ms). `generateQuestions` returns `{concept, questions}` — Groq-named concept drives badge label and `sessionChipsCache` key. `lastKnownConcept` module-level variable persists cache anchoring across keystroke-triggered `pendingQuestions=null` resets. `TOPIC_MAP` and `getDisplayTopic` deleted. Glow dot shows "Lenny has thoughts →" (no topic label).
+- [x] **Widget Onboarding (2-slide panel)** — completed 2026-04-12. Onboarding moved from popup carousel to content-script shadow DOM. Triggered on first PM-relevant highlight when `hasOnboarded=false`. Slide 1: animated pulse dot + "Lenny is finding something." loading state. Slide 2: Ctrl+Ctrl keyboard mock teaching voice activation. RAG fires in background during slides, result + audio buffered, played on dismiss. Three architectural guards: selection capture before RAG fires, voice race condition cancellation (`onboardingCancelled` flag), `isOnboarding` guard on selectionchange.
+- [x] **Dual-Approach Onboarding** — completed 2026-04-12. (1) On-page nudge dot: pulsing orange dot right-center, auto-expands tooltip "Highlight any text to get PM insights from Lenny" for 3s, fades on hover. Instantly hidden when widget opens. Responds to NUDGE_PULSE from popup. (2) Popup teaching state: "Lenny is ready." headline + animation placeholder + "Got it, let me try" CTA that sends NUDGE_PULSE and closes popup. Both gate on `hasOnboarded` flag.
+- [x] **Popup cleanup** — completed 2026-04-12. Removed 3-slide carousel from popup. Dashboard always visible (no `#main-content` wrapper). New empty state card: "Highlight any text on a webpage to get your first Lenny insight." YouTube clickthrough on saved insights (↗ arrow).
+- [x] **Groq Page-Level Semantic Classification** — completed 2026-04-13. On page load (2s delay), Groq `llama-3.1-8b-instant` classifies page as PM/not-PM via binary YES/NO (max_tokens=1, temperature=0). Result cached as `pageIsPMContext` boolean. Groq is the authority: PM pages → any highlight gets dot; non-PM pages → no dot (regex ignored); null (first 2s) → regex fallback. SPA navigation detection via `history.pushState` override + `popstate` listener resets and re-classifies. `classifyPage()` added to `abstraction.js`.
+- [x] **Killed Ambient Glow Dot** — completed 2026-04-13. Removed `scanForBuzzwords()`, `showBuzzwordChip()`, MutationObserver, `#ll-chip` element, all cooldown state. Bait-and-switch UX ("Lenny has thoughts" → opens mic) eliminated. Write+pause badge pill + selection dot + onboarding nudge cover the full user journey.
+- [x] **PM_ROOTS regex hardened** — completed 2026-04-13. Short acronyms (ARR, MRR, CAC, DAU, MAU, etc.) now use `\b` word boundaries to prevent matching inside words (e.g. "starred" was matching ARR). Removed ambiguous `epic` stem.
+- [x] **Selection dot positioning** — completed 2026-04-12. Anchored to bottom-right of `getBoundingClientRect()` (Medium/Notion pattern). Dots and widget are mutually exclusive — `showPostcard()` and `showOnboarding()` forcefully hide all ambient UI.
 
 ## Positioning (Locked 2026-03-29)
 
@@ -474,11 +488,12 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 
 > All items below are V1 requirements — real users ship on April 15th. Nothing here is optional or "phase 2".
 
-- [ ] **🔴 Platform Redesign (Element-First Detection)** — URL-gating kills the demo; write+pause unreliable on current arch. Spec: `docs/superpowers/specs/2026-03-29-platform-redesign.md`. Core: `focusin`/`focusout` gate, `<all_urls>` optional permissions, badge pill UX, hash cache + session dedup. Next: `superpowers:writing-plans` → `superpowers:subagent-driven-development`
+- [x] **🔴 Platform Redesign (Element-First Detection)** — COMPLETE. Branch: `feature/platform-redesign`
+- [x] **🔴 Smart PM Detection (Hybrid Architecture)** — COMPLETE. `PM_ROOTS` regex + Groq-only write+pause detection. Merged to main 2026-03-30.
 - [ ] **Full gamification system** — PM Levels + XP economy (+5 deliver/+15 save/+25 rare) + topic badges + streak milestones (3/7/14/30d) + streak shield + rare drops. See Notion: 🎮 Gamification System — PRD
-- [ ] **Onboarding commitment screen** — first-open popup moment, learning goal selection (behavioral commitment device — required for retention)
+- [x] **Onboarding** — COMPLETE. Dual-approach: nudge dot + popup teaching state + widget 2-slide panel. Replaces popup carousel.
 - [ ] **Chrome notifications** — Streak Saver at 8pm if no activation that day (highest retention lever per Duolingo research)
-- [ ] **Saved insights YouTube clickthrough** — clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; add link on postcard footer too
+- [x] **Saved insights YouTube clickthrough** — COMPLETE. Clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; ↗ arrow on clickable items.
 - [ ] **Analytics (PostHog)** — `background/analytics.js` + wire all events. Needs Rajat to create PostHog account (US region) and share `phc_...` API key. See Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
 - [ ] **ElevenLabs voice clone** — Starter plan ($5), clone Lenny's voice; update `ELEVENLABS_VOICE_ID` in `background/config.js`
 - [ ] **Re-seed audio_url cache** with Lenny Formula formatted text (currently bypassed — real-time TTS only)
@@ -487,14 +502,15 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 
 ---
 
-## Remaining Timeline (as of Mar 29, 2026)
+## Remaining Timeline (as of Apr 13, 2026)
 
 | Period | Dates | Focus |
 |---|---|---|
-| Now → Apr 3 | Mar 29–Apr 3 | Platform redesign (element-first detection + badge pill UX) |
-| Apr 4–8 | Apr 4–8 | Voice clone + Gamification + Onboarding |
-| Apr 9–12 | Apr 9–12 | Chrome notifications + Audio re-seed + Dynamic push question |
-| Buffer | Apr 13–15 | Full E2E testing + bug fixes + submit |
+| ~~Mar 29–Apr 3~~ | ✅ DONE | Platform redesign — element-first detection + badge pill UX |
+| ~~Apr 1–4~~ | ✅ DONE | Smart PM Detection — PM_ROOTS hybrid arch, Groq concept extraction |
+| ~~Apr 4–12~~ | ✅ DONE | Onboarding (widget + nudge + popup teaching) + Groq page classification + kill ambient dot |
+| Apr 13–14 | NOW | Voice clone + Chrome notifications + gamification polish + E2E testing |
+| Apr 15 | DEADLINE | Final bug fixes + submit |
 
 ---
 
@@ -547,6 +563,19 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 - [2026-03-25] — Scoping features as "good enough for demo" or deferring to "phase 2" is the wrong mental model — this is a full product for real users launching April 15th. If a feature is needed for a good user experience (onboarding, notifications, streak shield), it is V1, not V2. There is no phase 2.
 - [2026-03-29] — `triggerEagerFetch` keyword detection was too restrictive: `extractPageContext()` returns only the active Notion block (often one short sentence without PM keywords) → always use two-level detection: cursor block first, fall back to semantic container (`article`/`main`/`[role="main"]`). Symptom: `pageContext: active cursor block` logs but `Write+pause: eager Groq fetch` never appears.
 - [2026-03-29] — URL-gating (`manifest.json` hardcoding 4 platforms) is wrong for an ambient tool — it kills demos on unlisted platforms and means every new platform requires a code change + Web Store re-review → rebuild with element-first detection: `focusin`/`focusout` gate on any contenteditable/textarea, `<all_urls>` optional permissions with per-site opt-in onboarding.
+- [2026-03-30] — `focusout` calling `hideWritePauseDot()` makes the badge pill disappear the instant the user moves focus to click it → never hide the badge on focusout; only hide on explicit user dismiss, new typing, or `hideAllAmbientUI()`.
+- [2026-03-30] — Paste (`Cmd+V`) filtered by `metaKey` guard in `onSensorKeydown` — paste never started the eager fetch timer → add dedicated `paste` event listener on sensor element that starts `eagerFetchTimer` after 1.5s.
+- [2026-03-30] — Selection cap of 200 chars silently drops full paragraph highlights (paragraphs are 400–2000 chars) → raise to 2000 chars; the `selection.slice(0, 500)` truncation before RAG handles any downstream length concerns.
+- [2026-03-30] — `seenConceptsThisSession` Set required `pendingQuestions` to be non-null to short-circuit, but `pendingQuestions = null` on every keystroke means the gate always fell through → replace Set with `sessionChipsCache` Map storing `{keyword, questions}` per concept key; gates restore `pendingQuestions` from cache directly.
+- [2026-03-30] — `PM_BUZZWORDS` static list is correct syntax but wrong semantics for `<all_urls>` — "strategy", "launch", "retention", "roadmap" fire on chess forums, wedding docs, legal policies → architecture decision: split into Tier 1 (unambiguous PM jargon), Tier 2 (co-occurrence required), Tier 3 (Groq concept extraction). Do NOT expand the static list; the fix is tiered detection not more keywords.
+- [2026-03-30] — Cache gates in `triggerEagerFetch` used `pendingQuestions?.keyword` as the cache lookup key — but `pendingQuestions` is set to null on every keystroke, so it's always null when the gate runs → use a dedicated `lastKnownConcept` module-level variable set in `QUESTIONS_READY` happy path; this persists across keystrokes and gives gates a stable anchor.
+- [2026-03-30] — `lastKnownConcept` must be set to the normalized cache key (`ck = TOPIC_MAP[keyword] ?? keyword`), not the raw `message.keyword` — otherwise cache GET misses for any keyword present in TOPIC_MAP → always set `lastKnownConcept = ck` after `sessionChipsCache.set(ck, ...)`.
+- [2026-04-12] — Popup onboarding carousel is fundamentally broken: popup tears down on focus loss, position:fixed doesn't work as expected in MV3 popup, can't inspect with DevTools → move onboarding to content-script shadow DOM where it can be inspected and doesn't tear down.
+- [2026-04-12] — AUDIO messages arrive separately from RESPONSE — if you buffer RESPONSE during onboarding but don't buffer AUDIO, TTS plays over the onboarding slides → always buffer both RESPONSE and AUDIO when `isOnboarding=true`, play audio on dismiss alongside postcard.
+- [2026-04-12] — Content scripts only update when the page reloads, not when the extension reloads. Old code keeps running on already-open tabs → always refresh the page after extension reload, not just the extension.
+- [2026-04-13] — Short PM acronyms in regex (ARR, MRR, CAC, DAU, etc.) match inside common words without word boundaries — "starred" matches ARR, "epicure" matches epic → all ≤4-char acronym stems in PM_ROOTS must use `\b` word boundaries. Longer stems (≥5 chars) are safe as substrings.
+- [2026-04-13] — Keyword regex on non-PM pages creates false positives ("activation" on a fitness page triggers the dot) → Groq page classification must be the authority. When `pageIsPMContext=false`, regex should be completely disabled — only serve as fallback during the ~2s before Groq responds (`pageIsPMContext=null`).
+- [2026-04-13] — Ambient "Lenny has thoughts" glow dot was a bait-and-switch (promises contextual info, opens mic on click) and Clippy-like (interrupts reading flow). 3min/30min cooldowns proved it was unwelcome → killed entirely. Write+pause badge pill + selection dot + onboarding nudge cover the user journey better.
 
 ---
 
