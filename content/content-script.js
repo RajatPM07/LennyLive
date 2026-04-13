@@ -1693,6 +1693,14 @@ chrome.runtime.onMessage.addListener((message) => {
     if (onboardingCancelled) return; // voice took over — discard
     playAudio(message.audio);
   }
+  if (message.type === 'AUDIO_ERROR') {
+    // Audio failed but postcard may be visible — don't show error toast (PRD v2 §4.1)
+    console.warn('[LennyLive] Audio failed silently — postcard remains visible');
+  }
+  if (message.type === 'MUTE_CHANGED') {
+    // Popup toggled mute — stop any currently-playing audio immediately (PRD v2 §4.5)
+    if (message.muted) stopCurrentAudio();
+  }
   if (message.type === 'QUESTIONS_READY') {
     // NOT_PM: model identified non-professional content — suppress badge silently
     if (message.notPm || (!message.error && (!message.questions || message.questions.length === 0))) {
