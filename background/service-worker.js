@@ -324,7 +324,8 @@ function pushAudio(insight, tabId, query = '', allChunks = []) {
       })
       .catch(err => {
         console.warn('[LennyLive] Audio skipped:', err.message);
-        pushResponse(tabId, { type: 'RESPONSE', status: 'network_error', insight: null });
+        // Send AUDIO_ERROR, not RESPONSE — avoids double-error when postcard is visible (PRD v2 §4.1)
+        pushResponse(tabId, { type: 'AUDIO_ERROR' });
       })
       .finally(() => clearTimeout(ttsTimeoutId));
   });
@@ -338,3 +339,65 @@ function pushResponse(tabId, response) {
     console.warn('[LennyLive] pushResponse failed:', err.message);
   });
 }
+
+// ─── Streak Saver Notification (PRD v2 §3.4) ─────────────────────────────────
+// Fires daily at 8pm local time. If user has an active streak ≥ 2 and hasn't
+// used the extension today, show a Chrome notification.
+
+function scheduleStreakSaver() {
+  const now = new Date();
+  const next8pm = new Date(now);
+  next8pm.setHours(20, 0, 0, 0);
+  if (now >= next8pm) next8pm.setDate(next8pm.getDate() + 1);
+
+  chrome.alarms.create('streakSaver', {
+    when: next8pm.getTime(),
+    periodInMinutes: 1440, // repeat daily
+  });
+  console.log('[LennyLive] Streak saver alarm set for', next8pm.toLocaleString());
+}
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name !== 'streakSaver') return;
+
+  chrome.storage.local.get(['streak', 'lastActiveDate'], (data) => {
+    if (chrome.runtime.lastError) return;
+    const today = new Date().toISOString().split('T')[0];
+    const streak = data.streak || 0;
+
+    // Only notify if: active streak ≥ 2, AND user hasn't activated today
+    if (streak >= 2 && data.lastActiveDate !== today) {
+      chrome.notifications.create('streakSaver', {
+        type: 'basic',
+        iconUrl: 'assets/icons/icon128.png',
+        title: `🔥 Your ${streak}-day streak ends at midnight`,
+        message: 'Highlight something to keep it alive.',
+        priority: 2,
+      }, (notifId) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[LennyLive] Notification failed:', chrome.runtime.lastError.message);
+        } else {
+          console.log('[LennyLive] Streak saver notification shown:', notifId);
+        }
+      });
+    }
+  });
+});
+
+// Click handler: open the last active tab or Notion as fallback
+chrome.notifications.onClicked.addListener((notifId) => {
+  if (notifId === 'streakSaver') {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+      if (tabs[0]) {
+        chrome.tabs.update(tabs[0].id, { active: true });
+        chrome.windows.update(tabs[0].windowId, { focused: true });
+      } else {
+        chrome.tabs.create({ url: 'https://notion.so' });
+      }
+    });
+    chrome.notifications.clear(notifId);
+  }
+});
+
+// Schedule on first load
+scheduleStreakSaver();
