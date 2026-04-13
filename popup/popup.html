@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="popup.css">
-  <!-- No external font requests — MV3 CSP blocks them. System font stack used instead. -->
 </head>
 <body>
 
@@ -52,25 +51,34 @@
     </label>
   </section>
 
-  <!-- Gamification Stats -->
+  <!-- Gamification Stats — PM Level + Streak -->
   <section class="stats-grid">
     <div class="stat-card">
       <span class="stat-title">🔥 Streak</span>
-      <span class="stat-value"><span id="streak-value">0</span> Days</span>
+      <span class="stat-value"><span id="streak-value">0</span> <small>Days</small></span>
+      <span class="stat-sub" id="streak-shield"></span>
     </div>
     <div class="stat-card">
-      <span class="stat-title">🧠 Score</span>
-      <span class="stat-value" id="score-value">0</span>
+      <span class="stat-title" id="level-title">Intern</span>
+      <span class="stat-value"><span id="score-value">0</span> <small>XP</small></span>
+      <span class="stat-sub" id="level-progress"></span>
     </div>
   </section>
 
-  <!-- Saved Insights -->
+  <!-- PM Knowledge Map -->
+  <section class="knowledge-map-section">
+    <h2 class="section-heading">PM Knowledge Map</h2>
+    <div id="knowledge-map" class="knowledge-map"></div>
+  </section>
+
+  <!-- Saved Insights — Topic Accordion -->
   <section class="saved-insights-section">
     <div class="saved-header">
-      <h2>Saved Insights</h2>
+      <h2 class="section-heading">Saved Insights</h2>
     </div>
+    <input type="text" id="search-bar" class="search-bar" placeholder="Search by topic, guest, or keyword...">
     <div id="saved-list" class="saved-list">
-      <div class="empty-state-card">
+      <div class="empty-state-card" id="empty-state">
         <p class="empty-state-text"><span class="empty-highlight">Highlight</span> any text on a webpage to get your first Lenny insight. Then hit 🔖 to save it here.</p>
       </div>
     </div>
