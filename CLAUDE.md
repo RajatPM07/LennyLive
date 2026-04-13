@@ -486,6 +486,9 @@ node scripts/embed.js
 - [x] **Selection dot viewport clamping** — completed 2026-04-14. `Math.min`/`Math.max` keeps dot within viewport (40px padding right/bottom, 8px left/top).
 - [x] **Manifest permissions** — completed 2026-04-14. Added `notifications` and `alarms` to manifest.json permissions array.
 - [x] **Lenny voice clone** — completed 2026-04-14. ElevenLabs Instant Voice Clone. Voice ID: `8tZdziIM3Y7ERvK9TUjy`. TTS settings: `stability: 0.45, similarity_boost: 0.85` (natural podcast cadence). Replaces Eric placeholder (`cjVigY5qzO86Huf0OWal`).
+- [x] **Landing page** — completed 2026-04-14. Next.js 16 + Tailwind v4 + Framer Motion in `landing/`. 7 sections: Hero, How It Works, Feature Showcase, Social Proof (anchor quote + floating pills), Demo Preview (browser mockup with real PM text + animation loop), Waitlist CTA (dynamic counter), Footer. Waitlist emails stored in Supabase `waitlist` table. Deployed to Vercel: `https://landing-mu-nine-76.vercel.app`. Knowledge Stack logo (stacked cards + quote lines + play indicator).
+- [x] **Knowledge Stack logo** — completed 2026-04-14. Three stacked cards with quote lines + play indicator. SVG at `landing/public/logo.svg` (wordmark) and `landing/public/logo-icon.svg` (icon). Chrome extension icons regenerated at 16/48/128px.
+- [x] **Popup Editorial Assurance redesign** — completed 2026-04-14. Unified CSS variables matching postcard + ambient badge theme. Cream bg, serif italic headers, subtle shadows on stat cards, pill badges for topic counts, softer search bar (12px radius), orange pulsing status dot, hover states on all interactive elements.
 
 ## Positioning (Locked 2026-03-29)
 
@@ -509,6 +512,8 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 - [x] **Saved insights YouTube clickthrough** — COMPLETE. Clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; ↗ arrow on clickable items.
 - [ ] **Analytics (PostHog)** — `background/analytics.js` + wire all events. Needs Rajat to create PostHog account (US region) and share `phc_...` API key. See Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
 - [x] **ElevenLabs voice clone** — COMPLETE (2026-04-14). Voice ID `8tZdziIM3Y7ERvK9TUjy` in `background/config.js`. Stability 0.45, similarity_boost 0.85.
+- [x] **Landing page + waitlist** — COMPLETE (2026-04-14). Next.js + Tailwind + Framer Motion. Deployed to Vercel. Supabase waitlist table with RLS. Knowledge Stack logo.
+- [x] **Popup Editorial Assurance redesign** — COMPLETE (2026-04-14). Unified theme matching postcard + badges.
 - [ ] **Re-seed audio_url cache** with Lenny Formula formatted text (currently bypassed — real-time TTS only)
 - [ ] **Dynamic push question** — inject page context into Sentence 3 of Lenny Formula (generic version shipped)
 - [ ] **Submit to competition** — April 15, 2026
