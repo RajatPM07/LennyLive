@@ -5,7 +5,7 @@ import { useInView } from 'framer-motion';
 
 export default function CountUp({ target, suffix = '', duration = 1.5 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const inView = useInView(ref, { once: true, amount: 0.5 });
   const [count, setCount] = useState(0);
 
   useEffect(() => {

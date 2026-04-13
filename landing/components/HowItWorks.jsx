@@ -115,7 +115,7 @@ const steps = [
 
 export default function HowItWorks() {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
     <section ref={sectionRef} className="py-24 px-6 bg-cream">

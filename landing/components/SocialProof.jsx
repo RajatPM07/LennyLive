@@ -12,7 +12,7 @@ const stats = [
 
 export default function SocialProof() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const inView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
     <section className="py-24 px-6 bg-proof">
