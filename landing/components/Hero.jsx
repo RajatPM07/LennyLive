@@ -29,7 +29,7 @@ export default function Hero() {
           className="inline-block mb-6"
         >
           <span className="px-4 py-2 bg-white rounded-pill text-sm font-medium text-text-muted shadow-sm border border-gray-100">
-            Powered by 300+ Lenny Podcast episodes
+            Powered by 300+ Lenny Podcast episodes & newsletters
           </span>
         </motion.div>
 
