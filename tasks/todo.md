@@ -2,25 +2,65 @@
 
 ---
 
-## Next Up — Platform Redesign (Element-First Detection)
+## ✅ DONE — Platform Redesign (Element-First Detection)
 
-**Spec:** `docs/superpowers/specs/2026-03-29-platform-redesign.md`
+Completed 2026-03-30. Branch: `feature/platform-redesign`. 10 commits.
 
-**Why:** Write+pause activation is unreliable on current architecture. URL-gating blocks the demo the moment a user opens Slack, Gmail, or any unlisted platform. This redesign fixes both with element-first detection + Grammarly-inspired badge pill.
+**What shipped:**
+- `<all_urls>` manifest — extension works on any platform
+- `focusin`/`focusout` element-first sensor gate
+- 40-word threshold + `sessionChipsCache` Map dedup (Groq fires once per concept per session)
+- Badge pill UI — fixed bottom-right, "3 patterns on retention →", chips panel on click
+- Combined NOT_PM detection + chip generation in single Groq call
+- Fail-open on Groq errors (template chips served, badge never goes dark)
+- Google Docs clipboard intercept
+- Google Fonts removed → system font stack (fixes 33 CSP violations per page load)
+- Paste triggers write+pause sensor
+- Selection cap raised 200 → 2000 chars
+- focusout no longer hides badge pill
 
-**Positioning locked:** "Compounded experience. Borrowed intuition."
+---
 
-**Key decisions:**
-- `focusin`/`focusout` gate replaces global `keydown` listener
-- `<all_urls>` optional permissions with warm per-site onboarding
-- Fixed bottom-right badge pill ("3 patterns on retention →") — no inline DOM injection
-- 40-word threshold + paragraph hash cache + session concept dedup (cuts Groq calls ~70-80%)
-- Single progressive disclosure card (compact for chip tap, expanded for selection/double-tap)
-- Google Docs fallback: clipboard intercept (`document.oncopy`)
+## ✅ DONE — Smart PM Detection (Hybrid Detection Architecture)
 
-**Files touched:** `manifest.json`, `content/content-script.js`, `background/service-worker.js`, `background/abstraction.js`
+Completed 2026-03-30. Branch: `feature/platform-redesign` (merged to main). 9 commits.
 
-**Next action:** `superpowers:writing-plans` on the spec, then `superpowers:subagent-driven-development`
+**What shipped:**
+- `PM_ROOTS` stem regex replaces `PM_BUZZWORDS` array — morphological variants match (`retent` → retention/retaining/retentive)
+- `textMatchesPMRoot()` replaces `detectPMKeywordInText()` — one-liner boolean
+- Write+pause path sends paragraph straight to Groq — no local keyword gate, zero false positives
+- Selection dot + reading sensor + clipboard → `PM_ROOTS` instant regex (<100ms)
+- `generateQuestions` returns `{concept, questions}` — Groq names the concept ("Retention Strategy")
+- Badge label and cache key driven by Groq concept, not static TOPIC_MAP
+- `lastKnownConcept` module-level variable — cache gates work even when `pendingQuestions` is null (cleared on keystrokes)
+- `TOPIC_MAP` and `getDisplayTopic` deleted — fully removed
+- Glow dot shows "Lenny has thoughts →" (generic label — Option B, locked 2026-03-30)
+
+---
+
+## 🔴 Next Up — Smart PM Detection (Tiered Buzzword Architecture)
+
+**Why:** `PM_BUZZWORDS` static list is broken for `<all_urls>`. Words like "strategy", "launch", "retention", "roadmap" fire on chess forums, wedding docs, legal policies. With platform-wide injection, false positives will be constant.
+
+**Decision (2026-03-30):** Tiered detection — do NOT expand static list, redesign the architecture.
+
+**Architecture (planned, not yet specced):**
+
+**Tier 1 — Unambiguous PM jargon (fire immediately, zero verification)**
+High-confidence terms where false positives are near-zero:
+`DAU`, `MAU`, `WAU`, `ARR`, `MRR`, `ARPU`, `LTV`, `CAC`, `NPS`, `CSAT`, `PMF`, `OKR`, `KPI`, `JTBD`, `PLG`, `GTM`, `A/B test`, `north star`, `product market fit`, `churn rate`, `retention rate`
+
+**Tier 2 — Ambiguous words (require PM co-occurrence in 200-word window)**
+`strategy`, `launch`, `retention`, `roadmap`, `prioritisation`, `discovery`, `viral`, `acquisition`, `competitive`, `positioning`, `stakeholder`, `funnel`, `conversion`
+Co-occurrence signal: must appear with `product`, `user`, `feature`, `metric`, `sprint`, `backlog`, `customer`, or any Tier 1 term within 200 words.
+
+**Tier 3 — Groq concept extraction (once per page session, cached by URL)**
+Drop PM_BUZZWORDS entirely as primary trigger for new contexts. Groq identifies actual PM concepts present: "Retention · Roadmap · OKR". Returns NONE for non-PM pages.
+Badge label changes: "3 patterns on retention" → "Lenny sees: Retention · Roadmap · OKR →"
+
+**Local model note:** DeepSeek/Ollama via localhost works for developer use only — not viable for real users. Keep Groq as default; optionally add `LOCAL_OLLAMA_URL` config override in `background/config.js` for zero-cost development.
+
+**Status:** ✅ COMPLETE — see Done section above.
 
 ---
 
@@ -28,34 +68,20 @@
 
 ### Dynamic Topic Re-tag (Groq Ingestion Layer)
 
-**Problem:** 280 existing rows in `transcript_chunks` have stale V1 topic labels forced into 10 rigid buckets. The RAG retrieval is correct but the UI pill reads "Roadmap Prioritisation" for an AI Strategy quote — breaking the illusion.
-
-**Solution:** One-time Groq batch re-tag + forward pipe update.
+**Problem:** 280 existing rows in `transcript_chunks` have stale V1 topic labels forced into 10 rigid buckets.
 
 **Tasks:**
-- [ ] `scripts/retag-topics.js` — fetch all rows from Supabase, send `insight + pull_quote + guest_name + episode_title` to Groq `llama3-8b-8192`, get back a 2-3 word title-case PM topic label, UPDATE `topic` column in Supabase
-  - Prompt constraints: 2-3 words max, title case, PM vocabulary (e.g. "AI Strategy", "Pricing Models", "Hiring Decisions")
-  - Rate limit: 1.5s delay between calls (Groq free tier: 30 req/min)
-  - Estimated runtime: ~7 minutes for 280 rows
-  - Estimated cost: ~$0.08 one-time
-- [ ] Update `scripts/curate.js` — replace hardcoded 10-bucket topic assignment with Groq-generated free-form label (same prompt), so all future episode curation is fully dynamic
-- [ ] Verify postcard UI pill renders correctly with new free-form labels post-retag
-
-**Files to touch:**
-- `scripts/retag-topics.js` (new)
-- `scripts/curate.js` (update topic generation)
-
-**No extension code changes needed** — `topic` is already returned by `match_transcript_chunks` and rendered directly on the postcard pill.
+- [ ] `scripts/retag-topics.js` — fetch all rows, Groq re-tag with 2-3 word PM topic label, UPDATE Supabase
+- [ ] Update `scripts/curate.js` — replace hardcoded 10-bucket topic with Groq-generated free-form label
 
 ---
 
 ## Up Next (ordered)
 
-- [ ] Voice clone — ElevenLabs Starter ($5), clone Lenny's real voice; update `ELEVENLABS_VOICE_ID` in `background/config.js`
-- [ ] Clippy UX fix — replace keyword chip notification with ambient glow dot
-- [ ] Gamification — streaks, scores, saved library popup UI
-- [ ] Postcard output redesign — teaser text + "Read more" CTA (~800 chars expanded)
-- [ ] Honest mentor framing UI — `abstracted: true` → bridging copy on postcard
+- [ ] Voice clone — ElevenLabs Starter ($5), clone Lenny's real voice; update `ELEVENLABS_VOICE_ID`
+- [ ] Gamification — PM Levels, full XP economy, topic badges, streak milestones (3/7/14/30d), streak shield
+- [ ] Onboarding commitment screen — first-open popup, learning goal selection
+- [ ] Chrome notifications — Streak Saver at 8pm
 - [ ] Dynamic push question — inject pageContext into Sentence 3 of Lenny Formula
-- [ ] Re-seed audio_url cache with Lenny Formula formatted text (currently bypassed)
-- [ ] **Session memory + deduplication** — conversational context chaining across activations (e.g. "retention" → "B2B retention" → "B2C retention" should give progressively refined, non-repeating insights). Needs brainstorming session before implementation: scope of session reset (per tab / per browser session / time-bounded), dedup strategy (exclude seen chunk IDs from Supabase RPC), and query context injection.
+- [ ] Re-seed audio_url cache with Lenny Formula formatted text
+- [ ] Analytics (PostHog) — needs Rajat to create account + share `phc_...` API key

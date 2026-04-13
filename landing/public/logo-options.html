@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lenny Live — Logo Options v2</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #fdfcf6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      color: #1a1c1c;
+      padding: 48px 24px;
+    }
+    h1 { font-family: Georgia, serif; text-align: center; font-size: 32px; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #5e5e5e; margin-bottom: 48px; font-size: 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid #e5e5e5;
+      text-align: center;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 140px;
+      margin-bottom: 16px;
+    }
+    .card h2 { font-family: Georgia, serif; font-size: 18px; margin-bottom: 4px; }
+    .card .tag { color: #ff6e40; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .card p { color: #5e5e5e; font-size: 14px; line-height: 1.5; }
+    .sizes {
+      display: flex; gap: 20px; justify-content: center; align-items: end;
+      margin-top: 16px; padding-top: 16px; border-top: 1px solid #f0f0f0;
+    }
+    .size-item { text-align: center; }
+    .size-label { font-size: 10px; color: #999; margin-top: 4px; }
+    .dark-pill {
+      background: #1a1a1a; border-radius: 12px; padding: 10px 14px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lenny Live — Logo Options v2</h1>
+  <p class="subtitle">Fresh directions. More modern, more abstract.</p>
+
+  <div class="grid">
+
+    <!-- OPTION A: LL Monogram -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="64" viewBox="0 0 220 64" fill="none">
+          <!-- Intertwined LL monogram -->
+          <g>
+            <!-- First L - solid -->
+            <path d="M6 4h10v42h22v10H6V4z" fill="#ff6e40"/>
+            <!-- Second L - overlapping, offset, slightly transparent -->
+            <path d="M22 10h10v42h22v10H22V10z" fill="#ff6e40" opacity="0.5"/>
+          </g>
+          <!-- Wordmark -->
+          <text x="68" y="30" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#1a1c1c" letter-spacing="-0.5">lenny</text>
+          <text x="68" y="54" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#ff6e40" letter-spacing="4">LIVE</text>
+        </svg>
+      </div>
+      <div class="tag">Monogram</div>
+      <h2>Option A: The Double L</h2>
+      <p>Two overlapping L's create depth and movement. The overlap represents compounded experience — layers of wisdom stacking on each other. Clean, bold, works at every size.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M4 2h7v28h15v6H4V2z" fill="#ff6e40"/>
+            <path d="M12 6h7v28h15v6H12V6z" fill="#ff6e40" opacity="0.45"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+        <div class="size-item">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <path d="M6 4h10v42h22v8H6V4z" fill="#ff6e40"/>
+            <path d="M18 10h10v42h22v8H18V10z" fill="#ff6e40" opacity="0.45"/>
+          </svg>
+          <div class="size-label">64px</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M4 2h7v28h15v6H4V2z" fill="#ff6e40"/>
+            <path d="M12 6h7v28h15v6H12V6z" fill="#ff6e40" opacity="0.45"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION B: Spark/Flame -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="70" viewBox="0 0 220 70" fill="none">
+          <!-- Abstract flame/spark that contains an L in negative space -->
+          <g transform="translate(4, 0)">
+            <!-- Outer flame shape -->
+            <path d="M24 68C10 68 0 56 0 42C0 28 8 18 16 10C20 6 22 2 22 0C22 4 26 10 30 16C38 28 48 36 48 50C48 60 38 68 24 68Z" fill="#ff6e40"/>
+            <!-- Inner cutout creating L-like negative space -->
+            <path d="M16 22C16 22 16 48 16 52C16 54 17 55 19 55L34 55C34 55 34 58 34 58C34 58 14 58 12 58C10 58 10 56 10 54L10 22Z" fill="#fdfcf6"/>
+            <!-- Small bright dot at top -->
+            <circle cx="22" cy="8" r="2" fill="white" opacity="0.8"/>
+          </g>
+          <!-- Wordmark -->
+          <text x="64" y="34" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#1a1c1c" letter-spacing="-0.5">lenny</text>
+          <text x="64" y="58" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#ff6e40" letter-spacing="4">LIVE</text>
+        </svg>
+      </div>
+      <div class="tag">Iconic</div>
+      <h2>Option B: The Spark</h2>
+      <p>An abstract flame/spark with an "L" carved in negative space. Represents the ignition of insight — that moment when borrowed intuition lights up. Energetic, memorable, premium.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="32" height="40" viewBox="0 0 32 40" fill="none">
+            <path d="M16 40C8 40 0 33 0 25C0 16 5 10 10 6C12 3.5 14 1 14 0C14 2.5 16 6 19 10C24 17 32 22 32 30C32 36 25 40 16 40Z" fill="#ff6e40"/>
+            <path d="M10 13L10 32C10 33 10.5 34 12 34L22 34V36H8.5C7.5 36 7 35 7 34V13Z" fill="#fdfcf6"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+        <div class="size-item">
+          <svg width="48" height="64" viewBox="0 0 48 64" fill="none">
+            <path d="M24 64C10 64 0 54 0 42C0 28 8 18 16 10C20 6 22 2 22 0C22 4 26 10 30 16C38 28 48 36 48 50C48 60 38 64 24 64Z" fill="#ff6e40"/>
+            <path d="M16 20L16 50C16 52 17 53 19 53L34 53V56H12C10 56 10 54 10 52V20Z" fill="#fdfcf6"/>
+          </svg>
+          <div class="size-label">64px</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="32" height="40" viewBox="0 0 32 40" fill="none">
+            <path d="M16 40C8 40 0 33 0 25C0 16 5 10 10 6C12 3.5 14 1 14 0C14 2.5 16 6 19 10C24 17 32 22 32 30C32 36 25 40 16 40Z" fill="#ff6e40"/>
+            <path d="M10 13L10 32C10 33 10.5 34 12 34L22 34V36H8.5C7.5 36 7 35 7 34V13Z" fill="#1a1a1a"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION C: The Stack -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="70" viewBox="0 0 220 70" fill="none">
+          <!-- Stacked cards representing 300+ episodes -->
+          <g transform="translate(2, 0)">
+            <!-- Bottom card -->
+            <rect x="8" y="14" width="44" height="52" rx="6" fill="#ff6e40" opacity="0.15" stroke="#ff6e40" stroke-width="1.5"/>
+            <!-- Middle card -->
+            <rect x="4" y="8" width="44" height="52" rx="6" fill="#ff6e40" opacity="0.3" stroke="#ff6e40" stroke-width="1.5"/>
+            <!-- Top card (active) -->
+            <rect x="0" y="2" width="44" height="52" rx="6" fill="#ff6e40"/>
+            <!-- Quote lines on top card -->
+            <line x1="8" y1="16" x2="36" y2="16" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <line x1="8" y1="24" x2="30" y2="24" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            <line x1="8" y1="32" x2="34" y2="32" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+            <!-- Play/audio indicator -->
+            <circle cx="14" cy="44" r="4" stroke="white" stroke-width="1.5" fill="none" opacity="0.8"/>
+            <polygon points="12.5,42 17,44 12.5,46" fill="white" opacity="0.8"/>
+          </g>
+          <!-- Wordmark -->
+          <text x="68" y="30" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#1a1c1c" letter-spacing="-0.5">lenny</text>
+          <text x="68" y="54" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#ff6e40" letter-spacing="4">LIVE</text>
+        </svg>
+      </div>
+      <div class="tag">Layered</div>
+      <h2>Option C: The Knowledge Stack</h2>
+      <p>Three stacked cards — 300+ episodes of wisdom, layered. The top card is "live" (active, in-your-face). Quote lines + play button hint at the audio experience. Communicates depth instantly.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="36" height="40" viewBox="0 0 36 40" fill="none">
+            <rect x="6" y="10" width="28" height="28" rx="4" fill="#ff6e40" opacity="0.2"/>
+            <rect x="3" y="5" width="28" height="28" rx="4" fill="#ff6e40" opacity="0.4"/>
+            <rect x="0" y="0" width="28" height="28" rx="4" fill="#ff6e40"/>
+            <line x1="5" y1="9" x2="23" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <line x1="5" y1="14" x2="18" y2="14" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+        <div class="size-item">
+          <svg width="52" height="64" viewBox="0 0 52 64" fill="none">
+            <rect x="8" y="14" width="40" height="48" rx="6" fill="#ff6e40" opacity="0.15" stroke="#ff6e40" stroke-width="1"/>
+            <rect x="4" y="7" width="40" height="48" rx="6" fill="#ff6e40" opacity="0.3"/>
+            <rect x="0" y="0" width="40" height="48" rx="6" fill="#ff6e40"/>
+            <line x1="7" y1="14" x2="33" y2="14" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <line x1="7" y1="22" x2="26" y2="22" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+            <line x1="7" y1="30" x2="30" y2="30" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+          </svg>
+          <div class="size-label">64px</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="36" height="40" viewBox="0 0 36 40" fill="none">
+            <rect x="6" y="10" width="28" height="28" rx="4" fill="#ff6e40" opacity="0.2"/>
+            <rect x="3" y="5" width="28" height="28" rx="4" fill="#ff6e40" opacity="0.4"/>
+            <rect x="0" y="0" width="28" height="28" rx="4" fill="#ff6e40"/>
+            <line x1="5" y1="9" x2="23" y2="9" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <line x1="5" y1="14" x2="18" y2="14" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION D: Abstract Geometric -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="70" viewBox="0 0 220 70" fill="none">
+          <!-- Modern geometric L made of two connected shapes -->
+          <g transform="translate(0, 3)">
+            <!-- Vertical bar (rounded) -->
+            <rect x="0" y="0" width="16" height="60" rx="8" fill="#ff6e40"/>
+            <!-- Horizontal bar (rounded) with gap -->
+            <rect x="12" y="44" width="40" height="16" rx="8" fill="#ff6e40"/>
+            <!-- Accent dot — the "live" indicator -->
+            <circle cx="48" cy="8" r="6" fill="#ff6e40" opacity="0.4"/>
+            <circle cx="48" cy="8" r="3" fill="#ff6e40"/>
+          </g>
+          <!-- Wordmark -->
+          <text x="70" y="30" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#1a1c1c" letter-spacing="-0.5">lenny</text>
+          <text x="70" y="54" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#ff6e40" letter-spacing="4">LIVE</text>
+        </svg>
+      </div>
+      <div class="tag">Geometric</div>
+      <h2>Option D: The Rounded L</h2>
+      <p>Ultra-modern geometric "L" with pill-shaped bars and a "live" indicator dot in the top corner. Feels like a startup logomark. The dot says "on air" — Lenny is live, right now, in your workflow.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="36" height="40" viewBox="0 0 36 40" fill="none">
+            <rect x="2" y="2" width="10" height="36" rx="5" fill="#ff6e40"/>
+            <rect x="8" y="28" width="24" height="10" rx="5" fill="#ff6e40"/>
+            <circle cx="30" cy="6" r="4" fill="#ff6e40" opacity="0.35"/>
+            <circle cx="30" cy="6" r="2" fill="#ff6e40"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+        <div class="size-item">
+          <svg width="52" height="64" viewBox="0 0 52 64" fill="none">
+            <rect x="0" y="0" width="14" height="56" rx="7" fill="#ff6e40"/>
+            <rect x="10" y="42" width="36" height="14" rx="7" fill="#ff6e40"/>
+            <circle cx="44" cy="8" r="5.5" fill="#ff6e40" opacity="0.35"/>
+            <circle cx="44" cy="8" r="3" fill="#ff6e40"/>
+          </svg>
+          <div class="size-label">64px</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="36" height="40" viewBox="0 0 36 40" fill="none">
+            <rect x="2" y="2" width="10" height="36" rx="5" fill="#ff6e40"/>
+            <rect x="8" y="28" width="24" height="10" rx="5" fill="#ff6e40"/>
+            <circle cx="30" cy="6" r="4" fill="#ff6e40" opacity="0.35"/>
+            <circle cx="30" cy="6" r="2" fill="#ff6e40"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION E: Typographic -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="64" viewBox="0 0 220 64" fill="none">
+          <!-- Pure typographic logo — stylized "LL" ligature -->
+          <text x="0" y="52" font-family="Georgia, serif" font-size="58" font-weight="bold" fill="#1a1c1c" letter-spacing="-4">lenny</text>
+          <!-- "live" with orange underline/accent -->
+          <text x="148" y="52" font-family="Georgia, serif" font-size="58" font-weight="bold" fill="#ff6e40" letter-spacing="-4">live</text>
+          <!-- Continuous underline accent -->
+          <rect x="0" y="58" width="220" height="4" rx="2" fill="#ff6e40" opacity="0.3"/>
+          <rect x="148" y="58" width="72" height="4" rx="2" fill="#ff6e40"/>
+        </svg>
+      </div>
+      <div class="tag">Typographic</div>
+      <h2>Option E: The Wordmark</h2>
+      <p>No icon — just beautiful typography. "lenny" in dark, "live" in orange, connected by an underline that highlights "live." The simplest, most confident approach. Lets the name do the work.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="8" fill="#ff6e40"/>
+            <text x="6" y="30" font-family="Georgia, serif" font-size="24" font-weight="bold" fill="white" letter-spacing="-1.5">LL</text>
+          </svg>
+          <div class="size-label">App icon</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="120" height="32" viewBox="0 0 120 32" fill="none">
+            <text x="0" y="26" font-family="Georgia, serif" font-size="30" font-weight="bold" fill="white" letter-spacing="-2">lenny</text>
+            <text x="76" y="26" font-family="Georgia, serif" font-size="30" font-weight="bold" fill="#ff6e40" letter-spacing="-2">live</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION F: The Broadcast -->
+    <div class="card">
+      <div class="logo-area">
+        <svg width="220" height="70" viewBox="0 0 220 70" fill="none">
+          <!-- Broadcast/signal arcs emanating from a point -->
+          <g transform="translate(4, 5)">
+            <!-- Signal arcs -->
+            <path d="M28 55C14 55 2 43 2 30C2 17 14 5 28 5" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.2"/>
+            <path d="M28 47C19 47 10 39 10 30C10 21 19 13 28 13" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <path d="M28 39C24 39 18 35 18 30C18 25 24 21 28 21" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.65"/>
+            <!-- Center point -->
+            <circle cx="28" cy="30" r="7" fill="#ff6e40"/>
+            <!-- L inside -->
+            <path d="M25 24h3v8h5v3h-8V24z" fill="white"/>
+            <!-- Forward arrow suggesting delivery -->
+            <path d="M42 30l8-5v10z" fill="#ff6e40" opacity="0.5"/>
+          </g>
+          <!-- Wordmark -->
+          <text x="72" y="32" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#1a1c1c" letter-spacing="-0.5">lenny</text>
+          <text x="72" y="56" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#ff6e40" letter-spacing="4">LIVE</text>
+        </svg>
+      </div>
+      <div class="tag">Signal</div>
+      <h2>Option F: The Broadcast</h2>
+      <p>Signal arcs radiating from a center point with an "L" — like a podcast being broadcast directly into your workflow. Arrow suggests delivery. Captures both "live" (broadcast) and "podcast" (signal) in one mark.</p>
+      <div class="sizes">
+        <div class="size-item">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M20 36C10 36 2 28 2 20C2 12 10 4 20 4" stroke="#ff6e40" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.2"/>
+            <path d="M20 30C14 30 8 25 8 20C8 15 14 10 20 10" stroke="#ff6e40" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.45"/>
+            <circle cx="20" cy="20" r="6" fill="#ff6e40"/>
+            <path d="M17.5 15.5h2.5v7h4v2.5h-6.5V15.5z" fill="white"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+        <div class="size-item">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <path d="M28 50C14 50 2 40 2 28C2 16 14 6 28 6" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.2"/>
+            <path d="M28 42C19 42 10 35 10 28C10 21 19 14 28 14" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <path d="M28 34C24 34 18 31 18 28C18 25 24 22 28 22" stroke="#ff6e40" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+            <circle cx="28" cy="28" r="8" fill="#ff6e40"/>
+            <path d="M24.5 22h3.5v9h5.5v3.5H24.5V22z" fill="white"/>
+          </svg>
+          <div class="size-label">64px</div>
+        </div>
+        <div class="size-item dark-pill">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M20 36C10 36 2 28 2 20C2 12 10 4 20 4" stroke="#ff6e40" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.25"/>
+            <path d="M20 30C14 30 8 25 8 20C8 15 14 10 20 10" stroke="#ff6e40" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+            <circle cx="20" cy="20" r="6" fill="#ff6e40"/>
+            <path d="M17.5 15.5h2.5v7h4v2.5h-6.5V15.5z" fill="white"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

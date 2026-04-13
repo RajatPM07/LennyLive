@@ -61,12 +61,14 @@ document.addEventListener('keydown', (e) => {
 });
 ```
 
-#### Mode 2: Passive — Auto-detect PM buzzwords
-- Extension silently reads active page text
-- Detects PM keywords: retention, GTM, PMF, roadmap, churn, activation, north star, growth loops, DAU, MAU, funnel, cohort, ARR, ARPU, NPS, onboarding, conversion, etc.
-- Shows subtle floating notification: "Lenny has something to say about [topic] →"
-- User clicks notification to hear the insight
-- Non-intrusive — fades if ignored after 10 seconds
+#### Mode 2: Passive — Ambient PM concept detection
+- Extension silently monitors active page text (reading sensor via MutationObserver + write+pause sensor on focused elements)
+- **Hybrid detection (as of 2026-03-30):**
+  - Write+pause (40+ words, 1.5s pause): sends paragraph to Groq — no local keyword filter. Groq identifies PM concept and returns `{concept, questions}`. Badge label: "Lenny has thoughts →"
+  - Selection dot (mouseup): instant local check via `PM_ROOTS` stem regex (<100ms, zero API cost). Matches morphological variants: "retaining" → retention, "strategize" → strategy
+  - Reading sensor (MutationObserver): `PM_ROOTS` regex check on visible text
+- Shows badge pill (bottom-right): "Lenny has thoughts →" → chips panel on click
+- Non-intrusive — badge persists until user clicks or starts typing
 
 #### Mode 3: Selection Review
 - User highlights any text in document
@@ -384,33 +386,14 @@ lenny-live/
 
 ---
 
-## PM Buzzword Detection List
+## PM Detection — PM_ROOTS Regex (as of 2026-03-30)
+
+`PM_BUZZWORDS` array replaced by `PM_ROOTS` stem regex. Stems match morphological variants — `retent` matches retention/retentive/retaining. Negative lookaheads prevent common false positives (`retain(?!er)` avoids "retainer", `persona(?!l\b)` avoids "personal").
+
+**Used by:** selection dot, reading sensor, Google Docs clipboard intercept. NOT used by write+pause (Groq handles that).
 
 ```javascript
-const PM_BUZZWORDS = [
-  // Metrics
-  'retention', 'churn', 'DAU', 'MAU', 'WAU', 'activation',
-  'conversion', 'funnel', 'cohort', 'ARR', 'MRR', 'ARPU', 'LTV',
-  'CAC', 'NPS', 'CSAT', 'north star', 'KPI', 'OKR',
-  
-  // Strategy
-  'PMF', 'product market fit', 'GTM', 'go-to-market', 'roadmap',
-  'prioritization', 'prioritisation', 'discovery', 'strategy',
-  'positioning', 'competitive', 'moat', 'differentiation',
-  
-  // Growth
-  'growth loop', 'viral', 'acquisition', 'referral', 'PLG',
-  'product-led', 'paid acquisition', 'SEO', 'content marketing',
-  
-  // Process
-  'user research', 'user interview', 'jobs to be done', 'JTBD',
-  'hypothesis', 'A/B test', 'experiment', 'sprint', 'backlog',
-  'stakeholder', 'engineering', 'design', 'cross-functional',
-  
-  // 0-to-1
-  'MVP', 'launch', 'go live', 'zero to one', '0 to 1',
-  'founding', 'founder', 'early stage', 'pre-PMF'
-];
+const PM_ROOTS = /retent|retain(?!er)|churn|activat|growth[\s-]+loop|viral[\s-]+growth|acquisi|referral|network[\s-]+effect|funnel|cohort|north[\s-]+star|KPI|OKR|NPS|CSAT|DAU|MAU|WAU|LTV|CAC|ARR|MRR|product[\s-]+market|PMF|strateg|position(?:ing)?|competit|differenti|moat|roadmap|prioriti|pricing|monetiz|freemium|paywall|upsell|subscript|free[\s-]+trial|revenue[\s-]+model|onboard|aha[\s-]+moment|time[\s-]+to[\s-]+value|user[\s-]+journey|drop[\s-]+off|go[\s-]+to[\s-]+market|GTM|product[\s-]+led|PLG|sprint|backlog|epic|user[\s-]+stor|feature[\s-]+flag|dogfood|rollout|post[\s-]+mortem|user[\s-]+research|jobs[\s-]+to[\s-]+be|JTBD|A[\/\s]B[\s-]+test|experiment|persona(?!l\b)|stakehold|cross[\s-]+func|buy[\s-]+in|one[\s-]+pager|customer[\s-]+develop|feedback[\s-]+loop|feature[\s-]+request|power[\s-]+user|win[\s-]+loss|marketplac|cold[\s-]+start|MVP|zero[\s-]+to[\s-]+one|0[\s-]+to[\s-]+1|early[\s-]+stage|pre[\s-]+PMF|founding/i;
 ```
 
 ---
