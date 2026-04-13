@@ -1489,12 +1489,18 @@ document.addEventListener('selectionchange', () => {
       return;
     }
 
-    // Check if selection is PM-relevant:
-    // Fast path: PM_ROOTS regex on the selected text (instant, same as before)
-    // Semantic path: page was classified as PM by Groq (any highlight gets the dot)
-    const keywordMatch = textMatchesPMRoot(text);
-    const pageContextMatch = pageIsPMContext === true;
-    if (!keywordMatch && !pageContextMatch) {
+    // PM relevance gate — Groq page classification is the authority:
+    //   pageIsPMContext === true  → any highlight gets the dot (semantic)
+    //   pageIsPMContext === false → no dot, even with keyword match (Groq says not PM)
+    //   pageIsPMContext === null  → regex fallback (Groq hasn't responded yet, ~first 2s)
+    let showDot = false;
+    if (pageIsPMContext === true) {
+      showDot = true;  // PM page — all highlights qualify
+    } else if (pageIsPMContext === null) {
+      showDot = textMatchesPMRoot(text);  // Groq pending — regex fallback
+    }
+    // pageIsPMContext === false → showDot stays false (non-PM page, trust Groq)
+    if (!showDot) {
       hideSelectionDot();
       return;
     }
