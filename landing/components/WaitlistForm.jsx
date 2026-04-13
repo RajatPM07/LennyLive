@@ -160,7 +160,7 @@ export default function WaitlistForm({ variant = 'default' }) {
         <p
           role="alert"
           className={`mt-2 text-xs font-sans text-center ${
-            isInverted ? 'text-red-200' : 'text-orange-dark'
+            isInverted ? 'text-red-200' : 'text-[#a23f1d]'
           }`}
         >
           {errorMsg}
