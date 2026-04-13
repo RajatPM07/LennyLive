@@ -1,12 +1,21 @@
+import Hero from '@/components/Hero';
+import HowItWorks from '@/components/HowItWorks';
+import FeatureShowcase from '@/components/FeatureShowcase';
+import SocialProof from '@/components/SocialProof';
+import DemoPreview from '@/components/DemoPreview';
+import WaitlistCTA from '@/components/WaitlistCTA';
+import Footer from '@/components/Footer';
+
 export default function Home() {
   return (
-    <div className="flex flex-1 items-center justify-center bg-cream min-h-screen">
-      <div className="text-center">
-        <h1 className="font-serif text-5xl text-text-primary mb-4">
-          Lenny Live
-        </h1>
-        <p className="text-xl text-text-muted">Coming Soon</p>
-      </div>
-    </div>
+    <main>
+      <Hero />
+      <HowItWorks />
+      <FeatureShowcase />
+      <SocialProof />
+      <DemoPreview />
+      <WaitlistCTA />
+      <Footer />
+    </main>
   );
 }
