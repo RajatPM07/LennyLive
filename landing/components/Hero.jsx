@@ -11,6 +11,16 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20 bg-cream relative overflow-hidden">
       <div className="max-w-4xl mx-auto text-center relative z-10">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8"
+        >
+          <img src="/logo.svg" alt="Lenny Live" width={200} height={70} className="mx-auto" />
+        </motion.div>
+
         {/* Eyebrow pill */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}

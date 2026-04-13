@@ -3,9 +3,13 @@ export default function Footer() {
     <footer className="bg-dark py-12 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-          <div className="text-center md:text-left">
-            <p className="text-white font-serif text-xl font-bold mb-1">Lenny Live</p>
-            <p className="text-gray-500 text-sm">Compounded experience. Borrowed intuition.</p>
+          <div className="text-center md:text-left flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-icon.svg" alt="" width={36} height={36} className="opacity-80" />
+            <div>
+              <p className="text-white font-serif text-xl font-bold mb-0.5">Lenny Live</p>
+              <p className="text-gray-500 text-sm">Compounded experience. Borrowed intuition.</p>
+            </div>
           </div>
 
           <p className="text-gray-500 text-sm text-center">
