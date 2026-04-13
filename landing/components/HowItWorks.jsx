@@ -24,8 +24,8 @@ function IconWrite() {
         stroke="#ff6e40"
         strokeWidth="2"
         strokeLinecap="round"
-        animate={{ opacity: [1, 0, 1] }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'steps(1)' }}
+        animate={{ opacity: [1, 1, 0, 0, 1] }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear', times: [0, 0.49, 0.5, 0.99, 1] }}
       />
     </svg>
   );
