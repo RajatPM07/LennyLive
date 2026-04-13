@@ -191,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const quote = insight.pull_quote || insight.topic || 'Saved Insight';
         const guest = insight.guest_name || 'Lenny Rachitsky';
 
+        const isNewsletter = guest === 'Lenny Rachitsky';
+        const sourceLabel = isNewsletter ? 'Read article' : 'Watch episode';
+
         item.innerHTML = `
           <div class="item-content">
             <div class="item-title">${quote}</div>
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="item-actions">
             <button class="item-action-btn copy-btn" title="Copy insight">⎘</button>
-            ${ytUrl ? '<button class="item-action-btn link-btn" title="Open source">↗</button>' : ''}
+            <button class="item-action-btn link-btn" title="${sourceLabel}">↗</button>
           </div>
         `;
 
@@ -217,14 +220,13 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         });
 
-        // Link: open YouTube at exact timestamp
-        const linkBtn = item.querySelector('.link-btn');
-        if (linkBtn && ytUrl) {
-          linkBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+        // Link: open YouTube/article at exact timestamp
+        item.querySelector('.link-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (ytUrl) {
             chrome.tabs.create({ url: ytUrl });
-          });
-        }
+          }
+        });
 
         // Card body click: also opens source
         item.addEventListener('click', () => {
