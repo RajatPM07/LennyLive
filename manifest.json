@@ -3,7 +3,7 @@
   "name": "Lenny Live",
   "version": "0.2.0",
   "description": "Compounded experience. Borrowed intuition.",
-  "permissions": ["activeTab", "storage", "scripting", "tabs"],
+  "permissions": ["activeTab", "storage", "scripting", "tabs", "notifications", "alarms"],
   "host_permissions": [
     "<all_urls>"
   ],
