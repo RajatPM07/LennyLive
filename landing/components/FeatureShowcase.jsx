@@ -1,6 +1,5 @@
 'use client';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const features = [
   {
@@ -102,9 +101,6 @@ const features = [
 ];
 
 export default function FeatureShowcase() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-
   return (
     <section className="py-24 px-6 bg-cream">
       <div className="max-w-4xl mx-auto">
@@ -112,12 +108,13 @@ export default function FeatureShowcase() {
           Why PMs love it
         </h2>
 
-        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.4, delay: i * 0.15 }}
               whileHover={{
                 y: -4,

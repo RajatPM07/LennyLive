@@ -1,6 +1,5 @@
 'use client';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import FloatingPills from './FloatingPills';
 import CountUp from './CountUp';
 
@@ -11,17 +10,15 @@ const stats = [
 ];
 
 export default function SocialProof() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-
   return (
     <section className="py-24 px-6 bg-proof">
-      <div ref={ref} className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Headline */}
         <motion.h2
           className="font-serif text-3xl sm:text-4xl font-bold text-center mb-8"
           initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5 }}
         >
           Wisdom from the best in product
@@ -31,7 +28,8 @@ export default function SocialProof() {
         <motion.blockquote
           className="max-w-2xl mx-auto text-center mb-12"
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <p className="font-serif italic text-xl sm:text-2xl leading-relaxed mb-3">

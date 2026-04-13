@@ -1,7 +1,6 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 // Step 1 icon: split-screen with text lines + blinking cursor
 function IconWrite() {
@@ -114,11 +113,8 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-
   return (
-    <section ref={sectionRef} className="py-24 px-6 bg-cream">
+    <section className="py-24 px-6 bg-cream">
       <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-16 text-text-primary">
         How it works
       </h2>
@@ -129,13 +125,14 @@ export default function HowItWorks() {
         <div className="hidden md:block absolute top-12 left-[20%] right-[20%] h-px overflow-hidden pointer-events-none">
           <motion.div
             className="h-full w-full"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
             style={{
               background:
                 'repeating-linear-gradient(to right, #ff6e40 0px, #ff6e40 6px, transparent 6px, transparent 14px)',
               transformOrigin: 'left',
-              scaleX: isInView ? 1 : 0,
             }}
-            animate={{ scaleX: isInView ? 1 : 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
           />
         </div>
@@ -145,7 +142,8 @@ export default function HowItWorks() {
             <motion.div
               key={number}
               initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: 0.2 + i * 0.2, ease: 'easeOut' }}
               className="flex flex-col items-center text-center"
             >

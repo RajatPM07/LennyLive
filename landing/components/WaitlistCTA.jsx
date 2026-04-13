@@ -1,11 +1,9 @@
 'use client';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import WaitlistForm from './WaitlistForm';
 
 export default function WaitlistCTA() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -20,9 +18,9 @@ export default function WaitlistCTA() {
   return (
     <section className="py-24 px-6 bg-orange">
       <motion.div
-        ref={ref}
         initial={{ opacity: 0, scale: 0.98 }}
-        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="max-w-2xl mx-auto text-center"
       >

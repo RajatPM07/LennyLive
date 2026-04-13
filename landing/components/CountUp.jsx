@@ -1,38 +1,48 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
 
 export default function CountUp({ target, suffix = '', duration = 1.5 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
   const [count, setCount] = useState(0);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (!inView) return;
+    const el = ref.current;
+    if (!el) return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      setCount(target);
-      return;
-    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
 
-    const fps = 60;
-    const totalFrames = Math.round(duration * fps);
-    let frame = 0;
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReducedMotion) {
+            setCount(target);
+            return;
+          }
 
-    const interval = setInterval(() => {
-      frame++;
-      const progress = frame / totalFrames;
-      setCount(Math.round(progress * target));
-      if (frame >= totalFrames) {
-        clearInterval(interval);
-        setCount(target);
-      }
-    }, 1000 / fps);
+          const fps = 60;
+          const totalFrames = Math.round(duration * fps);
+          let frame = 0;
 
-    return () => clearInterval(interval);
-  }, [inView, target, duration]);
+          const interval = setInterval(() => {
+            frame++;
+            const progress = frame / totalFrames;
+            setCount(Math.round(progress * target));
+            if (frame >= totalFrames) {
+              clearInterval(interval);
+              setCount(target);
+            }
+          }, 1000 / fps);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
 
   return (
     <span ref={ref}>{count}{suffix}</span>
