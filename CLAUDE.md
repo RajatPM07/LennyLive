@@ -473,6 +473,18 @@ node scripts/embed.js
 - [x] **Killed Ambient Glow Dot** — completed 2026-04-13. Removed `scanForBuzzwords()`, `showBuzzwordChip()`, MutationObserver, `#ll-chip` element, all cooldown state. Bait-and-switch UX ("Lenny has thoughts" → opens mic) eliminated. Write+pause badge pill + selection dot + onboarding nudge cover the full user journey.
 - [x] **PM_ROOTS regex hardened** — completed 2026-04-13. Short acronyms (ARR, MRR, CAC, DAU, MAU, etc.) now use `\b` word boundaries to prevent matching inside words (e.g. "starred" was matching ARR). Removed ambiguous `epic` stem.
 - [x] **Selection dot positioning** — completed 2026-04-12. Anchored to bottom-right of `getBoundingClientRect()` (Medium/Notion pattern). Dots and widget are mutually exclusive — `showPostcard()` and `showOnboarding()` forcefully hide all ambient UI.
+- [x] **Gamification PRD v2** — completed 2026-04-14. Rewrote gamification spec: cut Duolingo-clone mechanics (rare drops, onboarding commitment, shareable cards), focused on post-save experience + lightweight progression. Notion updated, local spec at `docs/gamification-post-save-prd-v2.md`.
+- [x] **XP Economy (v2)** — completed 2026-04-14. +5 XP on insight delivery, +15 XP on save (was +10), +2×streak_day daily bonus. Streak fires on activation (QUERY sent), not on success (postcard shown).
+- [x] **PM Level Career Ladder** — completed 2026-04-14. Intern (0) → APM (50) → PM (150) → Senior PM (350) → Staff PM (700) → Group PM (1200+). Popup shows level title + gap-to-next.
+- [x] **Popup overhaul** — completed 2026-04-14. Width 320→360px. PM Knowledge Map (5-bar progress per topic, ✓ at 5 saves). Topic-grouped accordion for saved insights (all shown, not capped at 5). Search bar (filters by topic/guest/quote, 150ms debounce). PM Level display with XP + gap-to-next.
+- [x] **Duplicate save prevention** — completed 2026-04-14. Dedup by `pull_quote` + `guest_name`. Shows "Already saved" toast. No XP increment on duplicate.
+- [x] **Save micro-celebrations** — completed 2026-04-14. Contextual toasts: "Your PM library starts here" (1st), "New topic: X" (new topic), "X explored — 5 insights deep" (5th), "10 insights..." (10th), "Saved to X" (default).
+- [x] **topicCounts tracking** — completed 2026-04-14. `topicCounts` object in `chrome.storage.local` tracks saves per topic. Drives PM Knowledge Map in popup.
+- [x] **Streak saver notification** — completed 2026-04-14. `chrome.alarms` fires daily at 8pm local time. `chrome.notifications` shown if streak ≥ 2 and no activation today. Click opens active tab or Notion fallback.
+- [x] **AUDIO_ERROR separation** — completed 2026-04-14. TTS timeout in `pushAudio` now sends `AUDIO_ERROR` type (not `RESPONSE` with `network_error`). Content script handles silently — no double-error toast over visible postcard.
+- [x] **MUTE_CHANGED handler** — completed 2026-04-14. Popup mute toggle sends `MUTE_CHANGED` to content script. `stopCurrentAudio()` called immediately.
+- [x] **Selection dot viewport clamping** — completed 2026-04-14. `Math.min`/`Math.max` keeps dot within viewport (40px padding right/bottom, 8px left/top).
+- [x] **Manifest permissions** — completed 2026-04-14. Added `notifications` and `alarms` to manifest.json permissions array.
 
 ## Positioning (Locked 2026-03-29)
 
@@ -490,9 +502,9 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 
 - [x] **🔴 Platform Redesign (Element-First Detection)** — COMPLETE. Branch: `feature/platform-redesign`
 - [x] **🔴 Smart PM Detection (Hybrid Architecture)** — COMPLETE. `PM_ROOTS` regex + Groq-only write+pause detection. Merged to main 2026-03-30.
-- [ ] **Full gamification system** — PM Levels + XP economy (+5 deliver/+15 save/+25 rare) + topic badges + streak milestones (3/7/14/30d) + streak shield + rare drops. See Notion: 🎮 Gamification System — PRD
+- [x] **Full gamification system** — COMPLETE (2026-04-14). PM Levels (career ladder), XP economy (+5/+15/streak bonus), PM Knowledge Map, topic-grouped library, search, micro-celebrations, duplicate prevention. PRD v2 spec: `docs/gamification-post-save-prd-v2.md`
 - [x] **Onboarding** — COMPLETE. Dual-approach: nudge dot + popup teaching state + widget 2-slide panel. Replaces popup carousel.
-- [ ] **Chrome notifications** — Streak Saver at 8pm if no activation that day (highest retention lever per Duolingo research)
+- [x] **Chrome notifications** — COMPLETE (2026-04-14). Streak Saver at 8pm via chrome.alarms + chrome.notifications.
 - [x] **Saved insights YouTube clickthrough** — COMPLETE. Clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; ↗ arrow on clickable items.
 - [ ] **Analytics (PostHog)** — `background/analytics.js` + wire all events. Needs Rajat to create PostHog account (US region) and share `phc_...` API key. See Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
 - [ ] **ElevenLabs voice clone** — Starter plan ($5), clone Lenny's voice; update `ELEVENLABS_VOICE_ID` in `background/config.js`
@@ -502,15 +514,15 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 
 ---
 
-## Remaining Timeline (as of Apr 13, 2026)
+## Remaining Timeline (as of Apr 14, 2026)
 
 | Period | Dates | Focus |
 |---|---|---|
 | ~~Mar 29–Apr 3~~ | ✅ DONE | Platform redesign — element-first detection + badge pill UX |
 | ~~Apr 1–4~~ | ✅ DONE | Smart PM Detection — PM_ROOTS hybrid arch, Groq concept extraction |
 | ~~Apr 4–12~~ | ✅ DONE | Onboarding (widget + nudge + popup teaching) + Groq page classification + kill ambient dot |
-| Apr 13–14 | NOW | Voice clone + Chrome notifications + gamification polish + E2E testing |
-| Apr 15 | DEADLINE | Final bug fixes + submit |
+| ~~Apr 13–14~~ | ✅ DONE | Gamification v2 (XP, levels, library, search, notifications) + edge case fixes |
+| Apr 15 | DEADLINE | E2E testing, voice clone, final bug fixes + submit |
 
 ---
 
