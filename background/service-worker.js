@@ -7,7 +7,7 @@
 
 import { embedQuery, searchChunks, searchChunksAt } from './rag.js';
 import { fetchTTS, fetchAndEncodeUrl } from './tts.js';
-import { abstractQuery, generateQuestions } from './abstraction.js';
+import { abstractQuery, generateQuestions, classifyPage } from './abstraction.js';
 import { synthesizeResponse } from './synthesis.js';
 
 chrome.runtime.onMessage.addListener((message, sender) => {
@@ -57,8 +57,20 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     return;
   }
 
-  // BUZZWORD_TRIGGERED handler removed — content-script does not send this message.
-  // Dead code from sub-project 1 stub — intentionally absent here.
+  if (message.type === 'CLASSIFY_PAGE') {
+    const tabId = sender.tab?.id;
+    if (!tabId) return;
+    classifyPage(message.pageContent)
+      .then(isPM => {
+        chrome.tabs.sendMessage(tabId, { type: 'PAGE_CLASSIFIED', isPM });
+        console.log('[LennyLive] Page classified for tab', tabId, '— PM:', isPM);
+      })
+      .catch(err => {
+        console.warn('[LennyLive] Page classification failed:', err.message);
+        // Fail silent: pageIsPMContext stays null, regex fallback works
+      });
+    return;
+  }
 });
 
 // Conversational queries with no PM intent — reject immediately before any API call.

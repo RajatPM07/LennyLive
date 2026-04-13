@@ -111,16 +111,7 @@ style.textContent = `
   }
   #ll-tooltip.visible { display: block; }
 
-  /* 4. Ambient Glow Dot (replaces Chip) */
-  #ll-chip {
-    display: none;
-    position: fixed;
-    bottom: 32px;
-    right: 370px;
-    z-index: 2147483647;
-  }
-  #ll-chip.visible { display: block; }
-  .glow-wrapper { position: relative; display: flex; align-items: center; cursor: pointer; }
+  /* 4. Pulse Dot (shared by selection dot and badge pill) */
   .pulse-dot-wrapper {
     position: relative; width: 14px; height: 14px; background: var(--accent-orange);
     border-radius: 50%; z-index: 10; box-shadow: 0 0 12px rgba(255,110,64,0.4); transition: transform 0.3s;
@@ -131,14 +122,6 @@ style.textContent = `
     animation: ll-pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
   }
   @keyframes ll-pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-  .glow-wrapper:hover .pulse-dot-wrapper { transform: scale(1.1); animation: none; }
-  .pill-content {
-    position: absolute; right: 7px; height: 28px; background: var(--bg-dark); border-radius: 14px;
-    display: flex; align-items: center; overflow: hidden; opacity: 0; width: 0px;
-    transition: all 0.3s ease-out; pointer-events: none; white-space: nowrap;
-  }
-  .glow-wrapper:hover .pill-content { width: 260px; padding-left: 12px; padding-right: 20px; opacity: 1; pointer-events: auto; }
-  .pill-text { color: var(--text-light); font-family: var(--font-sans); font-size: 11px; font-weight: 500; }
 
   /* 5. Postcard */
   #ll-postcard {
@@ -432,18 +415,7 @@ tooltip.id = 'll-tooltip';
 tooltip.textContent = 'Microphone access denied.';
 shadow.appendChild(tooltip);
 
-// 3. Ambient Glow Dot (replaces buzzword chip)
-const chip = document.createElement('div');
-chip.id = 'll-chip';
-chip.innerHTML = `
-  <div class="glow-wrapper" id="ll-chip-wrapper">
-    <div class="pill-content"><span class="pill-text">Lenny has thoughts on <span id="ll-chip-topic"></span></span></div>
-    <div class="pulse-dot-wrapper"></div>
-  </div>
-`;
-shadow.appendChild(chip);
-
-// 4. Toast
+// 3. Toast
 const toast = document.createElement('div');
 toast.id = 'll-toast';
 toast.innerHTML = '<div class="toast-content"><span class="toast-icon">✕</span><span id="ll-toast-text"></span></div>';
@@ -578,24 +550,6 @@ function showMicDeniedTooltip() {
   setTimeout(() => tooltip.classList.remove('visible'), 4000);
 }
 
-function showBuzzwordChip(topic) {
-  shadow.getElementById('ll-chip-topic').textContent = topic;
-  chip.classList.remove('fading');
-  chip.classList.add('visible');
-
-  // Auto-fade after 10s
-  const fadeTimer = setTimeout(() => {
-    chip.classList.add('fading');
-    setTimeout(() => chip.classList.remove('visible', 'fading'), 200);
-  }, 10000);
-
-  chip.onclick = () => {
-    clearTimeout(fadeTimer);
-    chip.classList.remove('visible', 'fading');
-    activateLennyLive();
-  };
-}
-
 // ─── Onboarding Nudge ─────────────────────────────────────────────────────────
 
 let nudgeAutoCollapseTimer = null;
@@ -647,6 +601,37 @@ chrome.storage.local.get(['hasOnboarded'], (data) => {
   if (!data.hasOnboarded) {
     showNudge();
     console.log('[LennyLive] Nudge dot shown — first-time user');
+  }
+});
+
+// ─── Page-Level Semantic Classification ──────────────────────────────────────
+// Classify the page once on load via Groq. Result cached as boolean.
+// Allows selection dot on ANY highlight on PM-relevant pages.
+
+function schedulePageClassification() {
+  setTimeout(() => {
+    const pageContent = extractPageContext();
+    if (!pageContent || pageContent.length < 50) return;
+    chrome.runtime.sendMessage({ type: 'CLASSIFY_PAGE', pageContent });
+    lastClassifiedUrl = location.href;
+    console.log('[LennyLive] Page classification requested');
+  }, 2000);
+}
+schedulePageClassification();
+
+// SPA navigation detection — re-classify when URL changes
+const _origPushState = history.pushState;
+history.pushState = function() {
+  _origPushState.apply(this, arguments);
+  if (location.href !== lastClassifiedUrl) {
+    pageIsPMContext = null;
+    schedulePageClassification();
+  }
+};
+window.addEventListener('popstate', () => {
+  if (location.href !== lastClassifiedUrl) {
+    pageIsPMContext = null;
+    schedulePageClassification();
   }
 });
 
@@ -966,6 +951,10 @@ let onboardingCancelled = false;    // true if voice fired during onboarding —
 let pendingOnboardingResult = null; // { insight, relatedInsights } | null — buffered RAG result
 let onboardingSelection = '';       // selected text captured before window.getSelection() is cleared
 let onboardingSlide = 1; // tracks which slide is currently visible (1 or 2)
+
+// ─── Page-Level Semantic Classification ──────────────────────────────────────
+let pageIsPMContext = null; // null=unknown, true=PM page, false=not PM
+let lastClassifiedUrl = '';
 
 // Write+pause sensor state
 let lastPrintableKeystroke = 0;       // timestamp of last printable keydown
@@ -1500,8 +1489,12 @@ document.addEventListener('selectionchange', () => {
       return;
     }
 
-    // Check if selection contains a PM keyword
-    if (!textMatchesPMRoot(text)) {
+    // Check if selection is PM-relevant:
+    // Fast path: PM_ROOTS regex on the selected text (instant, same as before)
+    // Semantic path: page was classified as PM by Groq (any highlight gets the dot)
+    const keywordMatch = textMatchesPMRoot(text);
+    const pageContextMatch = pageIsPMContext === true;
+    if (!keywordMatch && !pageContextMatch) {
       hideSelectionDot();
       return;
     }
@@ -1707,6 +1700,10 @@ chrome.runtime.onMessage.addListener((message) => {
   // Popup CTA: "Got it, let me try" sends this to make the nudge dot pulse prominently
   if (message.type === 'NUDGE_PULSE') {
     pulseNudge();
+  }
+  if (message.type === 'PAGE_CLASSIFIED') {
+    pageIsPMContext = message.isPM;
+    console.log('[LennyLive] Page classified: PM=' + message.isPM);
   }
   // Return nothing (no return true) — we never send a response back to the SW
 });
@@ -1918,63 +1915,6 @@ function dismissOnboarding() {
 
   console.log('[LennyLive] Onboarding dismissed');
 }
-
-// ─── Buzzword Scanning ────────────────────────────────────────────────────────
-
-let lastChipShownAt = 0;
-const topicCooldowns = new Map(); // topic → timestamp of last chip shown
-
-function scanForBuzzwords() {
-  if (state !== 'idle') return; // never interrupt active session
-  if (isUserEditing()) return;                               // NEW: skip during active editing
-  if (Date.now() - pageLoadTime < 20 * 1000) return;        // NEW: 20s minimum on page
-
-  const text = document.body.innerText.slice(0, 5000);
-  const now = Date.now();
-
-  if (!textMatchesPMRoot(text)) return;
-
-  const displayTopic = 'PM concepts'; // generic label — Groq identifies specific topic on click
-
-  // General cooldown: any chip shown in last 3 minutes → skip
-  if (now - lastChipShownAt < 3 * 60 * 1000) {
-    console.log('[LennyLive] PM root match suppressed (general 3min cooldown)');
-    return;
-  }
-
-  // Per-topic cooldown: same topic shown in last 30 minutes → skip
-  const topicLastShown = topicCooldowns.get(displayTopic) || 0;
-  if (now - topicLastShown < 30 * 60 * 1000) {
-    console.log('[LennyLive] PM root match suppressed (topic 30min cooldown):', displayTopic);
-    return;
-  }
-
-  console.log('[LennyLive] PM root matched — showing chip');
-  lastChipShownAt = now;
-  topicCooldowns.set(displayTopic, now);
-  chrome.storage.local.set({ lastTopic: displayTopic });
-  showBuzzwordChip(displayTopic);
-}
-
-// ─── MutationObserver ─────────────────────────────────────────────────────────
-// Fires when DOM changes (user typing). Debounced 2s to avoid thrashing.
-// childList+subtree catches element additions (Notion, Linear live updates).
-// characterData catches text edits in Google Docs contenteditable nodes.
-
-let buzzwordDebounceTimer = null;
-
-const observer = new MutationObserver(() => {
-  clearTimeout(buzzwordDebounceTimer);
-  buzzwordDebounceTimer = setTimeout(scanForBuzzwords, 2000);
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-  characterData: true,
-});
-
-console.log('[LennyLive] MutationObserver watching for PM buzzwords');
 
 // ─── Google Docs Clipboard Intercept ─────────────────────────────────────────
 // Google Docs uses a canvas renderer — getSelection() and contenteditable detection

@@ -176,3 +176,32 @@ Rules: One question per line. No numbering. No bullets. No preamble. Do NOT repe
     return { concept: null, questions: [] };
   }
 }
+
+// Page-level PM classifier — single YES/NO call per page.
+// Result cached in content script as pageIsPMContext boolean.
+// Allows selection dot to appear on ANY highlight on PM-relevant pages,
+// even when the highlighted text itself contains no PM keywords.
+export async function classifyPage(pageContent) {
+  const response = await fetch(GROQ_API_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'llama-3.1-8b-instant',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a binary classifier. Given a text excerpt from a webpage, determine if the page is about product management, startup strategy, growth, metrics, user research, or building products. Respond with exactly one word: YES or NO.',
+        },
+        { role: 'user', content: pageContent.slice(0, 500) },
+      ],
+      max_tokens: 1,
+      temperature: 0,
+    }),
+  });
+  const data = await response.json();
+  const answer = data.choices?.[0]?.message?.content?.trim().toUpperCase() || '';
+  return answer.includes('YES');
+}
