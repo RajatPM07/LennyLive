@@ -166,7 +166,7 @@ GOOGLE_AI_API_KEY=                           # For gemini-embedding-001 (768 dim
 CLAUDE_API_KEY=                              # For query understanding
 ```
 
-**Lenny Voice ID:** TBD — update this line when ElevenLabs voice clone is complete
+**Lenny Voice ID:** `8tZdziIM3Y7ERvK9TUjy` — cloned 2026-04-14, stability 0.45, similarity_boost 0.85
 
 ---
 
@@ -485,6 +485,7 @@ node scripts/embed.js
 - [x] **MUTE_CHANGED handler** — completed 2026-04-14. Popup mute toggle sends `MUTE_CHANGED` to content script. `stopCurrentAudio()` called immediately.
 - [x] **Selection dot viewport clamping** — completed 2026-04-14. `Math.min`/`Math.max` keeps dot within viewport (40px padding right/bottom, 8px left/top).
 - [x] **Manifest permissions** — completed 2026-04-14. Added `notifications` and `alarms` to manifest.json permissions array.
+- [x] **Lenny voice clone** — completed 2026-04-14. ElevenLabs Instant Voice Clone. Voice ID: `8tZdziIM3Y7ERvK9TUjy`. TTS settings: `stability: 0.45, similarity_boost: 0.85` (natural podcast cadence). Replaces Eric placeholder (`cjVigY5qzO86Huf0OWal`).
 
 ## Positioning (Locked 2026-03-29)
 
@@ -507,7 +508,7 @@ NOT a mentor, NOT a chatbot, NOT generated advice — 100% real stories, real pe
 - [x] **Chrome notifications** — COMPLETE (2026-04-14). Streak Saver at 8pm via chrome.alarms + chrome.notifications.
 - [x] **Saved insights YouTube clickthrough** — COMPLETE. Clicking saved insight opens YouTube at `youtube_url?t=timestamp_secs`; ↗ arrow on clickable items.
 - [ ] **Analytics (PostHog)** — `background/analytics.js` + wire all events. Needs Rajat to create PostHog account (US region) and share `phc_...` API key. See Notion: 📊 Analytics — Events, Metrics & Dropout Funnels
-- [ ] **ElevenLabs voice clone** — Starter plan ($5), clone Lenny's voice; update `ELEVENLABS_VOICE_ID` in `background/config.js`
+- [x] **ElevenLabs voice clone** — COMPLETE (2026-04-14). Voice ID `8tZdziIM3Y7ERvK9TUjy` in `background/config.js`. Stability 0.45, similarity_boost 0.85.
 - [ ] **Re-seed audio_url cache** with Lenny Formula formatted text (currently bypassed — real-time TTS only)
 - [ ] **Dynamic push question** — inject page context into Sentence 3 of Lenny Formula (generic version shipped)
 - [ ] **Submit to competition** — April 15, 2026
