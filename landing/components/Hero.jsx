@@ -5,10 +5,7 @@ import DownloadButton from './DownloadButton';
 import PostcardMockup from './PostcardMockup';
 import Link from 'next/link';
 
-const sentences = [
-  ['Compounded', 'experience.'],
-  ['Borrowed', 'intuition.'],
-];
+const lines = ['Compounded experience.', 'Borrowed intuition.'];
 
 export default function Hero() {
   return (
@@ -36,27 +33,19 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline — grouped by sentence to prevent orphan wrapping on mobile */}
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-          {sentences.map((sentence, si) => {
-            const wordOffset = sentences.slice(0, si).reduce((sum, s) => sum + s.length, 0);
-            return (
-              <span key={si} className="inline-block whitespace-nowrap">
-                {sentence.map((word, wi) => (
-                  <motion.span
-                    key={wi}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 + (wordOffset + wi) * 0.1 }}
-                    className="inline-block mr-[0.3em]"
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-                {si < sentences.length - 1 && <span className="inline-block w-[0.3em]" />}
-              </span>
-            );
-          })}
+        {/* Headline — each line animates as a block, no per-word splitting */}
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
+          {lines.map((line, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 + i * 0.15 }}
+              className="block"
+            >
+              {line}
+            </motion.span>
+          ))}
         </h1>
 
         {/* Subtitle */}
