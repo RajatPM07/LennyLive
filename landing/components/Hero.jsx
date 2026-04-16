@@ -29,8 +29,8 @@ export default function Hero() {
           transition={{ type: 'spring', stiffness: 200, damping: 12, delay: 0.1 }}
           className="inline-block mb-6"
         >
-          <span className="px-4 py-2 bg-white rounded-pill text-sm font-medium text-text-muted shadow-sm border border-gray-100">
-            Powered by 300+ Lenny Podcast episodes &amp; newsletters
+          <span className="px-4 py-2 bg-white rounded-pill text-xs sm:text-sm font-medium text-text-muted shadow-sm border border-gray-100 inline-block max-w-[90vw]">
+            2,700+ insights from Lenny&apos;s podcast &amp; newsletter
           </span>
         </motion.div>
 
