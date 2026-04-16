@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import WaitlistForm from './WaitlistForm';
+import DownloadButton from './DownloadButton';
 import PostcardMockup from './PostcardMockup';
+import Link from 'next/link';
 
 const headline = 'Compounded experience. Borrowed intuition.';
 const words = headline.split(' ');
@@ -29,7 +30,7 @@ export default function Hero() {
           className="inline-block mb-6"
         >
           <span className="px-4 py-2 bg-white rounded-pill text-sm font-medium text-text-muted shadow-sm border border-gray-100">
-            Powered by 300+ Lenny Podcast episodes & newsletters
+            Powered by 300+ Lenny Podcast episodes &amp; newsletters
           </span>
         </motion.div>
 
@@ -59,13 +60,20 @@ export default function Hero() {
           workflow — exactly when you need it.
         </motion.p>
 
-        {/* Waitlist form */}
+        {/* Download CTA + secondary link */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.6 }}
+          className="flex flex-col items-center gap-4"
         >
-          <WaitlistForm />
+          <DownloadButton />
+          <Link
+            href="/guide"
+            className="text-sm text-text-muted hover:text-orange-dark transition-colors underline underline-offset-2"
+          >
+            See how it works →
+          </Link>
         </motion.div>
       </div>
 
