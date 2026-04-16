@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const INCLUDES = [
   {
-    title: '312 curated moments',
+    title: '2,700+ curated moments',
     description: 'Real stories from 300+ podcast episodes, semantically searchable.',
     icon: (
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">

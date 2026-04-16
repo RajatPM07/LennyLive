@@ -5,7 +5,7 @@ import CountUp from './CountUp';
 
 const stats = [
   { target: 300, suffix: '+', label: 'Episodes indexed' },
-  { target: 280, suffix: '+', label: 'Curated PM moments' },
+  { target: 2700, suffix: '+', label: 'Curated PM moments' },
   { target: 50, suffix: '+', label: 'Product leaders featured' },
 ];
 
@@ -42,10 +42,10 @@ export default function SocialProof() {
         <FloatingPills />
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto mt-12">
+        <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto mt-12">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="font-serif text-4xl sm:text-5xl font-bold text-orange">
+              <div className="font-serif text-3xl sm:text-5xl font-bold text-orange">
                 <CountUp target={stat.target} suffix={stat.suffix} />
               </div>
               <div className="text-text-muted text-sm mt-1">{stat.label}</div>

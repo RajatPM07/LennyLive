@@ -65,7 +65,7 @@ const features = [
   {
     title: '300+ episodes distilled',
     description:
-      '280 curated moments from guests like Shreyas Doshi, Shishir Mehrotra, Reforge founders \u2014 searchable by your context.',
+      '2,700+ curated moments from guests like Shreyas Doshi, Shishir Mehrotra, Reforge founders \u2014 searchable by your context.',
     icon: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
         {/* Bookshelf — 5 vertical bars of varying height */}
