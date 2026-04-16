@@ -9,6 +9,10 @@
   --color-text-muted: #5e5e5e;
   --color-proof: #fff8f5;
   --color-dark: #1a1a1a;
+  --color-code-bg: #faf5ee;
+  --color-success: #22c55e;
+  --color-nav-bg: rgba(253, 252, 246, 0.95);
+  --color-step-bg: #fff8f0;
 
   /* Fonts */
   --font-serif: Georgia, 'Times New Roman', serif;
