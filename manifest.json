@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lenny Live",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Compounded experience. Borrowed intuition.",
   "permissions": ["activeTab", "storage", "scripting", "tabs", "notifications", "alarms"],
   "host_permissions": [

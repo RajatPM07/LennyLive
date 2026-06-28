@@ -4,3 +4,9 @@ package-lock.json
 background/config.js
 .superpowers/
 .worktrees/
+.DS_Store
+.agents/
+.claude/
+lenny-live-1.0.0.zip
+lennys-newsletterpodcastdata-all/
+.mcp.json
