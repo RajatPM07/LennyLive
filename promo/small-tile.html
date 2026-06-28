@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 440px;
+    height: 280px;
+    background: #fdfcf6;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #1a1c1c;
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-blob {
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 260px;
+    height: 260px;
+    background: #ff6e40;
+    border-radius: 50%;
+    opacity: 0.12;
+    filter: blur(4px);
+  }
+  .bg-blob-2 {
+    position: absolute;
+    left: -60px;
+    bottom: -80px;
+    width: 200px;
+    height: 200px;
+    background: #a23f1d;
+    border-radius: 50%;
+    opacity: 0.08;
+    filter: blur(6px);
+  }
+  .wrap {
+    position: relative;
+    z-index: 1;
+    padding: 28px 30px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ff6e40;
+    box-shadow: 0 0 0 4px rgba(255, 110, 64, 0.18);
+  }
+  .brand-name {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .headline {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: #1a1c1c;
+    margin: 0;
+  }
+  .headline .accent { color: #a23f1d; }
+  .sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5e5e5e;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-blob"></div>
+  <div class="bg-blob-2"></div>
+  <div class="wrap">
+    <div class="brand">
+      <div class="dot"></div>
+      <div class="brand-name">Lenny Live</div>
+    </div>
+    <h1 class="headline">Compounded<br>experience. <span class="accent">Borrowed<br>intuition.</span></h1>
+    <div class="sub">Lenny Rachitsky · In your flow</div>
+  </div>
+</body>
+</html>

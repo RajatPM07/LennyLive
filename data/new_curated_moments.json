@@ -1,0 +1,2522 @@
+[
+  {
+    "topic": "User Research",
+    "guest_name": "Ada Chen Rekhi",
+    "episode_title": "Feeling stuck? Here's how to know when it's time to leave your job | Ada Chen Rekhi",
+    "insight": "Leverage customer advisory councils to gather 'the literal voice of the customer' for product conflicts, enhancing decision-making and influence.",
+    "pull_quote": "When facing product conflicts, ping top customers directly through a council. Their 'literal voice of the customer' provides rich data, helping resolve debates and strengthening product's position.",
+    "youtube_url": "https://www.youtube.com/watch?v=l-T8sNRcWQk",
+    "timestamp_secs": 864
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Adam Fishman",
+    "episode_title": "How to build a high-performing growth team | Adam Fishman (Patreon, Lyft, Imperfect Foods)",
+    "insight": "Optimized onboarding can shift cohort retention curves outward by 10-20 percentage points by addressing early churn.",
+    "pull_quote": "Focus on onboarding to significantly improve retention. Companies have shifted cohort retention curves by 10-20 percentage points by optimizing early user experience.",
+    "youtube_url": "https://www.youtube.com/watch?v=wP8YyWH524A",
+    "timestamp_secs": 2298
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Adam Grenier",
+    "episode_title": "When to invest in new acquisition channels | Adam Grenier (Uber, MasterClass)",
+    "insight": "In changing markets, always re-evaluate product-market fit; your past fit may no longer apply to your current customer base.",
+    "pull_quote": "Start by assuming you no longer have product market fit, because you had product market fit in a different market. It’s a different market now, so you have to start over.",
+    "youtube_url": "https://www.youtube.com/watch?v=-PDsvl2WCZU",
+    "timestamp_secs": 2429
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Adriel Frederick",
+    "episode_title": "Humanizing product development | Adriel Frederick (Reddit, Lyft, Facebook)",
+    "insight": "Sustainable growth requires focusing on core user problems and delivering fundamental product value, beyond just short-term hacks.",
+    "pull_quote": "Growth hacking is valuable for initial traction, but if your product lacks fundamental value, you'll be a one-hit wonder. True growth means relentlessly solving core user problems and grinding on them.",
+    "youtube_url": "https://www.youtube.com/watch?v=uMhBej6-Ey4",
+    "timestamp_secs": 4400
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Aishwarya Naresh Reganti + Kiriti Badam",
+    "episode_title": "Why most AI products fail: Lessons from 50+ AI deployments at OpenAI, Google & Amazon",
+    "insight": "Begin AI product development with high human control and low agent agency, gradually increasing autonomy as reliability builds.",
+    "pull_quote": "Don't build fully autonomous AI agents on day one. Start with high human control and low agency, then increase autonomy step-by-step as you gain confidence and build trust with your system.",
+    "youtube_url": "https://www.youtube.com/watch?v=z7T1pCxgvlA",
+    "timestamp_secs": 799
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Albert Cheng",
+    "episode_title": "Finding hidden growth opportunities in your product | Albert Cheng (Duolingo, Grammarly, Chess.com)",
+    "insight": "Sample premium features to free users to demonstrate the full product value, significantly boosting paid subscription conversions.",
+    "pull_quote": "Grammarly's upgrade rates nearly doubled by interspersing sampled paid suggestions to free users. They then saw Grammarly as a much more powerful tool, converting at higher rates.",
+    "youtube_url": "https://www.youtube.com/watch?v=2BKmNmnEj9w",
+    "timestamp_secs": 1414
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Alex Hardiman",
+    "episode_title": "An inside look at how the New York Times builds product | Alex Hardiman (CPO, the New York Times)",
+    "insight": "Product teams must balance building bespoke, high-impact experiences for unique content with developing scalable platforms for widespread use.",
+    "pull_quote": "Many compelling features start as one-off newsroom experiments. Product teams then scale these into repeatable formats, operating in two modes: rapid, in-the-moment storytelling and long-term system building.",
+    "youtube_url": "https://www.youtube.com/watch?v=y3-cwoHMwQs",
+    "timestamp_secs": 1621
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Alex Komoroske",
+    "episode_title": "Thinking like a gardener, slime mold, the adjacent possible: Product advice from Alex Komoroske",
+    "insight": "Dedicate 70% of effort to clear value, then use the remaining 30% to plant small, experimental \"seeds\" for future growth.",
+    "pull_quote": "Dedicate 70% of team effort to obviously useful work to build credibility and minimize questions. Use the remaining 30% to plant 'seeds' – small, experimental projects – that might grow into massive, transformative value.",
+    "youtube_url": "https://www.youtube.com/watch?v=PoWRYBWSqpU",
+    "timestamp_secs": 2192
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Alexander Embiricos",
+    "episode_title": "How to drive word of mouth | Nilan Peiris (CPO of Wise)",
+    "insight": "AI coding agents enable extreme development speed, allowing small teams to launch top-tier products rapidly.",
+    "pull_quote": "The Sora Android app, a fully new app, was built in 18 days for employees, and then 10 days later for the public, becoming the #1 app in the app store, with just two or three engineers. This is an insane velocity.",
+    "youtube_url": "https://www.youtube.com/watch?v=xZifSLGOrrw",
+    "timestamp_secs": 2831
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Alisa Cohn",
+    "episode_title": "Scripts for navigating difficult conversations | Alisa Cohn (executive coach)",
+    "insight": "A leader's job is to drive results and foster growth, not to make employees happy by avoiding essential tough conversations.",
+    "pull_quote": "Many leaders mistakenly believe their job is to make employees happy, avoiding difficult feedback and hindering growth. This ultimately leads to subpar performance. Your real job is to drive results and enable success.",
+    "youtube_url": "https://www.youtube.com/watch?v=bvF0ZM8DjuI",
+    "timestamp_secs": 2349
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ami Vora",
+    "episode_title": "Making an impact through authenticity and curiosity | Ami Vora (CPO at Faire, ex-WhatsApp, FB, IG)",
+    "insight": "Execution beats strategy; prioritize continually shipping and learning from customers over perfecting plans to truly win in the market.",
+    "pull_quote": "\"Perfect strategy but poor execution, you don't win because your strategy never makes it to the market.\" Spend 80% of your time on execution, building the machine to constantly improve with customer feedback, not just planning.",
+    "youtube_url": "https://www.youtube.com/watch?v=6UHAop9fhNU",
+    "timestamp_secs": 2343
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Amjad Masad",
+    "episode_title": "Behind the product: Replit | Amjad Masad (co-founder and CEO)",
+    "insight": "As AI makes building faster, a PM's core bottleneck shifts to generating new, valuable ideas and concepts quickly.",
+    "pull_quote": "Making things is now much easier with AI. The new bottleneck for product managers becomes how fast you can generate valuable ideas and explore new concepts.",
+    "youtube_url": "https://www.youtube.com/watch?v=Bp_h674oIhw",
+    "timestamp_secs": 2715
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Andrew Wilkinson",
+    "episode_title": "I’ve run 75+ businesses. Here’s why you’re probably chasing the wrong idea. | Andrew Wilkinson",
+    "insight": "Find profitable niches with low competition to secure early wins and build business muscle effectively.",
+    "pull_quote": "Fish where the fish are. The biggest mistakes I've made have been going into business models where other people have repeatedly failed and thinking, I can do this better. Competition equals lower margin.",
+    "youtube_url": "https://www.youtube.com/watch?v=VxAwUb86MUE",
+    "timestamp_secs": 26
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Andy Johns",
+    "episode_title": "When enough is enough | Andy Johns (ex-FB, Twitter, Quora)",
+    "insight": "Disrupted sleep, strained relationships, or failing physical health are flashing red alarms indicating deeper issues beyond normal work stress.",
+    "pull_quote": "Normal stress is one thing, but disrupted sleep, strained relationships, or failing physical health are flashing red alarms. Your body signals deeper issues. Don't dismiss these as mere day-to-day work stress; something needs to change.",
+    "youtube_url": "https://www.youtube.com/watch?v=_93m4PriHyc",
+    "timestamp_secs": 2910
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Andy Raskin",
+    "episode_title": "The power of strategic narrative | Andy Raskin",
+    "insight": "A strategic narrative defines a movement, providing a clear \"north star\" to prioritize product features and shape your roadmap.",
+    "pull_quote": "Traditional pitches focus on problems and solutions, but a strategic narrative defines a new movement, providing a clear north star for product strategy. It helps filter feature requests and prioritizes what to build.",
+    "youtube_url": "https://www.youtube.com/watch?v=dkVJnaxDlXE",
+    "timestamp_secs": 499
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Andy Raskin",
+    "episode_title": "The power of strategic narrative | Andy Raskin",
+    "insight": "Use a clear strategic narrative to filter feature requests and prioritize your product roadmap, aligning all efforts.",
+    "pull_quote": "Gong's CEO used their strategic narrative to say no to features based on 'opinions.' The narrative acts as a crucial filter, ensuring your roadmap prioritizes only what aligns with the movement.",
+    "youtube_url": "https://www.youtube.com/watch?v=dkVJnaxDlXE",
+    "timestamp_secs": 2271
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Anneka Gupta",
+    "episode_title": "Becoming more strategic, navigating difficult colleagues, founder mode, more | Anneka Gupta",
+    "insight": "Prioritize making a decision with ~70% confidence, then iterate; waiting for perfect information leads to analysis paralysis and missed learning.",
+    "pull_quote": "It's not about making the right decision, it's about making the decision. Operate off imprecise information, because once you commit, you learn more. Aim for 70% right, then iterate. No decision means no high-fidelity information.",
+    "youtube_url": "https://www.youtube.com/watch?v=E3dUveqt9Bw",
+    "timestamp_secs": 1842
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Annie Duke",
+    "episode_title": "This will make you a better decision maker | Annie Duke (Thinking In Bets, former pro poker player)",
+    "insight": "Actively shorten long feedback loops by identifying and tracking necessary, correlated short-term signals and intermediate outcomes.",
+    "pull_quote": "There's no such thing as a long feedback loop; you choose its length. Shorten it by tracking necessary, correlated short-term signals and intermediate outcomes. Don't wait a decade for results when you can measure progress in months.",
+    "youtube_url": "https://www.youtube.com/watch?v=svQMODvIGAE",
+    "timestamp_secs": 40
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Annie Pearl",
+    "episode_title": "Behind the scenes of Calendly’s rapid growth | Annie Pearl (CPO)",
+    "insight": "Defining your precise target market and persona is the biggest unlock for efficient product prioritization and building an amazing product.",
+    "pull_quote": "It's one of the harder things for companies to do. The ability to say no is going to allow you to build something amazing for the people that matter most, not something average for many. For example, we deprioritized a Venmo integration because our target market is teams, not solopreneurs.",
+    "youtube_url": "https://www.youtube.com/watch?v=-tUIGpgmsZw",
+    "timestamp_secs": 1280
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Aparna Chennapragada",
+    "episode_title": "Microsoft CPO: If you aren’t prototyping with AI you’re doing it wrong | Aparna Chennapragada",
+    "insight": "Leverage AI-powered prototyping and prompt sets to rapidly visualize ideas and accelerate the product building loop.",
+    "pull_quote": "If you aren’t prototyping and building to see what you want to build, you’re doing it wrong. The prompt sets are the new PRDs, accelerating the product building loop with demos before memos.",
+    "youtube_url": "https://www.youtube.com/watch?v=HbbfXAWcuUo",
+    "timestamp_secs": 1379
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Casey Winters",
+    "episode_title": "How to sell your ideas and rise within your company | Casey Winters, Eventbrite",
+    "insight": "In uncertain, resource-constrained environments, PMs must make decisions, ship to learn, and apply critical thinking beyond frameworks.",
+    "pull_quote": "Many product managers say they can't create solutions without seeing all the data and talking to customers. In reality, the fastest way to learn is often to ship, especially when resources are scarce. Use your brain; don't just follow a process.",
+    "youtube_url": "https://www.youtube.com/watch?v=6XMUDEYf2OE",
+    "timestamp_secs": 1522
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Brian Balfour",
+    "episode_title": "Why ChatGPT will be the next big growth channel (and how to capitalize on it) | Brian Balfour",
+    "insight": "Embrace new distribution platforms early, as competitors will, and customer expectations will shift, making opting out impossible.",
+    "pull_quote": "Don't trick yourself into thinking you can opt out of new platform shifts. It's a prisoner's dilemma: if you don't play, your competitors will, and customer expectations will change. You have to play the game.",
+    "youtube_url": "https://www.youtube.com/watch?v=cX4cL6B-_aU",
+    "timestamp_secs": 1653
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Brian Chesky",
+    "episode_title": "Brian Chesky’s new playbook",
+    "insight": "True leadership involves being in the product details, not just delegating, to ensure quality and coherence across teams.",
+    "pull_quote": "There's a difference between micromanagement and being in the details. How do you know people are doing a good job if you're not in the details? Leaders are in the details.",
+    "youtube_url": "https://www.youtube.com/watch?v=4ef0juAMqoE",
+    "timestamp_secs": 15
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Brian Tolkin",
+    "episode_title": "Lessons from scaling Uber and Opendoor | Brian Tolkin (Head of Product at Opendoor, ex-Uber)",
+    "insight": "In low-volume contexts, honestly assess A/B test feasibility, then build conviction with diverse methods or trust informed intuition.",
+    "pull_quote": "In low-volume contexts, don't force A/B tests; run a power analysis and be honest about runtime. If not feasible, increase conviction by talking to customers, using observational data, or accepting longer runtimes. Sometimes, trust informed intuition.",
+    "youtube_url": "https://www.youtube.com/watch?v=sRukk520Fds",
+    "timestamp_secs": 2429
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Cam Adams",
+    "episode_title": "'Inside Canva: Coaches not managers, giving away your Legos, and embracing AI | Cameron Adams'",
+    "insight": "Overcome blank page fear in onboarding by guiding users through simple, low-effort steps that build to a surprising accomplishment and deep delight.",
+    "pull_quote": "We learned to overcome the 'blank page fear' in onboarding. Guide users with simple steps, like 'search for a monkey,' to quickly build something they never thought they could. This surprising accomplishment drove immense delight and \"I didn't know I could be a designer\" moments.",
+    "youtube_url": "https://www.youtube.com/watch?v=wgrJNHlYUA8",
+    "timestamp_secs": 2483
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Camille Fournier",
+    "episode_title": "The things engineers are desperate for PMs to understand | Camille Fournier (“The Manager’s Path”)",
+    "insight": "PMs hoarding ideas forces engineers to find creative outlets in over-engineering, which ultimately harms the product.",
+    "pull_quote": "When product managers hoard all the ideas, engineers seek creative outlets in over-engineering. This is ultimately bad for the product. Involve your team in ideation to channel their creativity effectively.",
+    "youtube_url": "https://www.youtube.com/watch?v=hZSh0rs20uI",
+    "timestamp_secs": 471
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Camille Hearst",
+    "episode_title": "Monetizing passions, scaling marketplaces, and stories from a creator economy vet | Camille Hearst",
+    "insight": "For marketplaces, prioritize solving supply-side pain points, as great demand means nothing without available product.",
+    "pull_quote": "It doesn't matter how nice the user experience is, how much demand you can generate if when someone opens that app, there are no cars available. You can't lose sight of solving real pain points for the supply side to ensure the business operates.",
+    "youtube_url": "https://www.youtube.com/watch?v=oB-BjEjxHNw",
+    "timestamp_secs": 1869
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Camille Ricketts",
+    "episode_title": "How Notion leveraged community to build a $10B business | Camille Ricketts",
+    "insight": "Apply product-market fit thinking to content creation, identifying audience needs and crafting \"painkiller\" content.",
+    "pull_quote": "The way that you think about product market fit, you have to think about content market fit. Identify your audience and what causes them anxiety. Create content that acts as a painkiller, addressing their real-life needs.",
+    "youtube_url": "https://www.youtube.com/watch?v=bY5KC9Gguz8",
+    "timestamp_secs": 3114
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Carilu Dietrich",
+    "episode_title": "How to achieve hypergrowth in your business and career | Carilu Dietrich (Atlassian)",
+    "insight": "In early stages, build non-scalable processes like deep customer engagement to intimately understand user struggles for lasting solutions.",
+    "pull_quote": "Gusto's founders personally ran payroll for their first 200 customers. Early-stage startups must embrace non-scalable processes to deeply understand customer struggles and build truly beloved products.",
+    "youtube_url": "https://www.youtube.com/watch?v=Pm7QSWDIEUc",
+    "timestamp_secs": 2084
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Carole Robin",
+    "episode_title": "How to build deeper, more robust relationships | Carole Robin (Stanford professor, “Touchy Feely”)",
+    "insight": "Recognize anger as a secondary emotion, often masking fear or hurt; expressing these core feelings fosters deeper connection and problem-solving.",
+    "pull_quote": "Anger is often a secondary emotion, typically masking fear or hurt. Expressing your underlying fear or hurt (or acknowledging others' fear) connects people and rallies teams faster than anger ever could.",
+    "youtube_url": "https://www.youtube.com/watch?v=Cew9-GlC_yk",
+    "timestamp_secs": 2006
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Casey Winters",
+    "episode_title": "Why most product managers are unprepared for the demands of a real startup | Casey Winters",
+    "insight": "Prepare for important meetings by anticipating every possible question and having all data ready to significantly reduce negative outcomes.",
+    "pull_quote": "To prepare for important meetings, anticipate every possible question and have all data ready. This dramatically reduces the chance of a negative outcome.",
+    "youtube_url": "https://www.youtube.com/watch?v=WlRfyEpAKxw",
+    "timestamp_secs": 910
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Casey Winters",
+    "episode_title": "How to sell your ideas and rise within your company | Casey Winters, Eventbrite",
+    "insight": "When facing disruptors with seemingly terrible business models, assume they are right and base your strategy on them playing optimally.",
+    "pull_quote": "Grubhub assumed DoorDash's negative-margin model was stupid and unsustainable. When facing existential threats, overreact: assume the disruptor is right and base your strategy on their optimal game.",
+    "youtube_url": "https://www.youtube.com/watch?v=6XMUDEYf2OE",
+    "timestamp_secs": 3074
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Chandra Janakiraman",
+    "episode_title": "An operator’s guide to product strategy | Chandra Janakiraman (CPO at VRChat, ex-Meta, Headspace)",
+    "insight": "Prioritize strategic opportunities by assessing expected impact, certainty, clarity of levers, and unique differentiation your team offers.",
+    "pull_quote": "Don't just pick opportunities; rank them by impact, confidence, solution clarity, and whether your team offers unique capabilities to truly differentiate your product.",
+    "youtube_url": "https://www.youtube.com/watch?v=WFLH8Af2f30",
+    "timestamp_secs": 2120
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Chip Conley",
+    "episode_title": "Mastering product strategy and growing as a PM | Maggie Crowley (Toast, Drift, TripAdvisor)",
+    "insight": "Shift from merely meeting customer desires to identifying and fulfilling their unrecognized needs to truly define your product.",
+    "pull_quote": "Airbnb's product wasn't home sharing, but 'belonging anywhere.' True product definition goes beyond desires to fulfilling unrecognized needs. Discover these fundamental needs to unlock deeper product-market fit and guide your entire strategy.",
+    "youtube_url": "https://www.youtube.com/watch?v=4LjddcccYIo",
+    "timestamp_secs": 3318
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Chip Huyen",
+    "episode_title": "Al Engineering 101 with Chip Huyen (Nvidia, Stanford, Netflix)",
+    "insight": "To build successful AI products, focus on talking to users and improving fundamental processes, not just chasing the latest AI tech.",
+    "pull_quote": "What people think improves AI apps: staying up to date with latest news, adopting new frameworks, agonizing over databases. What actually improves them: talking to users, preparing better data, optimizing workflows.",
+    "youtube_url": "https://www.youtube.com/watch?v=qbvY0dQgSJ4",
+    "timestamp_secs": 330
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Chris Hutchins",
+    "episode_title": "Launching and growing a podcast | Chris Hutchins (All the Hacks, Wealthfront, Google)",
+    "insight": "Focus on being someone's favorite, not everyone's 'okay,' to build a strong, advocated user base and achieve product-market fit.",
+    "pull_quote": "Try to be someone's favorite. Don't try to be everyone's okay podcast. Every episode, except one, was someone's favorite. That's how you build true fans.",
+    "youtube_url": "https://www.youtube.com/watch?v=kc1XhB4k0Eg",
+    "timestamp_secs": 2070
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Christian Idiodi",
+    "episode_title": "The essence of product management | Christian Idiodi (SVPG)",
+    "insight": "Achieve product-market fit by finding 6-8 B2B or 15-25 B2C reference customers who will stake their reputation on your solution.",
+    "pull_quote": "Don't launch hoping it works. You're not ready until you have 6-8 B2B or 15-25 B2C reference customers. These are people who love your solution so much they'll stake their reputation on it, providing real product-market fit.",
+    "youtube_url": "https://www.youtube.com/watch?v=SXYc5RoU3Lg",
+    "timestamp_secs": 1541
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Christina Wodtke",
+    "episode_title": "The ultimate guide to OKRs | Christina Wodtke (Stanford)",
+    "insight": "Streamline OKR approvals by having peer teams provide rapid feedback instead of relying on slow, hierarchical management approvals.",
+    "pull_quote": "The OKR approval process can kill your velocity. Instead of slow boss approvals, get three trusted peer teams to review your OKRs in 24 hours. This fast peer feedback drives alignment without bottlenecks.",
+    "youtube_url": "https://www.youtube.com/watch?v=kvkL18Ue0dE",
+    "timestamp_secs": 3000
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Christine Itwaru",
+    "episode_title": "Understanding the role of product ops | Christine Itwaru (Pendo)",
+    "insight": "Product Ops should build essential systems, automate core processes, and then pivot to higher-level strategic value.",
+    "pull_quote": "Product ops shouldn't just run processes. Build the necessary systems, then automate and get out of the way to focus on more strategic value, such as increasing retention or driving growth.",
+    "youtube_url": "https://www.youtube.com/watch?v=tGS-NhxrN_Q",
+    "timestamp_secs": 2001
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Christopher Lochhead",
+    "episode_title": "How to become a category pirate | Christopher Lochhead (Author of Play Bigger, Niche Down, more)",
+    "insight": "Competing in an existing market means fighting for 24% of the value; designing a new category allows you to capture two-thirds.",
+    "pull_quote": "In tech categories, one company earns two-thirds (76%) of total value. Competing in existing markets means fighting for the remaining 24%. Design your own category to capture the majority.",
+    "youtube_url": "https://www.youtube.com/watch?v=mS4B541m9xg",
+    "timestamp_secs": 932
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Christopher Miller",
+    "episode_title": "Relentless curiosity, radical accountability, and HubSpot’s winning growth formula | Chris Miller",
+    "insight": "Take radical ownership of neglected opportunities and proactively fix them; it unlocks outsized growth and builds trust.",
+    "pull_quote": "HubSpot's early growth team identified a neglected self-service revenue stream that \"no one was committing any code to.\" They took ownership, redesigned it, and saw a step-function change in business physics, proving that radical accountability fuels growth.",
+    "youtube_url": "https://www.youtube.com/watch?v=SzKKJwuRFZI",
+    "timestamp_secs": 2883
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Claire Butler",
+    "episode_title": "An inside look at Figma’s unique GTM motion | Claire Butler (first GTM hire)",
+    "insight": "To succeed in 0-to-1, go to extreme, unscalable lengths to unblock and delight your very first users.",
+    "pull_quote": "Their engineer couldn't open the file. Dylan drove our CTO to fix their MacBook just to get them to use the product. You must go to extreme, unscalable lengths to get your first users over the hump.",
+    "youtube_url": "https://www.youtube.com/watch?v=UmirRfy-gzA",
+    "timestamp_secs": 37
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Claire Hughes Johnson",
+    "episode_title": "Lessons from scaling Stripe | Claire Hughes Johnson (ex-COO of Stripe)",
+    "insight": "Act as the decision-maker to maintain momentum, and if unsure, just ask, don't get stuck and slow things down.",
+    "pull_quote": "If you're not sure who the decision maker is, it's probably you. Act that way to avoid slowing the company down. Don't get stuck – just ask, or decide, to drive progress, impact, and momentum.",
+    "youtube_url": "https://www.youtube.com/watch?v=Mv0o9o4MRh0",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Claire Vo",
+    "episode_title": "Bending the universe in your favor | Claire Vo (LaunchDarkly, Color, Optimizely, ChatPRD)",
+    "insight": "Increase clock speed by moving deadlines one iteration faster; year-long tasks become half-year, half-year tasks become quarterly.",
+    "pull_quote": "To increase pace, challenge your leaders to bring clock speed one click faster. If something needs to be done this year, target this half. If this half, target this quarter. This simple shift can transform organizational momentum.",
+    "youtube_url": "https://www.youtube.com/watch?v=aXGo1o_baBo",
+    "timestamp_secs": 1438
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Crystal Widjaja",
+    "episode_title": "How to scrappily hire for, measure, and unlock growth | Crystal Widjaja, Gojek and Kumu",
+    "insight": "Don't just track metrics; instrument events with properties to understand user context and generate actionable insights.",
+    "pull_quote": "Power users do four times more bookings is an observation, not an insight. An insight tells you why, providing context like 'power users use free shipping on high GMV baskets,' guiding specific marketing changes.",
+    "youtube_url": "https://www.youtube.com/watch?v=lYaiyi2ZX6Q",
+    "timestamp_secs": 2477
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Dalton Caldwell",
+    "episode_title": "Lessons from 1,000+ YC startups: Resilience, tar pit ideas, pivoting, more | Dalton Caldwell (YC)",
+    "insight": "Overcome social anxiety to regularly engage customers in person for true product understanding, not just through online methods.",
+    "pull_quote": "Most founders hide behind keyboards. Don't. Overcome social anxiety and consistently talk to customers in person. It's the only way to genuinely understand them and your product.",
+    "youtube_url": "https://www.youtube.com/watch?v=m7LvNTbaqSI",
+    "timestamp_secs": 2457
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Dan Hockenmaier",
+    "episode_title": "Developing a growth model + marketplace growth strategy | Dan Hockenmaier",
+    "insight": "The biggest wins in retention come from inflecting the early user experience; homogenize first-time encounters to prove consistent value.",
+    "pull_quote": "The biggest wins in retention often come from inflecting the early user experience, not from trying to resurrect churned users. Homogenize first-time encounters to teach and prove the product's value consistently.",
+    "youtube_url": "https://www.youtube.com/watch?v=AlTQ6O2qooI",
+    "timestamp_secs": 1309
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Dan Shipper",
+    "episode_title": "The AI-native startup: 5 products, 7-figure revenue, 100% AI-written code. | Dan Shipper (Every)",
+    "insight": "Empower engineers to manage AI agents that write all code, shifting the product focus from manual coding to strategy and review.",
+    "pull_quote": "No one is manually coding anymore. Organizations like ours, people who are playing at the edge, we're doing things that, in three years, everybody else is going to be doing.",
+    "youtube_url": "https://www.youtube.com/watch?v=crMrVozp_h8",
+    "timestamp_secs": 3115
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Daniel Lereya",
+    "episode_title": "Daniel Lereya",
+    "insight": "Spending more time developing a product does not yield better results; instead, set strict time-based release traps to focus and get fast customer feedback.",
+    "pull_quote": "Spending more time on product development often creates more questions and complications, not better results. Set time-based traps to focus on core value and ship fast. Don't fear early, imperfect feedback; it's priceless.",
+    "youtube_url": "",
+    "timestamp_secs": 3066
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "David Placek",
+    "episode_title": "Building a culture of excellence | David Singleton (CTO of Stripe)",
+    "insight": "To generate truly innovative names, abandon large brainstorms; use small, diverse teams with varied or disguised briefs to unlock fresh creative directions.",
+    "pull_quote": "Ditch big-team brainstorms for naming. Our best names come from small, two-person teams, often given disguised briefs (e.g., naming a bicycle for an AI product) to foster breakthrough, unconventional ideas.",
+    "youtube_url": "https://www.youtube.com/watch?v=F0_IKKY3HCk",
+    "timestamp_secs": 1350
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "David Singleton",
+    "episode_title": "Building a culture of excellence | David Singleton (CTO of Stripe)",
+    "insight": "Implement 'friction logging' by role-playing specific user journeys to identify and prioritize critical pain points for meticulous craft investment.",
+    "pull_quote": "Friction logging requires role-playing a specific user's journey through your product, meticulously noting every point of difficulty. This process reveals critical areas to invest in, driving impactful product improvements and revenue uplifts.",
+    "youtube_url": "https://www.youtube.com/watch?v=F0_IKKY3HCk",
+    "timestamp_secs": 1537
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Deb Liu",
+    "episode_title": "Succeeding as an introvert, building zero-to-one, and PM’ing your career like a product | Deb Liu",
+    "insight": "Treat your career as a product by defining success metrics, skills as features, and creating an intentional roadmap to achieve goals.",
+    "pull_quote": "Some of the best PMs are terrible PMs for their career; they just drift from job to job. But if you wrote a spec for your career, what would success look like? How would you get there?",
+    "youtube_url": "https://www.youtube.com/watch?v=MajB5CQUKDA",
+    "timestamp_secs": 11
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Dhanji R. Prasanna",
+    "episode_title": "How Block is becoming the most AI-native enterprise in the world | Dhanji R. Prasanna",
+    "insight": "Non-technical people using AI agents to build software tools for themselves is driving the most surprising and impactful productivity gains.",
+    "pull_quote": "The most surprising and amazing impact of AI is non-technical people using agents and programming tools to build things. They are showing the most impact by optimizing their particular workday and tasks.",
+    "youtube_url": "https://www.youtube.com/watch?v=JMeXWVw0r3E",
+    "timestamp_secs": 47
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Dharmesh Shah",
+    "episode_title": "Zigging vs. zagging: How HubSpot built a $30B company | Dharmesh Shah (co-founder/CTO)",
+    "insight": "Always factor in the long-term, third-order cost of dimensional complexity when adding a new product or feature.",
+    "pull_quote": "When adding a new product or feature, don't just consider development and maintenance. Recognize the third-order cost of dimensional complexity: every future decision must be made through its lens, escalating overhead. This silent cost reliably kills companies.",
+    "youtube_url": "https://www.youtube.com/watch?v=dpw9Ue1HU48",
+    "timestamp_secs": 2532
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Dmitry Zlokazov",
+    "episode_title": "How Revolut trains world-class PMs: The “Local CEO” model, raw intellect & building wow products",
+    "insight": "Recognize that a product 99% done is closer to 0% than 100%; relentless focus on full execution ensures real impact.",
+    "pull_quote": "If something is 99% done, it's closer to 0% rather than 100%. Product owners must ensure full execution, from build to customer care, so features aren't useless.",
+    "youtube_url": "https://www.youtube.com/watch?v=-kPpd21bFrE",
+    "timestamp_secs": 3349
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Donna Lichaw",
+    "episode_title": "How to discover your superpowers, own your story, and unlock personal growth | Donna Lichaw",
+    "insight": "Apply user research methods to leadership: gather feedback from your team to validate or debunk the stories you tell yourself about your impact.",
+    "pull_quote": "A CEO's self-story was 'Nobody listens, I'm too nice.' User research with his team revealed they valued his caring, wanted vision, and empowered autonomy. This clarified true impact.",
+    "youtube_url": "https://www.youtube.com/watch?v=7fA8DMMUNPI",
+    "timestamp_secs": 1655
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Dr. Fei Fei Li",
+    "episode_title": "The Godmother of AI on jobs, robots & why world models are next | Dr. Fei-Fei Li",
+    "insight": "To build truly intelligent systems, prioritize gathering massive, well-structured datasets; they are often the critically-overlooked ingredient.",
+    "pull_quote": "Early AI models lacked data. Our breakthrough with ImageNet showed that big data, neural networks, and GPUs were the golden recipe for modern AI advancements, enabling object recognition.",
+    "youtube_url": "https://www.youtube.com/watch?v=Ctjiatnd6Xk",
+    "timestamp_secs": 1013
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Drew Houston",
+    "episode_title": "Behind the founder | Drew Houston (Dropbox)",
+    "insight": "At strategic inflection points, go all-in on one path rather than hedging, even if it feels insane, to avoid being a second-best product everywhere.",
+    "pull_quote": "When facing existential threats, a company must go all-in on one strategic direction, like Intel exiting memory for microprocessors, rather than hedging and being second-best everywhere.",
+    "youtube_url": "https://www.youtube.com/watch?v=egdYKLBswgk",
+    "timestamp_secs": 1540
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Dylan Field",
+    "episode_title": "Figma’s CEO: Why AI makes design, craft, and quality the new moat for startups | Dylan Field",
+    "insight": "Intuition is a hypothesis generator; validate these hypotheses with data to form a working theory for product development.",
+    "pull_quote": "Intuition is like a hypothesis generator. You constantly generate ideas, then debate them and find data to support or negate them, winnowing down to a working hypothesis.",
+    "youtube_url": "https://www.youtube.com/watch?v=WyJV6VwEGA8",
+    "timestamp_secs": 645
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Dylan Field 2.0",
+    "episode_title": "Dylan Field live at Figma's Config: Intuition, simplicity, and the future of design",
+    "insight": "Dedicate resources to systematically fix user 'blockers' because it measurably improves retention and activation more than new features.",
+    "pull_quote": "Removing user blockers is as important for retaining users as adding cool new stuff. Our 'Blockers' team struck them down one by one, seeing measurable improvements in retention and activation metrics with each fix.",
+    "youtube_url": "https://www.youtube.com/watch?v=yJQYBjto41s",
+    "timestamp_secs": 2528
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ebi Atawodi",
+    "episode_title": "Crafting a compelling product vision | Ebi Atawodi (YouTube, Netflix, Uber)",
+    "insight": "Continuously maintain a crisp, clear list of the top 3-10 problems users face to ground all product vision and strategy.",
+    "pull_quote": "It baffles me how many PMs ramble when asked about the top problems that keep them up at night. Curate a living document of 3-10 crisp, clear problems to consistently ground your product vision and strategy.",
+    "youtube_url": "https://www.youtube.com/watch?v=tBPTwUmaxDs",
+    "timestamp_secs": 1964
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Edwin Chen",
+    "episode_title": "The $1B Al company training ChatGPT, Claude & Gemini on the path to responsible AGI | Edwin Chen",
+    "insight": "Don't optimize your product for superficial engagement or flashiness; instead, build for truth, deep utility, and genuine user value.",
+    "pull_quote": "We're teaching models to chase dopamine instead of truth. Current AI leaderboards reward crazy emojis, bolding, and length, even if models hallucinate. This optimizes for 'AI slop' over genuine advancement.",
+    "youtube_url": "https://www.youtube.com/watch?v=dduQeaqmpnI",
+    "timestamp_secs": 1394
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Eeke de Milliano",
+    "episode_title": "How to foster innovation and big thinking | Eeke de Milliano (Retool, Stripe)",
+    "insight": "To quickly launch new products, fund small teams like internal startups and keep them separate from the core product for independent, rapid iteration.",
+    "pull_quote": "Retool launched three products in one year by funding small teams like internal startups, keeping them separate from the core product. This enabled rapid iteration and distinct customer focus.",
+    "youtube_url": "https://www.youtube.com/watch?v=2ezz4KJe7kA",
+    "timestamp_secs": 2159
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Elena Verna",
+    "episode_title": "10 growth tactics that never work | Elena Verna (Amplitude, Miro, Dropbox, SurveyMonkey)",
+    "insight": "Growth teams must prioritize building owned, earned acquisition channels like virality or user-generated content for sustainable growth.",
+    "pull_quote": "Growth teams must prioritize building owned, earned channels like virality or user-generated content. Don't rely solely on rented channels like SEO/SEM; algorithms can giveth and taketh away. Your cost of acquisition will only rise.",
+    "youtube_url": "https://www.youtube.com/watch?v=IHwS2By9UKM",
+    "timestamp_secs": 2685
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Elena Verna 2.0",
+    "episode_title": "The ultimate guide to product-led sales | Elena Verna",
+    "insight": "In product-led sales, product must take accountability for customer acquisition and pipeline generation, not just building features.",
+    "pull_quote": "Do not implement product-led sales in marketing; it's a recipe for disaster within six months. Product must take accountability for selling the product itself.",
+    "youtube_url": "https://www.youtube.com/watch?v=bxghtN-OlJQ",
+    "timestamp_secs": 40
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Elena Verna 3.0",
+    "episode_title": "The ultimate guide to product-led sales | Elena Verna",
+    "insight": "Invest in building owned and earned acquisition channels like virality and user-generated content for sustainable long-term growth.",
+    "pull_quote": "Your growth team's top priority should be building owned and earned acquisition channels. Reliance on SEO, SEM, and social makes Google richer and leaves you vulnerable to algorithms. Earned channels, like virality or UGC, are stable and defensible.",
+    "youtube_url": "https://www.youtube.com/watch?v=bxghtN-OlJQ",
+    "timestamp_secs": 2643
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Elena Verna 4.0",
+    "episode_title": "The new AI growth playbook for 2026 | How Lovable hit $200M ARR in one year",
+    "insight": "For new AI products, aggressively give away product access, tracking it as a marketing cost to accelerate adoption and \"wow\" moments.",
+    "pull_quote": "Give your product away a lot. For AI products, remove the barrier of entry; give a lot away for free. We track it as marketing costs, not something to reduce to make our margins better. This is part of our growth secret sauce.",
+    "youtube_url": "https://www.youtube.com/watch?v=6qAB6aUMIeA",
+    "timestamp_secs": 3195
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Eli Schwartz",
+    "episode_title": "Rethinking SEO in the age of AI | Eli Schwartz (SEO advisor, author)",
+    "insight": "PMs must treat SEO as a product, deeply understanding the user's self-discovery journey to identify if and how search drives conversions.",
+    "pull_quote": "Think of SEO as a product; PMs should lead by understanding the user's self-discovery journey. If users aren't searching for your solution, or your product requires a complex sales motion, SEO likely isn't your best investment.",
+    "youtube_url": "https://www.youtube.com/watch?v=Z71yGshPTwk",
+    "timestamp_secs": 1380
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Elizabeth Stone",
+    "episode_title": "How Netflix builds a culture of excellence | Elizabeth Stone (CTO)",
+    "insight": "Centralize data and insights, including user research, to foster objectivity, functional excellence, and holistic product problem-solving.",
+    "pull_quote": "Netflix keeps its data, analytics, and user research teams centralized and functionally diverse. This structure fosters objectivity, deep functional expertise, and cross-pollination, making them truth-tellers for product decisions.",
+    "youtube_url": "https://www.youtube.com/watch?v=2XgU6T4DalY",
+    "timestamp_secs": 3254
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Emilie Gerber",
+    "episode_title": "The ultimate guide to PR | Emilie Gerber (founder of Six Eastern)",
+    "insight": "When pitching press, frame your product as a better alternative to an existing solution, rather than claiming category creation.",
+    "pull_quote": "For PR, 'category creator' is not a useful tactic. Instead, position your product as doing what a household name does, but better, to give reporters an instant frame of reference.",
+    "youtube_url": "https://www.youtube.com/watch?v=jW9GzaaRPxk",
+    "timestamp_secs": 2501
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Emily Kramer",
+    "episode_title": "How to build a powerful marketing machine | Emily Kramer (Asana, Carta, MKT1)",
+    "insight": "Product-led growth is a misnomer; it truly means product plus robust marketing, requiring deep collaboration, not just product.",
+    "pull_quote": "Product-led growth is a misnomer. It really means product plus marketing. You're going to have a bigger marketing team early on because sales isn't communicating with customers, so marketing fills that gap.",
+    "youtube_url": "https://www.youtube.com/watch?v=gzs61z9Fekw",
+    "timestamp_secs": 2228
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Eoghan McCabe",
+    "episode_title": "How Intercom rose from the ashes by betting everything on AI | Eoghan McCabe (founder and CEO)",
+    "insight": "Price AI products based on the value delivered, like resolved customer problems, rather than cost, anticipating future efficiency gains.",
+    "pull_quote": "We charged 99 cents per resolved customer ticket, even though it initially cost us $1.20. Our pricing aligned 100% with attained value, betting on future efficiency and customer preference for predictable, fair rates.",
+    "youtube_url": "https://www.youtube.com/watch?v=0_opWSfmN8M",
+    "timestamp_secs": 1401
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Shreyas Doshi",
+    "episode_title": "Countdown of the top 10 episodes of the year",
+    "insight": "Categorize tasks as Leverage, Neutral, or Overhead to focus effort on high-impact work and avoid burnout.",
+    "pull_quote": "My to-do list was endless. Not all tasks are created equal: some give 100x impact (leverage), others just 1x (neutral), or less (overhead). Focus your best energy on leverage tasks.",
+    "youtube_url": "https://www.youtube.com/watch?v=f4cskASqAsg",
+    "timestamp_secs": 2668
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Eric Ries",
+    "episode_title": "Reflections on a movement | Eric Ries (creator of the Lean Startup methodology)",
+    "insight": "Quality is customer-defined; without knowing your customer, you don't truly understand what 'quality' means.",
+    "pull_quote": "Quality is defined by the customer. If we don't know who our customer is, we literally don't know what 'quality' means. Building a high quality product with the wrong value proposition is nothing to be proud of.",
+    "youtube_url": "https://www.youtube.com/watch?v=xzebbzIntFc",
+    "timestamp_secs": 1965
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Eric Simons",
+    "episode_title": "Inside Bolt: From near-death to one of the fastest-growing products in history | Eric Simons",
+    "insight": "Leverage interactive, high-fidelity working prototypes to articulate product vision and features more effectively and quickly than static documentation.",
+    "pull_quote": "It's now faster to make real prototypes with working software than dragging frames in Figma. If a picture is worth a thousand words, a live actual demo is worth millions; you can feel it, it's real.",
+    "youtube_url": "https://www.youtube.com/watch?v=L22DtAHLmzs",
+    "timestamp_secs": 2871
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Ethan Evans",
+    "episode_title": "Taking control of your career | Ethan Evans (Amazon)",
+    "insight": "Systematic invention requires dedicated, regular time for focused thinking, primarily by combining existing concepts.",
+    "pull_quote": "People think invention takes all this time, but you only need two hours once a month. Dedicate time to combine existing concepts; you don't need many good ideas to be seen as tremendously inventive.",
+    "youtube_url": "https://www.youtube.com/watch?v=GB0P0_nFPTA",
+    "timestamp_secs": 1753
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Ethan Evans 2.0",
+    "episode_title": "Taking control of your career | Ethan Evans (Amazon)",
+    "insight": "Allocate dedicated time to systematically combine existing ideas and focus on continuous optimization; true invention is rarely pure magic.",
+    "pull_quote": "People think invention takes all this time, but you only need two hours once a month. The thing is once you have one good idea, it often takes years to express that. Jeff and Amazon had ideas like Prime shipping; it's a 20-year-old idea still getting better.",
+    "youtube_url": "https://www.youtube.com/watch?v=GB0P0_nFPTA",
+    "timestamp_secs": 2014
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Ethan Smith",
+    "episode_title": "The ultimate guide to AEO: How to get ChatGPT to recommend your product | Ethan Smith (Graphite)",
+    "insight": "Early-stage companies can quickly win high-converting leads through Answer Engine Optimization, a channel where traditional SEO falls short.",
+    "pull_quote": "Webflow saw 6X higher conversion rates from LLM traffic vs. Google Search. Unlike traditional SEO, early-stage companies can quickly win these valuable leads via Answer Engine Optimization (AEO) by getting frequently cited.",
+    "youtube_url": "https://www.youtube.com/watch?v=iT7kq-R3jgc",
+    "timestamp_secs": 2501
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Evan LaPointe",
+    "episode_title": "Improve strategy, influence, and decision-making by understanding your brain | Evan LaPointe",
+    "insight": "Understand your brain's biases, like low openness to abstract ideas, to actively seek diverse perspectives for strong product vision.",
+    "pull_quote": "Your brain might be wired to resist abstract vision work if you have low openness. Be self-aware, understand this bias, and actively seek diverse perspectives to build a stronger product vision.",
+    "youtube_url": "https://www.youtube.com/watch?v=GECtyEj9UPA",
+    "timestamp_secs": 2040
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Tom Conrad",
+    "episode_title": "Failure",
+    "insight": "Product execution cannot overcome a fundamentally broken business model or underlying 'math problem' that prevents viable returns.",
+    "pull_quote": "A company is a math problem: if the foundational equation is broken, no amount of product execution can get you out of the failed outputs. Quibi's multi-billion dollar bet on bespoke content was an unfixable math problem.",
+    "youtube_url": "https://www.youtube.com/watch?v=9euy9gC48lc",
+    "timestamp_secs": 1798
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Fareed Mosavat",
+    "episode_title": "How to build trust and grow as a product leader | Fareed Mosavat (Reforge, Slack, Instacart, Pixar)",
+    "insight": "Leaders must define necessary resources for impact, not just work within current constraints, to truly own business outcomes.",
+    "pull_quote": "When you're a leader, it's your job to propose, 'What are the resources we need to have the most impact on this problem?' Don't just work with what you have. Marshal resources across the organization.",
+    "youtube_url": "https://www.youtube.com/watch?v=oo0jSep7pzc",
+    "timestamp_secs": 2337
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Farhan Thawar",
+    "episode_title": "How Shopify builds a high-intensity culture | Farhan Thawar (VP and Head of Eng)",
+    "insight": "Prioritize building foundational platforms that enable future features to be built in hours, rather than point solutions taking weeks.",
+    "pull_quote": "Instead of building a specific feature in weeks, focus on creating a platform layer so anyone can build that feature in one hour. This puts ‘gas in the tank’ for long-term growth and unknown future use cases.",
+    "youtube_url": "https://www.youtube.com/watch?v=C_lhMOjG7PE",
+    "timestamp_secs": 2598
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Fei Fei",
+    "episode_title": "The Godmother of AI on jobs, robots & why world models are next | Dr. Fei-Fei Li",
+    "insight": "To truly advance AI, models needed massive, real-world data, mirroring how humans learn from constant experience.",
+    "pull_quote": "For decades, AI models were stuck due to lack of data. Just like humans learn from massive, constant experience, machines needed millions of labeled examples to truly learn object recognition.",
+    "youtube_url": "https://www.youtube.com/watch?v=Ctjiatnd6Xk",
+    "timestamp_secs": 1020
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Garrett Lord",
+    "episode_title": "Inside the expert network training every frontier AI model | Garrett Lord",
+    "insight": "Launch internal ventures successfully by empowering a separate, founder-led, metrics-focused team, unburdened by existing priorities.",
+    "pull_quote": "I focused 80% of my time. We separated everything: engineering, design, ops, finance. Everyone had one job only: making Handshake AI successful. That was absolutely critical.",
+    "youtube_url": "https://www.youtube.com/watch?v=0qdR-XwHJ9o",
+    "timestamp_secs": 3230
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Gaurav Misra",
+    "episode_title": "Mastering onboarding | Lauryn Isford (Head of Growth at Airtable)",
+    "insight": "Maintain a \"secret roadmap\" for breakthrough ideas users don't ask for, to truly revolutionize behavior and gain a competitive edge.",
+    "pull_quote": "Besides a public roadmap of user requests, maintain a 'secret roadmap' for disruptive ideas no one asked for. These hidden projects, born from unique insights, truly change user behavior and deliver breakthrough wins.",
+    "youtube_url": "https://www.youtube.com/watch?v=dLku0AiGPVA",
+    "timestamp_secs": 64
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Geoff Charles",
+    "episode_title": "Velocity over everything: How Ramp became the fastest-growing SaaS startup ever | Geoff Charles",
+    "insight": "Prioritize velocity by reducing planning accuracy for most features, dedicating that time to execution instead.",
+    "pull_quote": "Any second you spend planning is a second you don't spend doing. Don't waste time on planning accuracy for most features; rather, spend that time creating velocity.",
+    "youtube_url": "https://www.youtube.com/watch?v=aNJDZ_RzTVk",
+    "timestamp_secs": 1942
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Geoffrey Moore",
+    "episode_title": "Geoffrey Moore on finding your beachhead, crossing the chasm, and dominating a market",
+    "insight": "When crossing the chasm, focus your pitch entirely on the customer's severe, unmet problem, not your product's features or vision.",
+    "pull_quote": "When engaging pragmatist customers, shut your laptop. Don't talk about your product or vision. Focus entirely on *their* serious problem; they need therapy, not a demo, and will talk if you listen intently.",
+    "youtube_url": "https://www.youtube.com/watch?v=RBbINB5HSHk",
+    "timestamp_secs": 2511
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Gergely",
+    "episode_title": "Leaving big tech to build the #1 technology newsletter | Gergely Orosz (The Pragmatic Engineer)",
+    "insight": "When launching a new product, observe and \"double down on pulls\"—strong, unexpected surges of user interest or demand.",
+    "pull_quote": "Gergely's initial book plan pivoted when a blog post draft unexpectedly generated 20 DMs/hour asking to read it. He realized the \"pull\" of interest meant turning it into an ebook.",
+    "youtube_url": "https://www.youtube.com/watch?v=CtB0O0M7YS0",
+    "timestamp_secs": 3186
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Gia Laudi",
+    "episode_title": "Customer-led growth | Georgiana Laudi (Forget The Funnel)",
+    "insight": "Focusing on ideal customer segments and updating messaging can significantly increase website and trial conversion, even without product changes.",
+    "pull_quote": "Refocusing on the ideal customer and updating website messaging increased one company's website conversion by 89% and trial-to-paid by 40%, without touching the product.",
+    "youtube_url": "https://www.youtube.com/watch?v=0FgZ1VVxEBo",
+    "timestamp_secs": 547
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Gibson Biddle",
+    "episode_title": "35 years of product design wisdom from Apple, Disney, Pinterest and beyond | Bob Baxley",
+    "insight": "Align leaders on Growth, Engagement, and Monetization (GEM) priorities to eliminate fundamental misalignment.",
+    "pull_quote": "The number one source of misalignment I discover among startups is not agreeing on Growth, Engagement, and Monetization. Get leaders aligned on how to prioritize these basic factors.",
+    "youtube_url": "https://www.youtube.com/watch?v=X-83gvgVaWc",
+    "timestamp_secs": 2756
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Gina Gotthilf",
+    "episode_title": "Scaling Duolingo, embracing failure, and insight into Latin America’s tech scene | Gina Gotthilf",
+    "insight": "Cultivating a unique, quirky brand voice evokes emotion, drives memorability, and fosters strong organic word-of-mouth.",
+    "pull_quote": "The way we talk to you is a little bit funny. It doesn't take ourselves too seriously and it makes the person receiving this message feel something. Use that to your benefit.",
+    "youtube_url": "https://www.youtube.com/watch?v=sWClFYdbkRA",
+    "timestamp_secs": 25
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Gokul Rajaram",
+    "episode_title": "Gokul Rajaram on designing your product development process, when and how to hire your first PM, a playbook for hiring leaders, getting ahead in your career, how to get started angel investing, and more",
+    "insight": "Avoid becoming a feature factory by empowering teams to solve customer problems and measure impact, rather than just shipping features.",
+    "pull_quote": "A feature factory ships features without knowing their impact on customer behavior. Empower product teams to solve problems, measure results, and focus on outcomes, not just outputs.",
+    "youtube_url": "https://www.youtube.com/watch?v=gokul-rajaram",
+    "timestamp_secs": 1380
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Graham Weaver",
+    "episode_title": "How to break out of autopilot and create the life you want | Graham Weaver (Stanford GSB professor)",
+    "insight": "Consistently writing down your product goal and three daily actions accelerates progress more in three months than in three years.",
+    "pull_quote": "Writing down your core product goal and three daily actions toward it helps you accomplish more in three months than in three years without it. This simple, consistent habit is incredibly powerful.",
+    "youtube_url": "https://www.youtube.com/watch?v=UpGR9P0Ufts",
+    "timestamp_secs": 2548
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Grant Lee",
+    "episode_title": "“Dumbest idea I’ve heard” to $100M ARR: Inside the rise of Gamma | Grant Lee (co-founder)",
+    "insight": "To achieve true product-market fit, make the first 30 seconds of user onboarding magical and shareable by focusing on one core value.",
+    "pull_quote": "We won Product Hunt but lacked word-of-mouth. True PMF arrived only after we revamped onboarding to make the first 30 seconds magical, driving organic viral growth. We didn't need ads.",
+    "youtube_url": "https://www.youtube.com/watch?v=3H0ngGU5pbM",
+    "timestamp_secs": 682
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Guillermo Rauch",
+    "episode_title": "Everyone’s an engineer now: Inside v0’s mission to create 100 million builders | Guillermo Rauch",
+    "insight": "AI empowers product managers to directly build, prototype, and spec out live products, transforming PRDs into interactive artifacts.",
+    "pull_quote": "Some of the best things created with v0 come from the product management team. They're now actually building the product, speccing out new functionality as a live PRD. Just ship it.",
+    "youtube_url": "https://www.youtube.com/watch?v=-QsTmu2CqhA",
+    "timestamp_secs": 2021
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Gustaf Alstromer",
+    "episode_title": "Lessons from working with 600+ YC startups | Gustaf Alströmer (Y Combinator, Airbnb)",
+    "insight": "Companies fail when they don't talk to users, preventing product-market fit, which makes all other efforts irrelevant.",
+    "pull_quote": "If I drill down what makes companies fail, it's quite simple. They don't talk to users, which means they don't find product market fit. If they don't find product market fit, nothing else really matters.",
+    "youtube_url": "https://www.youtube.com/watch?v=ZoKLofsp8u0",
+    "timestamp_secs": 1550
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Gustav Söderström",
+    "episode_title": "The science of product, big bets, and how AI is impacting the future of music | Gustav Söderström",
+    "insight": "When redesigning a core product experience, protect existing user recall behaviors; don't replace current high-intent actions with discovery features.",
+    "pull_quote": "Spotify's home screen was 90% recall. Our redesign shifted it to 10% recall, 90% discovery. Users complained, \"I can't find my playlists anymore!\" Don't sacrifice essential user recall for new discovery features.",
+    "youtube_url": "https://www.youtube.com/watch?v=QtJoYFyrdPI",
+    "timestamp_secs": 2999
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Hamel Husain & Shreya Shankar",
+    "episode_title": "Why AI evals are the hottest new skill for product builders | Hamel Husain & Shreya Shankar",
+    "insight": "Appoint a single, trusted domain expert, often the PM, as a 'benevolent dictator' for AI error analysis to ensure tractability.",
+    "pull_quote": "To keep AI error analysis tractable, appoint one \"benevolent dictator\" whose taste you trust. This person, often the Product Manager, needs domain expertise to simplify the process and cut through noise.",
+    "youtube_url": "https://www.youtube.com/watch?v=BsWxPI9UM4c",
+    "timestamp_secs": 1529
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Hamel+Shreya",
+    "episode_title": "Why AI evals are the hottest new skill for product builders | Hamel Husain & Shreya Shankar",
+    "insight": "Before writing AI product tests, always perform qualitative error analysis on user data to identify actual problems.",
+    "pull_quote": "Many teams make the common trap of jumping straight to AI product tests. Start with data analysis to ground what you should test, identifying actual errors from user interactions first.",
+    "youtube_url": "https://www.youtube.com/watch?v=BsWxPI9UM4c",
+    "timestamp_secs": 606
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Hamilton Helmer",
+    "episode_title": "Business strategy with Hamilton Helmer (author of 7 Powers)",
+    "insight": "While operational excellence is crucial for achieving competitive position, it rarely constitutes a durable source of power because it can often be mimicked.",
+    "pull_quote": "Operational excellence is essential for attaining competitive position, but it's not typically a source of power. If competitors can mimic your processes, you're on a treadmill.",
+    "youtube_url": "https://www.youtube.com/watch?v=hKq1_KPSqy0",
+    "timestamp_secs": 2737
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Hari Srinivasan",
+    "episode_title": "LinkedIn’s product evolution and the art of building complex systems | Hari Srinivasan (LinkedIn)",
+    "insight": "Implement structured decision-making processes, like clear ownership and escalation rules, to rapidly resolve blockers in complex product ecosystems.",
+    "pull_quote": "In complex product ecosystems, clear decision-making mechanisms are crucial. LinkedIn uses a 'five-day escalation rule' to unblock issues and assigns a single 'decision-maker' (RAPID) for rapid clarity and progress.",
+    "youtube_url": "https://www.youtube.com/watch?v=ZUwkTs_QWqg",
+    "timestamp_secs": 2290
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Heidi Helfand",
+    "episode_title": "The art and wisdom of changing teams | Heidi Helfand (Author of Dynamic Reteaming)",
+    "insight": "To foster innovation, create isolated teams with process freedom, clear decision-makers, and protection from distractions.",
+    "pull_quote": "For innovation, create isolated teams with process freedom. Ensure they report to a clear decision-maker, and crucially, protect them from external distractions and bureaucracy. This setup saved Expertcity with GoToMyPC.",
+    "youtube_url": "https://www.youtube.com/watch?v=0wN5wSImUdY",
+    "timestamp_secs": 1680
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Hila Qu",
+    "episode_title": "The ultimate guide to adding a PLG motion | Hila Qu (Reforge, GitLab)",
+    "insight": "Product-led growth is fundamentally data-led growth; without analyzing free user behavior, your free product yields no strategic value.",
+    "pull_quote": "When offering a free product, you gain broader reach and critical usage data. Without analyzing this data, giving away your product is for nothing. PLG is fundamentally 'data-led growth.'",
+    "youtube_url": "https://www.youtube.com/watch?v=7l1fIxk7SnA",
+    "timestamp_secs": 878
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Hilary Gridley",
+    "episode_title": "How to build a team that can “take a punch” | Hilary Gridley (Head of Core Product, Whoop)",
+    "insight": "When criticized, counter negative narratives by taking a small action that demonstrates the opposite of what others might think.",
+    "pull_quote": "Don't litigate others' impressions of you. Instead, take a small, specific action that demonstrates the opposite of what you fear they think. This counter-programs the narrative and helps you move forward.",
+    "youtube_url": "https://www.youtube.com/watch?v=xm5QAzAlqEY",
+    "timestamp_secs": 521
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Howie Liu",
+    "episode_title": "How we restructured Airtable's entire org for AI | Howie Liu (co-founder and CEO)",
+    "insight": "For an existing company adapting to AI, ask if your mission is better served by re-founding with an AI-native approach.",
+    "pull_quote": "If you were founding a new company today with the same mission, how would you execute it using a fully AI-native approach? If you can't, consider selling and starting fresh to truly embrace the mission.",
+    "youtube_url": "https://www.youtube.com/watch?v=GT0jtVjRy2E",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Ian McAllister",
+    "episode_title": "What it takes to become a top 1% PM | Ian McAllister (Uber, Amazon, Airbnb)",
+    "insight": "The biggest mistake in working backwards is starting with a solution and then retrofitting a problem, instead of truly obsessing over the problem first.",
+    "pull_quote": "When teams \"work backwards\" incorrectly, they start with a solution then retrofit a problem. The key is to genuinely obsess about the customer's problem first, being guided by it before ever developing a solution.",
+    "youtube_url": "https://www.youtube.com/watch?v=7gaPPrAd7nc",
+    "timestamp_secs": 2831
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Inbal S",
+    "episode_title": "The future of AI in software development | Inbal Shani (CPO of GitHub)",
+    "insight": "Don't chase AI for AI's sake; identify customer problems first, then leverage AI to build impactful solutions.",
+    "pull_quote": "Many companies rush to adopt AI without a clear purpose. Instead, work backward from the customer problem, then leverage AI to create valuable solutions.",
+    "youtube_url": "https://www.youtube.com/watch?v=f10s3rxKaJw",
+    "timestamp_secs": 847
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Shishir Mehrotra",
+    "episode_title": "I’ve run 75+ businesses. Here’s why you’re probably chasing the wrong idea. | Andrew Wilkinson",
+    "insight": "Ask Eigenquestions to simplify complex problems and make decisive progress, even with minimal information.",
+    "pull_quote": "When facing a new, ambiguous problem, identify the one or two 'Eigenquestions' – the critical questions that, once answered, will determine your entire strategy. For example, with a teleportation device: Is it safe for humans? Is it expensive to buy or run? These answers define your product's market.",
+    "youtube_url": "https://www.youtube.com/watch?v=VxAwUb86MUE",
+    "timestamp_secs": 599
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Itamar Gilad",
+    "episode_title": "Becoming evidence-guided | Itamar Gilad (Gmail, YouTube, Microsoft)",
+    "insight": "Validate product ideas with no-code fake door tests and usability studies before writing a single line of code to save time and resources.",
+    "pull_quote": "For Gmail's tabbed inbox, we showed HTML facades and manually sorted emails in tests. No code was written, but it gave us evidence to build. Start with fake door tests to validate cheaply.",
+    "youtube_url": "https://www.youtube.com/watch?v=aJWSn-tz3jQ",
+    "timestamp_secs": 3138
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Ivan Zhao",
+    "episode_title": "Notion's lost years, near collapse during COVID, staying small to move fast, building horizontal",
+    "insight": "Hide your ambitious vision as a 'sugar-coated broccoli' inside a widely desired product form factor to achieve mass adoption.",
+    "pull_quote": "People don't want to eat the broccoli, but people like sugar. Give them the sugar, then hide your vision inside. This 'sugar-coated broccoli' approach enables mass adoption of complex ideas.",
+    "youtube_url": "https://www.youtube.com/watch?v=IIPKMixTMfE",
+    "timestamp_secs": 35
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jackie Bavaro",
+    "episode_title": "Bending the universe in your favor | Claire Vo (LaunchDarkly, Color, Optimizely, ChatPRD)",
+    "insight": "To grow your PM career, proactively ask your manager: \"What should I work on now to be ready for [next role] later?\"",
+    "pull_quote": "To advance your PM career, proactively ask your manager, \"What should I work on now to be ready for [next role] later?\" This approach gets them on your side, focuses their feedback, and sets a clear path for growth.",
+    "youtube_url": "https://www.youtube.com/watch?v=aXGo1o_baBo",
+    "timestamp_secs": 2223
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Jackson Shuttleworth",
+    "episode_title": "'Behind the product: Duolingo streaks | Jackson Shuttleworth (Group PM, Retention Team)'",
+    "insight": "Implement continuous experimentation, like 600 A/B tests in four years, to unlock massive, incremental product improvements.",
+    "pull_quote": "We've run over 600 experiments on streaks in four years, effectively testing every other day. These constant, small A/B tests led to massive wins, proving relentless iteration drives product success.",
+    "youtube_url": "https://www.youtube.com/watch?v=_CCwoQZH5hI",
+    "timestamp_secs": 1000
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Jag Duggal",
+    "episode_title": "Be fundamentally different, not incrementally better | Jag Duggal (Nubank, Facebook, Google)",
+    "insight": "Validate product-market fit with the Sean Ellis score, only scaling if 50% of users would be \"very disappointed\" without it.",
+    "pull_quote": "Nubank uses the Sean Ellis score to determine product-market fit. They only scale a product if 50% of Brazilians (adjusting for culture) would be \"very disappointed\" if it went away. This high bar ensures customer fanaticism and prevents scaling a \"dead cat.\"",
+    "youtube_url": "https://www.youtube.com/watch?v=8A7wXK2MncQ",
+    "timestamp_secs": 22
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Jake Knapp + John Zeratsky",
+    "episode_title": "Making time for what matters | Jake Knapp and John Zeratsky (Authors of Make Time, Character VC)",
+    "insight": "Trust your intuition to prioritize high-leverage work that might not be on formal roadmaps or OKRs to drive real impact.",
+    "pull_quote": "You have great intuition about the highest leverage work you should do, even if it's not on your OKRs or boss's radar. Create space for it. You'll feel better, be more satisfied, and good things will happen.",
+    "youtube_url": "https://www.youtube.com/watch?v=cuce7zvOFHY",
+    "timestamp_secs": 2079
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Jake Knapp + John Zeratsky 2.0",
+    "episode_title": "Making time for what matters | Jake Knapp and John Zeratsky (Authors of Make Time, Character VC)",
+    "insight": "Invest 10 hours in a Foundation Sprint to deeply align your team on a unique customer problem and differentiated approach before building.",
+    "pull_quote": "Going fast can actually slow you down in the long run. Invest just 10 hours in a Foundation Sprint. It's the highest ROI time your team will spend, clarifying your unique customer promise and differentiation before you write a single line of code.",
+    "youtube_url": "https://www.youtube.com/watch?v=cuce7zvOFHY",
+    "timestamp_secs": 42
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Janna Bastow",
+    "episode_title": "Building better roadmaps | Janna Bastow (Mind the Product, ProdPad)",
+    "insight": "The value of a roadmap lies in the roadmapping process, not the static document, by continuously checking strategic assumptions.",
+    "pull_quote": "The value isn't in your roadmap, the value is in the roadmapping process. What you're actually doing is laying out your assumptions of the problems you're solving. Share early assumptions with your team and customers to check if you're on the right path.",
+    "youtube_url": "https://www.youtube.com/watch?v=W3cvqPCGcck",
+    "timestamp_secs": 47
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Jason Droege",
+    "episode_title": "Scale AI CEO on Meta's $14B deal, scaling Uber Eats to $80B, & what frontier labs are building next",
+    "insight": "Building a valuable product isn't enough; it must address the customer's most urgent daily problem to ensure successful adoption and market traction.",
+    "pull_quote": "The biggest thing people miss when building new products is the urgency of the buyer. If your product provides a lot of value but isn't the top thing your customer thinks about daily, you're on a long road to a small town.",
+    "youtube_url": "https://www.youtube.com/watch?v=W99jdYZOlN0",
+    "timestamp_secs": 2865
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Jason Feifer",
+    "episode_title": "How to get press for your product | Jason Feifer (editor in chief of Entrepreneur magazine)",
+    "insight": "To get press, understand a publication's audience and mission, then frame your story to serve their readers, not just your product.",
+    "pull_quote": "The editor, the writer... They don't care about you. They care about their reader or listener. Approach them with an understanding of what they're trying to do for their audience and how you can fit into that. If you don't, they are not interested in you.",
+    "youtube_url": "https://www.youtube.com/watch?v=LZLdoAq3R7Y",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Jason Fried",
+    "episode_title": "Jason Fried challenges your thinking on fundraising, goals, growth, and more",
+    "insight": "Instead of estimating work duration, define a fixed 'appetite' (e.g., six weeks) as the budget you're willing to spend.",
+    "pull_quote": "Don't estimate project time. Define a fixed 'appetite' – a maximum budget of time you're willing to spend on a feature. This radically shifts how you scope work and prevents projects from expanding indefinitely.",
+    "youtube_url": "https://www.youtube.com/watch?v=dAnF0tk0di8",
+    "timestamp_secs": 2016
+  },
+  {
+    "topic": "Hiring",
+    "guest_name": "Jason M Lemkin",
+    "episode_title": "We replaced our sales team with 20 AI agents—here’s what happened next | Jason Lemkin (SaaStr)",
+    "insight": "Do not hire a VP of Sales until you have at least two individual sales reps consistently hitting their quota.",
+    "pull_quote": "You need two sales reps hitting quota closing deals before you're ready to hire a manager for them. If you hire it before then, it never, ever works.",
+    "youtube_url": "https://www.youtube.com/watch?v=I-R1bc1rlFs",
+    "timestamp_secs": 1154
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jason Shah",
+    "episode_title": "Building a meaningful career | Jason Shah (Airbnb, Amazon, Microsoft, Alchemy)",
+    "insight": "Reframe 'pushback' as aligning on shared goals to help the business succeed, fostering collaboration over conflict.",
+    "pull_quote": "Forget 'pushback'; it's negative. Instead, identify the actual goal behind a request. Reframe your solution to align with that shared goal, turning potential disagreement into a clear path for business success.",
+    "youtube_url": "https://www.youtube.com/watch?v=nMsA5VeLoOM",
+    "timestamp_secs": 2320
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Jeanne Grosser",
+    "episode_title": "What world-class GTM looks like in 2026 | Jeanne DeWitt Grosser (Vercel, Stripe, Google)",
+    "insight": "Use AI agents to analyze sales interactions and uncover true reasons for lost deals, providing deep, unbiased customer understanding.",
+    "pull_quote": "The biggest loss that quarter according to the account executive was lost on price. When you ran the agent... it said actually you lost because you never really got in touch with an economic buyer.",
+    "youtube_url": "https://www.youtube.com/watch?v=RmnWHz8HD74",
+    "timestamp_secs": 2139
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Jeff Weinstein",
+    "episode_title": "Building product at Stripe: craft, metrics, and customer obsession | Jeff Weinstein (Product lead)",
+    "insight": "True product-market fit is proven by customers actually paying, not just expressing willingness to pay or interest.",
+    "pull_quote": "Ready to pay is not the same as paying. Paying indicates a burning problem, an exchange of value for a promise. It's real commitment, unlike just saying they would pay.",
+    "youtube_url": "https://www.youtube.com/watch?v=qbZQjprTnrU",
+    "timestamp_secs": 2593
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jeffrey Pfeffer",
+    "episode_title": "The paths to power: How to grow your influence and advance your career | Jeffrey Pfeffer (Stanford)",
+    "insight": "Stop letting discomfort with power hinder your career and ability to influence product outcomes.",
+    "pull_quote": "The biggest barrier to influence is often your own discomfort with power. Jeffrey Pfeffer notes: \"If I think power is dirty, the first thing that's going to happen is I'm not going to do what I need to do to be successful in my career.\"",
+    "youtube_url": "https://www.youtube.com/watch?v=etVCBDRXUH8",
+    "timestamp_secs": 38
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Jen Abel",
+    "episode_title": "The ultimate guide to founder-led sales | Jen Abel (co-founder of JJELLYFISH)",
+    "insight": "Many early-stage B2B SaaS companies should sell time-boxed services first to educate buyers and earn the right to sell technology.",
+    "pull_quote": "40-50% of B2B SaaS companies sell services before technology. This educates buyers, secures logos, and sets the stage for product adoption, especially in traditional markets. Time-box services to 90-day increments.",
+    "youtube_url": "https://www.youtube.com/watch?v=969dwgu98qc",
+    "timestamp_secs": 2845
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Jen Abel 2.0",
+    "episode_title": "$1M to $10M: The enterprise sales playbook with Jen Abel",
+    "insight": "To enter the enterprise market, sell services powered by your product first, then transition customers to the self-serve tool.",
+    "pull_quote": "Enterprise customers consistently buy services, making them the fastest way to get your foot in the door. Sell your product as a service initially, then guide clients to leverage the underlying technology.",
+    "youtube_url": "https://www.youtube.com/watch?v=37fKFWdrMyA",
+    "timestamp_secs": 2413
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Jeremy Henrickson",
+    "episode_title": "Moving fast and navigating uncertainty | Jeremy Henrickson (Rippling, Coinbase)",
+    "insight": "Avoid traditional MVPs; instead, design for the most complex use cases upfront to build a scalable product foundation that saves time long-term.",
+    "pull_quote": "MVPs often lead to building the wrong technical foundation. Instead, design for your most complex use cases first to ensure long-term scalability and avoid costly re-architecture later.",
+    "youtube_url": "https://www.youtube.com/watch?v=CsruQYKISYI",
+    "timestamp_secs": 1096
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jerry Colonna",
+    "episode_title": "How have I been complicit in creating the conditions I say I don’t want? | Jerry Colonna",
+    "insight": "Ask yourself how you've been complicit in creating undesirable conditions to evoke agency and change your reality.",
+    "pull_quote": "The question I often ask is how have I been complicit in creating the conditions I say I don't want. The purpose of this question is to evoke your own agency, looking at ways you may have been diluting yourself.",
+    "youtube_url": "https://www.youtube.com/watch?v=PJE7etZQ9us",
+    "timestamp_secs": 285
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Jess Lachs",
+    "episode_title": "Building a world-class data org | Jessica Lachs (VP of Analytics and Data Science at DoorDash)",
+    "insight": "Actively seek out and set concrete goals to eliminate rare, negative \"fail states\" as they drive churn and incur high costs.",
+    "pull_quote": "Don't just track averages; actively seek and set concrete goals to eliminate rare \"fail states.\" These terrible experiences, though infrequent, directly cause churn and are incredibly costly.",
+    "youtube_url": "https://www.youtube.com/watch?v=D4PDb_C8Dww",
+    "timestamp_secs": 3327
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Jessica Hische",
+    "episode_title": "How to see like a designer: The hidden power of typography and logos | Jessica Hische",
+    "insight": "For early-stage products, prioritize the core experience over heavy brand investment; a pivot can make early brand spend obsolete.",
+    "pull_quote": "If you invest super heavily on the whole brand vision from the jump, sometimes it's like throwing away money if you have to pivot. For many products, the brand should be somewhat invisible so the product itself becomes the star.",
+    "youtube_url": "https://www.youtube.com/watch?v=tLLqE6Ia8-U",
+    "timestamp_secs": 454
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Jessica Livingston",
+    "episode_title": "The social radar: Y Combinator’s secret weapon | Jessica Livingston (co-founder of YC, author)",
+    "insight": "Always be open-minded and avoid defensiveness when building products; adaptability to user feedback is key for success.",
+    "pull_quote": "If a founder would get defensive, that was always a bad sign. The best founders are open-minded, ready to adjust, and eager to learn from feedback, not just defend initial ideas.",
+    "youtube_url": "https://www.youtube.com/watch?v=h9MUuhsDJOM",
+    "timestamp_secs": 1000
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Jiaona Zhang",
+    "episode_title": "Building minimum lovable products, stories from WeWork & Airbnb, and thriving as a PM | Jiaona Zhang",
+    "insight": "Define ambitious OKRs by qualitatively outlining what 'crushing it' means, embracing red/yellow outcomes as learning.",
+    "pull_quote": "Don't sandbag OKRs; define qualitatively what 'crushing it' truly means for users and the business. It's better to have red/yellow OKRs and learn why, than all green without impactful outcomes.",
+    "youtube_url": "https://www.youtube.com/watch?v=gLFZNzeylCc",
+    "timestamp_secs": 1949
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Joe Hudson",
+    "episode_title": "How embracing your emotions will accelerate your career | Joe Hudson (Art of Accomplishment)",
+    "insight": "Avoiding a difficult emotion in your work invites more of that very emotion into your professional life.",
+    "pull_quote": "Whatever emotion you're trying to avoid, you are inviting into your life exactly as you're trying to avoid it. A conflict-avoidant CEO eventually deals with an entire organization full of unresolved tension and conflict.",
+    "youtube_url": "https://www.youtube.com/watch?v=DYkE1gf37ts",
+    "timestamp_secs": 1846
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "John Cutler",
+    "episode_title": "What differentiates the highest-performing product teams | John Cutler (The Beautiful Mess)",
+    "insight": "Highest-performing product teams ensure deep coherence between their organizational structure and current strategy.",
+    "pull_quote": "Brilliant product teams often fail when company structure doesn't align with strategy. No amount of empowerment can fix this core mismatch. Ensure your organizational design supports your strategic goals for true high performance.",
+    "youtube_url": "https://www.youtube.com/watch?v=Y4PdUItyXUk",
+    "timestamp_secs": 1990
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "John Mark Nickels",
+    "episode_title": "Conscious leadership: Unlocking vision, strategy and purpose | JM Nickels (Uber, Waymo, DoorDash)",
+    "insight": "Prioritize creating an excellent product over optics or external approval to achieve superior outcomes and career growth.",
+    "pull_quote": "The more I focused on optics and approval, the less I got promoted. By dropping the egoic, self-centered focus and building a fucking awesome product, I actually got recognized.",
+    "youtube_url": "https://www.youtube.com/watch?v=W7o40qcYHlM",
+    "timestamp_secs": 1080
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Jonathan Becker",
+    "episode_title": "The crazy story of landing Uber as a client | Jonathan Becker (Thrive Digital)",
+    "insight": "Creative testing is the primary lever in modern performance marketing, demanding rigorous, data-driven iteration over automated bid optimization.",
+    "pull_quote": "Automation shifted the paid growth lever from bids to creatives. Rigorous, data-driven creative testing is now paramount; ditch homogenous messaging for iterative, audience-specific assets across the funnel.",
+    "youtube_url": "https://www.youtube.com/watch?v=rG4zxf0CAv0",
+    "timestamp_secs": 1966
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Jonathan Lowenhar",
+    "episode_title": "How a great founder becomes a great CEO | Jonathan Lowenhar (co-founder of Enjoy The Work)",
+    "insight": "Seduce potential buyers by crafting a future fantasy of value, focusing on what your product could become for them, not just past performance.",
+    "pull_quote": "The best outcomes for early-stage startups happen when you're never for sale. You've seduced a buyer; they see the fantasy and fall in love with what your company could become for them. Focus on future value, not past metrics.",
+    "youtube_url": "https://www.youtube.com/watch?v=s0jn7eE33nk",
+    "timestamp_secs": 1685
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jonny Miller",
+    "episode_title": "Managing nerves, anxiety, and burnout | Jonny Miller (Nervous Systems Mastery)",
+    "insight": "Emotions are crucial data for better decision-making, providing a competitive advantage for product leaders in complex environments.",
+    "pull_quote": "The best decision-making is emotional. Patients unable to feel emotions struggle with basic choices, losing crucial intuitive data. Embrace your emotional sense for clear decisions, unskewed by fear.",
+    "youtube_url": "https://www.youtube.com/watch?v=-kN8Agqee4w",
+    "timestamp_secs": 2908
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Josh Miller",
+    "episode_title": "Competing with giants: An inside look at how The Browser Company builds product | Josh Miller (CEO)",
+    "insight": "Prioritize optimizing for specific human feelings like joy or focus in product development, using metrics only to validate if those feelings are achieved.",
+    "pull_quote": "Optimizing for numbers leaves a lot on the table and misses a lot. We talk about optimizing feelings: How do we want to make someone feel on the other end of our software?",
+    "youtube_url": "https://www.youtube.com/watch?v=AZpo5785v8A",
+    "timestamp_secs": 660
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Judd Antin",
+    "episode_title": "The UX Research reckoning is here | Judd Antin (Airbnb, Meta)",
+    "insight": "Good micro-level user research doesn't slow development; it delivers immense business value rapidly, even in 48 hours.",
+    "pull_quote": "The trope that \"research slows us down\" is false. Micro-level usability research can deliver multi-million dollar business impact in as little as 48 hours.",
+    "youtube_url": "https://www.youtube.com/watch?v=L6RKi9ZvkT4",
+    "timestamp_secs": 2116
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Jules Walter",
+    "episode_title": "Leveraging mentors to uplevel your career | Jules Walter (YouTube, Slack)",
+    "insight": "To get more valuable feedback, always respond with enthusiastic gratitude, even if it's hard to hear, to encourage future sharing.",
+    "pull_quote": "Most people don't focus on enthusiastic gratitude for feedback. But internally, even when your heart is melting, if you respond with genuine thanks, people will keep giving you valuable insights to help you grow.",
+    "youtube_url": "https://www.youtube.com/watch?v=zn2JNbZwf00",
+    "timestamp_secs": 2805
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Julia Schottenstein",
+    "episode_title": "M&A, competition, pricing, and investing | Julia Schottenstein (dbt Labs)",
+    "insight": "Before building, spend years as a consulting firm to manually solve problems and deeply understand user pain points firsthand.",
+    "pull_quote": "dbt Labs started as a consulting firm for two years. They manually solved client problems, building dbt into the workflow. This hands-on approach directly informed the product, ensuring it tackled real pain points.",
+    "youtube_url": "https://www.youtube.com/watch?v=y9hmrMBRPDI",
+    "timestamp_secs": 1500
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Julian Shapiro",
+    "episode_title": "From managing people to managing AI: The leadership skills everyone needs now | Julie Zhuo",
+    "insight": "Embrace initial bad ideas as a necessary step to unlock truly novel and intuitive solutions, rather than walking away too soon.",
+    "pull_quote": "Good ideas arrive after bad ideas are empty. Your brain identifies bad elements, then pattern matches novel ideas with greater intuition. Most creators resist bad ideas and never finish the creative process.",
+    "youtube_url": "https://www.youtube.com/watch?v=c_w0LaFahxk",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Julie Zhuo",
+    "episode_title": "From managing people to managing AI: The leadership skills everyone needs now | Julie Zhuo",
+    "insight": "Use data to diagnose problems and discover opportunities, but apply creativity and design to invent the right solutions.",
+    "pull_quote": "Diagnose with data and treat with design. Data helps you understand reality and where opportunities are, but it won't tell you what to build or how to solve problems.",
+    "youtube_url": "https://www.youtube.com/watch?v=c_w0LaFahxk",
+    "timestamp_secs": 1966
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Julie Zhuo 2.0",
+    "episode_title": "How To Win Friends & Influence Decisions (Julie Zhuo) | Lenny & Friends Summit 2024",
+    "insight": "Diagnose product problems using data to understand reality, then apply creative design solutions, rather than relying solely on instinct.",
+    "pull_quote": "Diagnose with data and treat with design. Data helps you figure out what's actually happening, but it won't tell you what to build. Amazing designers are obsessed with understanding reality through data.",
+    "youtube_url": "https://www.youtube.com/watch?v=0Z5FCYDeZXs",
+    "timestamp_secs": 1966
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Karina Nguyen",
+    "episode_title": "OpenAI researcher on why soft skills are the future of work | Karina Nguyen",
+    "insight": "As AI excels at hard skills, product teams must master soft skills like prioritization, communication, empathy, and collaboration to drive innovation.",
+    "pull_quote": "AI struggles with aesthetics, visual design, and extreme creativity. Prioritization, communication, management, empathy, and collaboration are the soft skills PMs must master as models automate hard tasks.",
+    "youtube_url": "https://www.youtube.com/watch?v=DeskgjrLxxs",
+    "timestamp_secs": 2821
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Karri Saarinen",
+    "episode_title": "Inside Linear: Building with taste, craft, and focus | Karri Saarinen (co-founder, designer, CEO)",
+    "insight": "Relentlessly prioritize by asking if an activity directly helps customers and the core product (\"main quest\"), or is a distracting \"side quest.\"",
+    "pull_quote": "Avoid side quests. Always ask if an activity directly progresses the main quest line: building the product and making it awesome for customers. If not, it can be ignored or done later.",
+    "youtube_url": "https://www.youtube.com/watch?v=4muxFVZ4XfM",
+    "timestamp_secs": 3338
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Katie Dill",
+    "episode_title": "Building beautiful products with Stripe’s Head of Design | Katie Dill (Stripe, Airbnb, Lyft)",
+    "insight": "Implement a 'walk the store' process where multidisciplinary leaders regularly friction log critical user journeys to identify and prioritize quality fixes.",
+    "pull_quote": "Products regress over time. Multidisciplinary leaders must regularly 'walk the store' through critical user journeys. Friction log the experience and calibrate quality scores across teams. This increases awareness, accountability, and informs roadmap prioritization.",
+    "youtube_url": "https://www.youtube.com/watch?v=gfEEcssu304",
+    "timestamp_secs": 2110
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Kayvon Beykpour",
+    "episode_title": "Twitter’s ex-Head of Product on Elon, consumer products, culture, more | Kayvon Beykpour",
+    "insight": "Staff risky, speculative projects with people obsessed with the idea, ensuring they have the drive to will it into existence.",
+    "pull_quote": "Staff projects with people obsessed with the idea they want to pursue. This passion makes them work harder, be more creative, and will the thing into existence, especially for speculative bets.",
+    "youtube_url": "https://www.youtube.com/watch?v=MKDnDueTvKk",
+    "timestamp_secs": 2662
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Keith Coleman & Jay Baxter",
+    "episode_title": "An inside look at X’s Community Notes | Keith Coleman & Jay Baxter",
+    "insight": "Small, self-selected teams with a clear founder, senior decision-maker, 100% focus, and dynamic goals accelerate impactful 0-to-1 building.",
+    "pull_quote": "Community Notes credits its success to a \"Thermal\" team structure: one founder, one senior decision-maker, 100% focus, and dynamic goals. This setup enables rapid iteration and massive impact.",
+    "youtube_url": "https://www.youtube.com/watch?v=8dgyqYHLcCI",
+    "timestamp_secs": 2544
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Keith Yandell",
+    "episode_title": "Leading with empathy | Keith Yandell (DoorDash, Uber)",
+    "insight": "For BD initiatives, validate demand with low-cost operational tests before investing product resources into scalable platform solutions.",
+    "pull_quote": "Don't waste product cycles on BD initiatives. First, test your thesis with hacky operations to validate demand. Only then invest product resources into building scalable platform solutions, not bespoke ones.",
+    "youtube_url": "https://www.youtube.com/watch?v=tlCK9TuALtk",
+    "timestamp_secs": 50
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Ken Norton",
+    "episode_title": "How to unlock your product leadership skills | Ken Norton, Ex-Google",
+    "insight": "For senior product leaders, challenges often stem from people, not product; invest equally in communication and collaboration skills.",
+    "pull_quote": "The number one category of challenges for senior product executives comes down to people, not product. Invest in communication and collaboration skills; they are as important, if not more, than technical product skills.",
+    "youtube_url": "https://www.youtube.com/watch?v=6P0Es02vIF4",
+    "timestamp_secs": 2814
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Kenneth Berger",
+    "episode_title": "Why not asking for what you want is holding you back | Kenneth Berger (exec coach, first PM @Slack)",
+    "insight": "Seek 'hell yes' commitment from stakeholders, not lukewarm agreement, to ensure full alignment and successful execution.",
+    "pull_quote": "Anything less than a 'hell yes' is a no. Don't settle for lukewarm agreement; ask 'What would it take for us to get to a hell yes?' to ensure true commitment.",
+    "youtube_url": "https://www.youtube.com/watch?v=KSCjl_VIdak",
+    "timestamp_secs": 1023
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Kevin Aluwi",
+    "episode_title": "Taxi mafias, cash vaults & 100% MoM growth: The story of SEA’s biggest startup | Kevin Aluwi (Gojek)",
+    "insight": "Doing the hard, operational things that competitors avoid builds deep customer loyalty and creates a durable, non-replicable competitive moat.",
+    "pull_quote": "Gojek hired private security to protect drivers from taxi mafias. Doing these hard, operational things creates a durable moat because they build trust and commitment that competitors can't easily replicate.",
+    "youtube_url": "https://www.youtube.com/watch?v=HVB-dqjUJks",
+    "timestamp_secs": 2092
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Kevin Weil",
+    "episode_title": "OpenAI’s CPO on how AI changes must-have skills, moats, coding, startup playbooks, more | Kevin Weil",
+    "insight": "Build AI products at the edge of current model capabilities, anticipating rapid improvements to transform barely working ideas into successful ones.",
+    "pull_quote": "If your product is at the edge of current AI capabilities, keep building. In a few months, models will be great, and your product that barely worked will sing. This \"model maximalism\" mindset leverages rapid AI advancements for future success.",
+    "youtube_url": "https://www.youtube.com/watch?v=scsW6_2SPC4",
+    "timestamp_secs": 1872
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Kevin Yien",
+    "episode_title": "Unorthodox PM tips: Automating user insights, unselling candidates, decision logs, more | Kevin Yien",
+    "insight": "Build product sense by consistently logging decisions, their rationale, and later reviewing actual outcomes to learn from your choices.",
+    "pull_quote": "Improve product sense by getting more reps: Consistently log your decisions, their rationale, and crucially, see their outcomes. This free practice builds your decision-making muscle over time.",
+    "youtube_url": "https://www.youtube.com/watch?v=xOTO98MXG9o",
+    "timestamp_secs": 2183
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Kim Scott",
+    "episode_title": "Inside Devin: The AI engineer that's set to write 50% of its company’s code this year | Scott Wu",
+    "insight": "The single most important step to build better relationships and give effective feedback is consistently soliciting criticism first.",
+    "pull_quote": "If you say, 'Do you have any feedback for me?' You're wasting your breath. Ask instead: 'What could I do or stop doing that would make it easier to work with me?' And never accept 'no' as an answer.",
+    "youtube_url": "https://www.youtube.com/watch?v=gI0ZNhA0rvE",
+    "timestamp_secs": 41
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Kristen Berman",
+    "episode_title": "Using behavioral science to improve your product | Kristen Berman (Irrational Labs)",
+    "insight": "Adding friction, like benefit-focused questions, to signup flows can increase conversion by engaging users with immediate value.",
+    "pull_quote": "Counterintuitively, adding friction to a signup flow can increase conversion. Asking benefit-focused questions makes users engage more, like Trunk Club's 133% increase or TytoCare's 53% purchase uplift from a quiz.",
+    "youtube_url": "https://www.youtube.com/watch?v=u53fplD_C30",
+    "timestamp_secs": 796
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Krithika Shankarraman",
+    "episode_title": "Growth tactics from OpenAI and Stripe’s first marketer | Krithika Shankarraman",
+    "insight": "To avoid copying others, apply the DATE framework: Diagnose problems, Analyze competitors, Take a different path, and Experiment.",
+    "pull_quote": "Most companies just copy others' successful tactics without understanding the inputs. Use the DATE framework—Diagnose, Analyze, Take a Different Path, Experiment—to build a truly differentiated GTM strategy.",
+    "youtube_url": "https://www.youtube.com/watch?v=QaDsk4iH1aw",
+    "timestamp_secs": 695
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Kunal Shah",
+    "episode_title": "Kunal Shah on winning in India, second-order thinking, the philosophy of startups, and more",
+    "insight": "In low-trust markets, a narrow product focus is a curse; successful companies build broad offerings around concentrated brand trust.",
+    "pull_quote": "In low-trust markets, focus is a curse. Lack of trust creates concentration around powerful brands. Customers are wary of trying new things, so embrace broad offerings like 'super apps'.",
+    "youtube_url": "https://www.youtube.com/watch?v=EgBOVDzUUAA",
+    "timestamp_secs": 1705
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Lane Shackleton",
+    "episode_title": "What sets great teams apart | Lane Shackleton (CPO of Coda)",
+    "insight": "Use a structured feedback system like 'flash tags' (FYI, suggestion, recommendation, plea) to calibrate feedback intensity and improve decision velocity.",
+    "pull_quote": "Feedback can slow everything down. Use 'flash tags' (FYI, suggestion, recommendation, plea) to calibrate the intensity of feedback. If there's one 'plea' among 100 FYIs, you know where to focus your attention.",
+    "youtube_url": "https://www.youtube.com/watch?v=XmgetFMgQZ0",
+    "timestamp_secs": 2170
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Laura Modi",
+    "episode_title": "Career frameworks, A/B testing, onboarding tips, selling to engineers | Laura Schaffer (Amplitude)",
+    "insight": "Prioritize existing customer retention over new acquisition, even if it means pausing all growth, to build long-term trust and brand loyalty.",
+    "pull_quote": "During a supply crisis, we turned off our site for six months, sacrificing immediate growth. This ensured we served existing subscribers reliably, making us the only formula company to never run out and building undeniable long-term trust.",
+    "youtube_url": "https://www.youtube.com/watch?v=UMAmj1bciww",
+    "timestamp_secs": 1203
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Laura Schaffer",
+    "episode_title": "Career frameworks, A/B testing, onboarding tips, selling to engineers | Laura Schaffer (Amplitude)",
+    "insight": "Strategically lowering experiment confidence intervals, coupled with qualitative validation, can double experiment velocity and lead to more net successes over time.",
+    "pull_quote": "Don't rigidly stick to a 95% confidence rate for product experiments. Strategically lowering the confidence interval can double your experiment velocity and lead to significantly more net successes over a year, when paired with qualitative data.",
+    "youtube_url": "https://www.youtube.com/watch?v=UMAmj1bciww",
+    "timestamp_secs": 2640
+  },
+  {
+    "topic": "Hiring",
+    "guest_name": "Lauren Ipsen",
+    "episode_title": "Lessons from one of the world’s top executive recruiters | Lauren Ipsen (Daversa Partners, GC)",
+    "insight": "For early-stage product leadership, prioritize hands-on builder DNA over big brand names from large, established companies.",
+    "pull_quote": "The biggest mistake is being distracted by shiny objects and huge names. Those individuals are often far from the work. Look for someone closer to the work, who can operate like a PM while also building leadership.",
+    "youtube_url": "https://www.youtube.com/watch?v=v3pofqabzhs",
+    "timestamp_secs": 599
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Lauryn Isford",
+    "episode_title": "Mastering onboarding | Lauryn Isford (Head of Growth at Airtable)",
+    "insight": "An activation rate in the 5-15% range often correlates better with long-term retention than a higher percentage.",
+    "pull_quote": "A low activation rate, perhaps 5-15%, is better than a high one. It often means a stronger correlation with long-term retention. You're working to get users to a state they're not reaching today, impacting future growth.",
+    "youtube_url": "https://www.youtube.com/watch?v=dLku0AiGPVA",
+    "timestamp_secs": 25
+  },
+  {
+    "topic": "Hiring",
+    "guest_name": "Logan Kilpatrick",
+    "episode_title": "Inside OpenAI | Logan Kilpatrick (head of developer relations)",
+    "insight": "Prioritize candidates with high agency and urgency; empower teams to solve problems autonomously and ship faster without consensus delays.",
+    "pull_quote": "High agency and urgency are top characteristics for hires. Empower people to solve problems directly, bypassing 50-person consensus. This allows teams to take on the world and ship incredibly fast.",
+    "youtube_url": "https://www.youtube.com/watch?v=XkMbkWG2ca4",
+    "timestamp_secs": 1998
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Luc Levesque",
+    "episode_title": "Leveraging growth advisors, mastering SEO, and honing your craft | Luc Levesque (Shopify, Meta)",
+    "insight": "The right growth advisor can deliver company-changing impact, providing insights that generate hundreds or even thousands of percent lift.",
+    "pull_quote": "The right growth advisor can have literally company-changing impact. I've seen hundreds of percentages, sometimes over a thousand percent lift when you get it right.",
+    "youtube_url": "https://www.youtube.com/watch?v=Xf_ZXIGCQb0",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Lulu Cheng Meservey",
+    "episode_title": "Gain attention as an underdog with this framework | Lulu Cheng Meservey",
+    "insight": "For startups, hyper-target a small, passionate audience to maximize impact and foster deep relationships with limited resources.",
+    "pull_quote": "To maximize impact with limited resources, decrease your communication 'surface area.' Hyper-target fewer people with a sharper message, fostering deep relationships. Get 10 diehards first; don't try to win over the general public immediately.",
+    "youtube_url": "https://www.youtube.com/watch?v=qKXIBE7KRGo",
+    "timestamp_secs": 1950
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Madhavan Ramanujam",
+    "episode_title": "Pricing your AI product: Lessons from 400+ companies and 50 unicorns | Madhavan Ramanujam",
+    "insight": "Monetize AI products early and capture value to prevent anchoring customers to low prices and hindering future growth.",
+    "pull_quote": "If you bring a lot of value with AI but underprice from day one, you train customers to expect more for less. AI products can tap into 10X larger labor budgets; don't anchor yourself on a low price point.",
+    "youtube_url": "https://www.youtube.com/watch?v=NR85H55eYkM",
+    "timestamp_secs": 15
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Madhavan Ramanujam 2.0",
+    "episode_title": "The art and science of pricing | Madhavan Ramanujam (Monetizing Innovation, Simon-Kucher)",
+    "insight": "AI product winners must master monetization from day one to capture value and avoid anchoring low prices, ensuring profitable growth.",
+    "pull_quote": "The winners in AI will need to master monetization from day one. If you're bringing a lot of value and start training customers to expect $20 a month, you're in trouble.",
+    "youtube_url": "https://www.youtube.com/watch?v=A6veeCbKIzw",
+    "timestamp_secs": 11
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Maggie Crowley",
+    "episode_title": "Mastering product strategy and growing as a PM | Maggie Crowley (Toast, Drift, TripAdvisor)",
+    "insight": "A great PM takes full ownership of outcomes, doing whatever it takes to succeed, even tasks outside their defined job.",
+    "pull_quote": "If you ever find yourself saying, 'that's not my job,' that's probably a thing you should do. PMs are responsible for outcomes, often the emotional center of the team, and must do whatever it takes to keep products successful.",
+    "youtube_url": "https://www.youtube.com/watch?v=4LjddcccYIo",
+    "timestamp_secs": 1662
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Manik Gupta",
+    "episode_title": "Becoming more strategic, navigating difficult colleagues, founder mode, more | Anneka Gupta",
+    "insight": "Before seeking product-market fit, ensure 'company-product fit': does it leverage your company's unique strengths and portfolio?",
+    "pull_quote": "Many companies waste time. Before building, confirm 'company-product fit.' Does this new product truly fit your portfolio and play to your unique strengths? If not, don't do it.",
+    "youtube_url": "https://www.youtube.com/watch?v=E3dUveqt9Bw",
+    "timestamp_secs": 1677
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Marc Benioff",
+    "episode_title": "'Behind the founder: Marc Benioff'",
+    "insight": "Experiment broadly with multiple tactics to identify what resonates, then double down to build your winning strategy.",
+    "pull_quote": "Throw everything against the wall and see what sticks. Identify the winning tactic. Then, turn that into your winning strategy and grow it.",
+    "youtube_url": "https://www.youtube.com/watch?v=tOGK1nlHdFo",
+    "timestamp_secs": 1279
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Marily Nika",
+    "episode_title": "AI and product management | Marily Nika (Meta, Google)",
+    "insight": "Always identify a real problem or user pain point before deciding to implement an AI solution.",
+    "pull_quote": "Don't do AI for the sake of doing AI. Identify a clear problem or pain point needing a smart solution first. An AI Product Manager's true role is solving the right problem, not just building AI products.",
+    "youtube_url": "https://www.youtube.com/watch?v=qNPPoj1qUG0",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Marty Cagan",
+    "episode_title": "Product management theater | Marty Cagan (Silicon Valley Product Group)",
+    "insight": "Shift your team's focus from delivering output (shipping features) to solving customer and business problems by measuring actual outcomes.",
+    "pull_quote": "Strong product companies understand it's all about outcomes. You don't get points for shipping; you get points for delivering value. Frame it as time to money, not time to market.",
+    "youtube_url": "https://www.youtube.com/watch?v=9N4ZgNaWvI0",
+    "timestamp_secs": 1335
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Marty Cagan 2.0",
+    "episode_title": "The disease of process people | Marty Cagan",
+    "insight": "Many individuals with product manager titles are merely performing a project management role, dramatically overpaid for their actual value.",
+    "pull_quote": "Many product managers are dramatically overpaid for the value they provide, because their role is essentially project management. It is far easier to deliver output than it is to deliver real outcomes.",
+    "youtube_url": "https://www.youtube.com/watch?v=gXDg88rSG8U",
+    "timestamp_secs": 18
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Matt Abrahams",
+    "episode_title": "How to speak more confidently and persuasively | Matt Abrahams (professor, speaker, author)",
+    "insight": "To excel in stakeholder management, prepare to be spontaneous, honing your ability to communicate effectively on the spot.",
+    "pull_quote": "You actually have to prepare to be spontaneous. Mastering impromptu communication is crucial for effective stakeholder alignment, giving feedback, and persuasion.",
+    "youtube_url": "https://www.youtube.com/watch?v=LpbBzmXrzEY",
+    "timestamp_secs": 20
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Matt Dixon",
+    "episode_title": "The surprising truth about what closes deals: Insights from 2.5m sales conversations | Matt Dixon",
+    "insight": "Shift from diagnosing customer needs to confidently recommending what they should do, reducing their fear of making the wrong choice.",
+    "pull_quote": "When buyers are stuck, don't just ask what they want. Offer a clear recommendation. This shifts the burden of a bad decision, making them feel safer and more confident in taking action.",
+    "youtube_url": "https://www.youtube.com/watch?v=cUzEgRetmC4",
+    "timestamp_secs": 2154
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Matt LeMay",
+    "episode_title": "The one question that saves product careers | Matt LeMay",
+    "insight": "Set team goals no more than one step away from company goals to ensure direct business impact.",
+    "pull_quote": "Set team goals no more than one step away from company goals. Avoid cascading goals into oblivion; ensure direct alignment. This empowers teams to make bolder decisions and secure needed resources by demonstrating clear business impact.",
+    "youtube_url": "https://www.youtube.com/watch?v=ts9ZvlkeWGs",
+    "timestamp_secs": 2699
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Matt MacInnis",
+    "episode_title": "\"I deliberately understaff every project\" | Leadership lessons from Rippling's $16B journey",
+    "insight": "Deliberately understaff projects to prevent politics, prioritize core work, and avoid unnecessary waste and slowdowns.",
+    "pull_quote": "Deliberately understaff every project. Overstaffing leads to politics, working on low-priority items, waste, and slows you down. Under-staffing is less evil and ensures focus.",
+    "youtube_url": "https://www.youtube.com/watch?v=O_W76LR77Vw",
+    "timestamp_secs": 644
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Matt Mochary",
+    "episode_title": "Are your fears giving you terrible advice? | Matt Mochary",
+    "insight": "Fewer people in an organization often leads to better performance and faster output by reducing coordination overhead and friction.",
+    "pull_quote": "After layoffs, CEOs reported: 'It's insane. The company's now operating better. We're putting out more features, more code, NPS is up.' Fewer people reduce coordination issues, leading to absolute performance improvement.",
+    "youtube_url": "https://www.youtube.com/watch?v=qOrwVtZvdaE",
+    "timestamp_secs": 2690
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Matt Mullenweg",
+    "episode_title": "The one question that saves product careers | Matt LeMay",
+    "insight": "Prioritize going back to basics, improving user experience, and ruthlessly editing or cutting less relevant features.",
+    "pull_quote": "We have some variable quality around some of our things. This year, we're focusing on going back to basics, improving user experience, and ruthlessly editing and cutting as much as possible.",
+    "youtube_url": "https://www.youtube.com/watch?v=ts9ZvlkeWGs",
+    "timestamp_secs": 2092
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Matthew Dicks",
+    "episode_title": "How to tell better stories | Matthew Dicks (Storyworthy)",
+    "insight": "To be memorable in business, speak in stories; our minds forget facts and data unless they are anchored to vivid imagery.",
+    "pull_quote": "Most business communication is round, white, and flavorless, making you forgettable. Our minds don't remember facts or data without imagery. Tell stories, or 100% your message will be forgotten.",
+    "youtube_url": "https://www.youtube.com/watch?v=J4wguyJZI6A",
+    "timestamp_secs": 2210
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Maya Prohovnik",
+    "episode_title": "Building Anchor, selling to Spotify, and lessons learned | Maya Prohovnik (Head of Podcast Product)",
+    "insight": "To gain rapid market share, eliminate user friction with 'magical' experiences, even if they rely on unscalable manual processes initially.",
+    "pull_quote": "We had college students making Apple podcast accounts and submitting hundreds of thousands of podcasts through these accounts. People thought we had a secret deal, but it was just manual, unscalable work that felt magical to users.",
+    "youtube_url": "https://www.youtube.com/watch?v=1gXNOJEWajU",
+    "timestamp_secs": 1800
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Mayur Kamat",
+    "episode_title": "Unconventional product lessons from Binance, N26, Google, more | Mayur Kamat (CPO at N26)",
+    "insight": "Redefine product strategy as rapid hypothesis testing and data validation to accelerate learning and execution.",
+    "pull_quote": "Strategy is a little bit overrated for product. Your strategy should be, 'How fast can I go from hypothesis to data?' The faster you go from hypothesis to data, the easier your strategy gets.",
+    "youtube_url": "https://www.youtube.com/watch?v=UVyfuSBwbNA",
+    "timestamp_secs": 45
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Megan Cook",
+    "episode_title": "Lessons from Atlassian | Megan Cook (Head of Product, Jira)",
+    "insight": "To launch new products, use a staged 'Wonder, Explore, Make, Impact, Scale' process to iterate fast and scale investment.",
+    "pull_quote": "We created small groups with stage gates: Wonder, Explore, Make, Impact, Scale. This assesses bets at every stage, iterating quickly. It helps decide fast if we should invest more or stop, crucial for successful new product development.",
+    "youtube_url": "https://www.youtube.com/watch?v=MQQ1wohqArk",
+    "timestamp_secs": 3084
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Melanie Perkins",
+    "episode_title": "She turned 100+ rejections into a $42B company | Melanie Perkins",
+    "insight": "Systematically collect and act on customer requests, augmented by frequent user testing, to deeply understand and meet user needs.",
+    "pull_quote": "Canva gets over a million community requests annually. Systematically tally, deliver, and close those loops. Supplement explicit asks with frequent user testing; even 10 random people can give astute, representative feedback.",
+    "youtube_url": "https://www.youtube.com/watch?v=-LywX3T5Scc",
+    "timestamp_secs": 2297
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Melissa",
+    "episode_title": "Building high-performing teams | Melissa Tan (Webflow, Dropbox, Canva)",
+    "insight": "Most organizations mistakenly focus on team training; 99% of product issues stem from poor goal setting and strategy deployment.",
+    "pull_quote": "99% of the time, product issues are not about training people, but about how goals are set and strategy is deployed. Without clear context, even trained teams lack direction.",
+    "youtube_url": "https://www.youtube.com/watch?v=DoEfXj1b_ko",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Melissa Perri",
+    "episode_title": "Everything you’ve ever wanted to know about SAFe and the product owner role | Melissa Perri",
+    "insight": "Prioritize customer value and business outcomes over rigid process adherence to avoid building the wrong things.",
+    "pull_quote": "Many organizations get so caught up in agile processes that they forget to ask, 'Are we serving customers or winning in the market?' Focus on achieving real business value, not just perfect sprints or framework compliance.",
+    "youtube_url": "https://www.youtube.com/watch?v=wbi9chsAHp4",
+    "timestamp_secs": 3053
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Melissa Perri + Denise Tilles",
+    "episode_title": "The ultimate guide to product operations | Melissa Perri and Denise Tilles",
+    "insight": "Establish a product operations team to streamline operational work, allowing product managers to dedicate more time to strategic value creation and scaling.",
+    "pull_quote": "Do you want to hire 10,000 product managers doing operational work 70% of the time, or build a product ops team creating shared systems so PMs can focus on strategy?",
+    "youtube_url": "https://www.youtube.com/watch?v=9VdixM9KPN4",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Hiring",
+    "guest_name": "Melissa Tan",
+    "episode_title": "Building high-performing teams | Melissa Tan (Webflow, Dropbox, Canva)",
+    "insight": "Hiring first-principles thinkers, even without direct experience, drives innovation by encouraging fresh, unconstrained problem-solving.",
+    "pull_quote": "Dropbox hired smart people with no sales experience and tasked them with sales. This led to tons of innovation because first-principles thinkers, unburdened by past methods, just figured things out.",
+    "youtube_url": "https://www.youtube.com/watch?v=DoEfXj1b_ko",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Meltem Kuran Berkowitz",
+    "episode_title": "An inside look at Deel’s unprecedented growth | Meltem Kuran Berkowitz (Head of Growth)",
+    "insight": "For early B2B product success, prioritize a strong product and engineering team, as acquisition channels fail without a quality core.",
+    "pull_quote": "Acquisition channels fail if your product doesn't meet expectations. Early B2B companies need a strong product and engineering core. If you see six salespeople and two engineers, it signals a weak foundation.",
+    "youtube_url": "https://www.youtube.com/watch?v=C1_sM0_ds2c",
+    "timestamp_secs": 2549
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Merci Grace",
+    "episode_title": "How to work through fear, give hard feedback, and doing layoffs with grace | Matt Mochary",
+    "insight": "True product-led growth requires immediate, day-zero value, otherwise the product's ease of entry becomes its ease of exit.",
+    "pull_quote": "Not every product can be product-led. If your tool doesn't offer day-zero value, the easier you make it to come in, the easier it can also be to leave. Ensure immediate utility for sustained adoption.",
+    "youtube_url": "https://www.youtube.com/watch?v=bCel0X2Ta7U",
+    "timestamp_secs": 2440
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Michael Truell",
+    "episode_title": "The rise of Cursor: The $300M ARR AI tool that engineers can’t stop using | Michael Truell",
+    "insight": "Unexpectedly, developing custom models became critical for Cursor's 'magic moments,' directly enhancing product quality and competitive advantage.",
+    "pull_quote": "We didn't expect to build our own models. But every magic moment in Cursor involves a custom model. This was counterintuitive yet critical for product quality and competitive edge.",
+    "youtube_url": "https://www.youtube.com/watch?v=En5cSXgGvZM",
+    "timestamp_secs": 20
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Mihika Kapoor",
+    "episode_title": "'Vision, conviction, and hype: How to build 0 to 1 inside a company | Mihika Kapoor (Product, Figma)'",
+    "insight": "For new products, proactively build and sustain internal and external excitement to overcome challenges and ensure the project successfully launches.",
+    "pull_quote": "When spearheading a new product, the onus is on you to constantly build internal hype. Rally your company by demonstrating potential early, ensuring excitement to get it out the door.",
+    "youtube_url": "https://www.youtube.com/watch?v=uDq6_CPaRjM",
+    "timestamp_secs": 2011
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Mike Krieger",
+    "episode_title": "Anthropic's CPO on what comes next | Mike Krieger (co-founder of Instagram)",
+    "insight": "AI founders should build defensible products with differentiated industry knowledge, go-to-market strategies, or novel interface form factors.",
+    "pull_quote": "Defensible areas for AI startups include deep understanding of a particular market, differentiated go-to-market with customer relationships, or completely new takes on the form factor for interfacing with AI.",
+    "youtube_url": "https://www.youtube.com/watch?v=DKrBGOFs0GY",
+    "timestamp_secs": 2871
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Mike Maples, Jr",
+    "episode_title": "Pattern Breakers: How to find a breakthrough startup idea | Mike Maples, Jr. (Partner at Floodgate)",
+    "insight": "To find breakthrough ideas, live in the future, actively observe what's missing, and trust your unique intuition.",
+    "pull_quote": "If you're not living in the future, your opinion about it isn't valid. To find breakthrough ideas, don't think of a startup; live in the future and notice what's missing.",
+    "youtube_url": "https://www.youtube.com/watch?v=h9o6gPQA6LA",
+    "timestamp_secs": 3112
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Molly Graham",
+    "episode_title": "“I like being scared”: Molly Graham’s frameworks for rapid career growth | Molly Graham",
+    "insight": "True prioritization in goal-setting demands painful trade-offs and assigning a single owner to each goal for clear accountability.",
+    "pull_quote": "Strategy should hurt. If your goal setting process is not painful, you are not prioritizing heavily enough. One goal must have one owner; if you cannot do that, you haven't done the most important work.",
+    "youtube_url": "https://www.youtube.com/watch?v=twzLDx9iers",
+    "timestamp_secs": 3063
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Nabeel S. Qureshi",
+    "episode_title": "How Palantir built the ultimate founder factory | Nabeel S. Qureshi (founder, writer, ex-Palantir)",
+    "insight": "Prioritize solving a customer's massive burning problem, even if it means pivoting from your initial product vision.",
+    "pull_quote": "Founders often err by sticking too rigidly to their initial product vision. It's often the right call to pivot and put everything on that big problem instead.",
+    "youtube_url": "https://www.youtube.com/watch?v=xQkSenlJvwA",
+    "timestamp_secs": 2620
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Nan Yu",
+    "episode_title": "Linear’s secret to building beloved B2B products | Nan Yu (Head of Product)",
+    "insight": "Uncover non-obvious solutions by probing customer requests to identify the specific 'bad feeling' they want to eliminate, then build for that emotion.",
+    "pull_quote": "My goal is to feel bad in the same way that customers feel bad. What is the actual emotional valence motivating your request? Then build to ensure they never have that bad feeling again.",
+    "youtube_url": "https://www.youtube.com/watch?v=nTr21kgCFF4",
+    "timestamp_secs": 31
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Nancy Duarte",
+    "episode_title": "Storytelling with Nancy Duarte: How to craft compelling presentations and tell a story that sticks",
+    "insight": "Utilize the 'what is, what could be, new bliss' framework to create desire for your proposed future in any moment of influence.",
+    "pull_quote": "The 'what is, what could be, new bliss' framework is a powerful tool. Use this contrast as a mental model in any moment of influence, from big presentations to quick phone calls, to make people long for your future vision.",
+    "youtube_url": "https://www.youtube.com/watch?v=-kHkWgjGD7U",
+    "timestamp_secs": 1876
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Naomi Gleit",
+    "episode_title": "Meta’s head of product on working with Mark Zuckerberg, early growth tactics, and more | Naomi Gleit",
+    "insight": "Establish a single, canonical document for every project to ensure extreme clarity on workstreams, owners, processes, and key information.",
+    "pull_quote": "Ask five different people, get five different answers? Unacceptable. Create one canonical doc for every project. Everyone knows exactly where to find all information, driving extreme clarity.",
+    "youtube_url": "https://www.youtube.com/watch?v=sTYuKgzZoL8",
+    "timestamp_secs": 3198
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Naomi Ionita",
+    "episode_title": "How to price your product | Naomi Ionita (Menlo Ventures)",
+    "insight": "Treat your product's pricing like your roadmap; regularly revisit and iterate on your monetization strategy every 6-12 months.",
+    "pull_quote": "Don't set and forget your pricing. Many companies labor over features but neglect pricing after launch. Revisit your monetization strategy every 6-12 months, just like your product roadmap, to ensure you're compensated appropriately.",
+    "youtube_url": "https://www.youtube.com/watch?v=xvQadImf568",
+    "timestamp_secs": 1143
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Nick Turley",
+    "episode_title": "'Inside ChatGPT: The fastest growing product in history | Nick Turley (OpenAI)'",
+    "insight": "For emergent AI products, ship quickly to learn what's possible and what users want; prior reasoning is often insufficient.",
+    "pull_quote": "With AI, you won't know what to polish until after you ship. You really have to ship to understand what's possible and what people want, rather than being able to reason about it a priori.",
+    "youtube_url": "https://www.youtube.com/watch?v=ixY2PvQJ0To",
+    "timestamp_secs": 23
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Nickey Skarstad",
+    "episode_title": "Nickey Skarstad (Airbnb, Etsy, Shopify, Duolingo) on translating vision into goals, operationalizing product quality, second-order decisions, brainstorming, influence, and much more",
+    "insight": "Adding friction to onboarding, like requiring thoughtful listings, can improve long-term user success and retention by ensuring early wins.",
+    "pull_quote": "We added friction to onboarding to slow sellers down, making them more thoughtful about listings. This helped them achieve a first sale faster, a critical quality metric. Focus on early user success, not just rapid sign-ups.",
+    "youtube_url": "",
+    "timestamp_secs": 786
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Nicole Forsgren",
+    "episode_title": "How to measure AI developer productivity in 2025 | Nicole Forsgren",
+    "insight": "Align your AI productivity metrics with specific leadership priorities like market share or profit margin to demonstrate clear business value.",
+    "pull_quote": "Don't blindly apply productivity metrics; tailor them to leadership's priorities. If they care about market share, measure speed to production. If profit margin, quantify vendor or cloud cost savings.",
+    "youtube_url": "https://www.youtube.com/watch?v=SWcDfPVTizQ",
+    "timestamp_secs": 2968
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Nicole Forsgren 2.0",
+    "episode_title": "How to measure AI developer productivity in 2025 | Nicole Forsgren",
+    "insight": "Fast development with AI demands stronger strategy to ensure teams build the right things, avoiding faster delivery of wrong solutions.",
+    "pull_quote": "We can ship trash faster every single day. We need strategy and really smart decisions to know what to ship.",
+    "youtube_url": "https://www.youtube.com/watch?v=SWcDfPVTizQ",
+    "timestamp_secs": 18
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Nikhyl Singhal",
+    "episode_title": "Building a long and meaningful career | Nikhyl Singhal (Meta, Google)",
+    "insight": "Senior product leaders must identify how their strengths cast 'shadows,' hindering growth by creating blind spots in their interactions.",
+    "pull_quote": "Your 'superpowers' may be creating 'shadows' that hinder your growth. Revisit contradictory feedback you've dismissed. It often reveals how your greatest strengths are now holding you back.",
+    "youtube_url": "https://www.youtube.com/watch?v=U_WQuUIYnJg",
+    "timestamp_secs": 3207
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Nikita Bier",
+    "episode_title": "Driving alignment within teams, work-life balance, and the changing PM landscape | Nikita Miller",
+    "insight": "When testing a new product, manually ensure the best possible user experience to eliminate confounding variables and get clear signal.",
+    "pull_quote": "When testing, eliminate confounding variables and test the best possible version, even if it's manual and won't scale. This clarifies if people care about the core value, ensuring your experiments provide undeniable signal.",
+    "youtube_url": "https://www.youtube.com/watch?v=4PhfAbRQpbI",
+    "timestamp_secs": 1938
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Nikita Miller",
+    "episode_title": "Driving alignment within teams, work-life balance, and the changing PM landscape | Nikita Miller",
+    "insight": "Don't swing too far on outcomes; remember that shipping things to market quickly is a crucial indicator of successful product development.",
+    "pull_quote": "Many teams over-focus on outcomes, forgetting output. If you're not shipping a lot quickly, all your ideation and decision-making efforts don't matter much. Execution and velocity are critical.",
+    "youtube_url": "https://www.youtube.com/watch?v=4PhfAbRQpbI",
+    "timestamp_secs": 1550
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Nilan Peiris",
+    "episode_title": "How to drive word of mouth | Nilan Peiris (CPO of Wise)",
+    "insight": "To drive word-of-mouth, deliver an experience so unexpectedly superior that it truly blows your users' socks off.",
+    "pull_quote": "Users only become advocates when a product is 8 to 10 times better, not incrementally. To get genuine recommendation, your product must blow users' socks off by offering an experience they didn't know was possible.",
+    "youtube_url": "https://www.youtube.com/watch?v=xZifSLGOrrw",
+    "timestamp_secs": 1165
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Nir Eyal",
+    "episode_title": "Strategies for becoming less distractible and improving focus | Nir Eyal",
+    "insight": "A more valuable metric for productivity is 'Did I do what I said I was going to do for as long as I said I would without distraction,' rather than merely task completion.",
+    "pull_quote": "You can't call something a distraction unless you know what it distracted you from. Measure your personal productivity by whether you did what you planned, without distraction, not just if a task was finished. This ensures time for deep, reflective work and accurate planning.",
+    "youtube_url": "https://www.youtube.com/watch?v=WSscIIY609c",
+    "timestamp_secs": 1419
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Noah Weiss",
+    "episode_title": "The 10 traits of great PMs, AI, and Slack’s approach to product | Noah Weiss (Slack, Google)",
+    "insight": "If growth plateaus, sacrifice short-term impact for long-term learning to discover new customer needs and unblock growth.",
+    "pull_quote": "Slack's self-service business plateaued in 2019. To restart growth, they \"threw the whole roadmap away,\" optimizing for learning over impact for six months to find new levers. This led to doubling paid customer growth by understanding new users.",
+    "youtube_url": "https://www.youtube.com/watch?v=XrRlVOWe5GE",
+    "timestamp_secs": 2709
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Noam Lovinsky",
+    "episode_title": "The happiness and pain of product management | Noam Lovinsky (Grammarly, FB, Thumbtack, YT)",
+    "insight": "Avoid relying on a single growth channel; diversify early to protect your business from sudden traffic or acquisition changes.",
+    "pull_quote": "“One channel growth is always a no-no.” Thumbtack saw triple-digit growth fall to negative year-over-year after SEO changes. Diversify your acquisition channels before they dry up.",
+    "youtube_url": "https://www.youtube.com/watch?v=a_W5Rn0bJWE",
+    "timestamp_secs": 2026
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Oji Udezue",
+    "episode_title": "Picking sharp problems, increasing virality, and unique product frameworks | Oji Udezue (Typeform)",
+    "insight": "Embed customer conversations into team calendars weekly so PMs, designers, EMs, and PMMs continuously engage by default.",
+    "pull_quote": "You should organize it so that your PMs, your designers, your engineering managers and your PMMs are constantly talking to customers by default. Customer conversations show up on their calendar every week automagically.",
+    "youtube_url": "https://www.youtube.com/watch?v=T8TQGbJhv6Q",
+    "timestamp_secs": 1969
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Paige Costello",
+    "episode_title": "How to ask the right questions, project confidence, and win over skeptics | Paige Costello (Asana)",
+    "insight": "Combat scarcity mindset by asking \"How might the opposite be true?\" to uncover alternative paths and reduce mental load.",
+    "pull_quote": "Challenge your scarcity mindset by asking, 'How might the opposite be true?' This question helps create alternative options and shows a different path, reducing stress and enabling you to tackle more.",
+    "youtube_url": "https://www.youtube.com/watch?v=N7S6nSmOsUI",
+    "timestamp_secs": 19
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Patrick Campbell",
+    "episode_title": "10 lessons on bootstrapping a $200m business | Patrick Campbell (ProfitWell)",
+    "insight": "Aligning on a clear 'tempo framework' for shipping frequency is more crucial for team output than optimizing organizational design.",
+    "pull_quote": "Your tempo framework is more important than your org design. Real professionals ship at high frequency. Align your team on what 'good' looks like in terms of shipping tempo to create a truly high-output culture.",
+    "youtube_url": "https://www.youtube.com/watch?v=FjLSCrSg5QY",
+    "timestamp_secs": 26
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Paul Millerd",
+    "episode_title": "Redefining success, money, and belonging | Paul Millerd (The Pathless Path)",
+    "insight": "To build a new path, meticulously track what energizes or saps your energy; then consciously do more of what energizes you.",
+    "pull_quote": "Pay really close attention to what gives you energy after you do the thing. Do more of the things that energize you and do less of the things that de-energize you. This simple strategy can help you discover a new, fulfilling path.",
+    "youtube_url": "https://www.youtube.com/watch?v=yFckwBtiCUM",
+    "timestamp_secs": 2273
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Pete Kazanjy",
+    "episode_title": "Founder-led sales | Pete Kazanjy (Founding Sales, Atrium)",
+    "insight": "Treat your sales motion like software; continuously update its \"source code\" with new slides, scripts, and objections based on customer feedback.",
+    "pull_quote": "A sales motion is like software; constantly update it. That interesting prospect question with no good answer? Make a slide. Now your sales motion is updated and more effective.",
+    "youtube_url": "https://www.youtube.com/watch?v=cZd5234Eem0",
+    "timestamp_secs": 1155
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Peter Deng",
+    "episode_title": "Peter Deng",
+    "insight": "Your product's pixels don't always matter; the true product often encompasses holistic elements like price or delivery.",
+    "pull_quote": "Sometimes your product actually doesn't matter. At Uber, the price and ETA were the real product. We humans consume the entirety of the product, not just the digital manifestation.",
+    "youtube_url": "",
+    "timestamp_secs": 24
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Petra Wille",
+    "episode_title": "How to be the best coach to product people | Petra Wille (Strong Product People)",
+    "insight": "Strong storytelling and public speaking are essential for PM career advancement, rallying teams, and avoiding career stagnation.",
+    "pull_quote": "Not being good at public speaking and bringing your point across is a career staller for product managers. It's crucial for rallying teams behind shared goals and securing promotions.",
+    "youtube_url": "https://www.youtube.com/watch?v=4n3ybRqU5mU",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Phyl Terry",
+    "episode_title": "Land your dream job in today’s market: negotiation tactics, job search councils, more | Phyl Terry",
+    "insight": "Proactively define your role's mission and OKRs to deeply understand and influence your contribution, impressing stakeholders and clarifying success.",
+    "pull_quote": "No one in my life has ever done this. If someone did this, it would blow my mind. I would hire them on the spot.",
+    "youtube_url": "https://www.youtube.com/watch?v=OH3nzRdwYPA",
+    "timestamp_secs": 3123
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Raaz Herzberg",
+    "episode_title": "Building Wiz: the fastest-growing startup in history | Raaz Herzberg (CMO and VP Product Strategy)",
+    "insight": "Real product-market fit is signaled by customers asking about pricing, next steps, and internal connections, not just polite interest.",
+    "pull_quote": "Polite interest isn't product-market fit. We knew we had it when customer calls changed from 'sounds interesting' to 'how are you pricing this? When can we start a POV? Who should I connect you to?' They pushed for the next step.",
+    "youtube_url": "https://www.youtube.com/watch?v=vnW3zIkrOvY",
+    "timestamp_secs": 792
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Rachel Lockett",
+    "episode_title": "A guide to difficult conversations, building high-trust teams, and designing a life you love",
+    "insight": "Shift from advising to coaching your team to empower them, accelerate execution, and free yourself for critical strategic work.",
+    "pull_quote": "An AI company CEO shifted from making every product decision to coaching his tech leads. Squads moved faster, teams felt empowered, and he gained time for 2026 strategic planning.",
+    "youtube_url": "https://www.youtube.com/watch?v=1GDVum5IarI",
+    "timestamp_secs": 1560
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Rahul Vohra",
+    "episode_title": "Superhuman's secret to success | Rahul Vohra (CEO and founder)",
+    "insight": "To systematically increase product-market fit, prioritize feedback from 'somewhat disappointed' users who value your core offering.",
+    "pull_quote": "Most companies struggle because they don't know who to listen to. To increase product-market fit, ignore the \"not disappointed\" and focus on \"somewhat disappointed\" users whose main benefit resonates. This segment provides the most actionable feedback.",
+    "youtube_url": "https://www.youtube.com/watch?v=0igjSRZyX-w",
+    "timestamp_secs": 3363
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ramesh Johari",
+    "episode_title": "Marketplace lessons from Uber, Airbnb, Bumble, and more | Ramesh Johari (Stanford professor)",
+    "insight": "Consequential marketplace changes create winners and losers; prioritize changes where the winners are more vital to your business than the losers.",
+    "pull_quote": "Marketplaces are a game of whac-a-mole: many consequential changes create winners and losers. Rolling with these changes means recognizing if the winners you've created are more important than the losers.",
+    "youtube_url": "https://www.youtube.com/watch?v=BVzTfsUMaK8",
+    "timestamp_secs": 3084
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ravi Mehta",
+    "episode_title": "How to build your product strategy stack | Ravi Mehta (Tinder, Facebook, Tripadvisor, Outpace)",
+    "insight": "Set goals after defining your product roadmap and strategy, ensuring they measure progress toward a clear destination, not arbitrary targets.",
+    "pull_quote": "Don't start with goals; define your strategy and roadmap first, then set goals as progress markers. Without a destination, \"driving 250 miles\" means nothing; goals need strategic context.",
+    "youtube_url": "https://www.youtube.com/watch?v=tncs0m5pmQg",
+    "timestamp_secs": 2565
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Ray Cao",
+    "episode_title": "Product management theater | Marty Cagan (Silicon Valley Product Group)",
+    "insight": "Deep collaboration between engineering, product, sales, and data science is crucial to build the right product and achieve market success.",
+    "pull_quote": "Engineers, product, sales, and data science must collaborate closely. Take PMs and engineers on client immersion trips to feel the market's pain points. This direct feedback loop is TikTok's secret sauce for building successful products.",
+    "youtube_url": "https://www.youtube.com/watch?v=9N4ZgNaWvI0",
+    "timestamp_secs": 1430
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Richard Rumelt",
+    "episode_title": "Good Strategy, Bad Strategy | Richard Rumelt",
+    "insight": "Refocus strategy from grand vision to a concrete action agenda addressing one or two addressable, key challenges.",
+    "pull_quote": "Don't call it strategy, call it an action agenda. Identify the one or two key challenges that can actually be addressed, and then focus on the coherent action steps you'll take to deal with them.",
+    "youtube_url": "https://www.youtube.com/watch?v=4uWKEG0s9Kc",
+    "timestamp_secs": 0
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Robby Stein",
+    "episode_title": "Inside Google's AI turnaround: AI Mode, AI Overviews, and vision for AI-powered search | Robby Stein",
+    "insight": "Product success comes from relentless, productive effort, fueled by deep dissatisfaction with the status quo, to make things better daily.",
+    "pull_quote": "My wife described me as 'dissatisfied.' It's not unhappiness, but a deep desire to make things better. This relentless drive, being your own harshest critic, creates a compounding effect until the product truly tips into usefulness.",
+    "youtube_url": "https://www.youtube.com/watch?v=kOnsqqVbIeY",
+    "timestamp_secs": 1328
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Roger Martin",
+    "episode_title": "5 essential questions to craft a winning strategy | Roger Martin (author, advisor, speaker)",
+    "insight": "Winning products need defensible capabilities that are hard for competitors to replicate, not just 'better' features.",
+    "pull_quote": "Just being better isn't enough; your product's competitive advantage must be hard for others to replicate quickly. Build capabilities competitors can't or won't match.",
+    "youtube_url": "https://www.youtube.com/watch?v=y7SN4FK8noY",
+    "timestamp_secs": 2046
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ronny Kohavi",
+    "episode_title": "The ultimate guide to A/B testing | Ronny Kohavi (Airbnb, Microsoft, Amazon)",
+    "insight": "Most experiments show no gain; do not ship features with flat results unless legally required, to avoid unnecessary code complexity.",
+    "pull_quote": "92% of our ideas failed to improve key metrics. If an experiment shows no statistically significant improvement, don't ship it. You've just complicated the code base with no value, increasing maintenance costs.",
+    "youtube_url": "https://www.youtube.com/watch?v=hEzpiDuYFoE",
+    "timestamp_secs": 2663
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Ryan Hoover",
+    "episode_title": "A better way to plan, build, and ship products | Ryan Singer (creator of “Shape Up\")",
+    "insight": "Prioritize generating revenue earlier, even alongside growth, to gain financial flexibility and prove your business model.",
+    "pull_quote": "I would've actually tried to monetize and generated revenue sooner. We could've been cashflow break-even much earlier, owning our own destiny.",
+    "youtube_url": "https://www.youtube.com/watch?v=GF-yUANql0c",
+    "timestamp_secs": 1984
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Ryan J. Salva",
+    "episode_title": "The role of AI in new product development | Ryan J. Salva (VP of Product at GitHub)",
+    "insight": "To transition R&D moonshots to core products, embed researchers with product teams then let new teams own the roadmap and operationalize.",
+    "pull_quote": "To successfully scale R&D projects, don't just hand them off. Embed researchers with the new product team for knowledge transfer, then ensure the product team fully owns the roadmap. Only transition researchers back after replacement.",
+    "youtube_url": "https://www.youtube.com/watch?v=awcd3P1DnX4",
+    "timestamp_secs": 3549
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Ryan Singer",
+    "episode_title": "A better way to plan, build, and ship products | Ryan Singer (creator of “Shape Up\")",
+    "insight": "Proactively involve experienced engineers in product shaping to expose hidden technical complexities and enable crucial trade-offs early.",
+    "pull_quote": "Many projects blow out because hidden technical complexities are discovered too late. Bring a 'grumpy old plumber' engineer into shaping sessions. They insist on opening up the walls to inspect the pipes, preventing costly surprises.",
+    "youtube_url": "https://www.youtube.com/watch?v=GF-yUANql0c",
+    "timestamp_secs": 3134
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Sachin Monga",
+    "episode_title": "Building Substack | Sachin Monga (Substack, Facebook)",
+    "insight": "Maximize user control in network effects by enabling direct, curated recommendations, leveraging goodwill to drive viral growth.",
+    "pull_quote": "We picked that way [writer-controlled recommendations] even if it might seem harder to pull off. There was this virality at play now where when you recommend a bunch of people, those people will get an email... It created this goodwill viral loop.",
+    "youtube_url": "https://www.youtube.com/watch?v=zKP2HrMc23s",
+    "timestamp_secs": 2630
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Sahil Mansuri",
+    "episode_title": "How to hit revenue targets in a recession | Sahil Mansuri (Bravado)",
+    "insight": "In a challenging market, move your best salespeople to customer success to relentlessly focus on retaining every existing customer.",
+    "pull_quote": "New sales are nearly impossible right now. Reallocate your top sales talent to Customer Success. Your priority: ensure every existing customer stays, because replacing them will be impossible.",
+    "youtube_url": "https://www.youtube.com/watch?v=pYZ0S7a72po",
+    "timestamp_secs": 2639
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Sam Schillace",
+    "episode_title": "How to be more innovative | Sam Schillace (Microsoft deputy CTO, creator of Google Docs)",
+    "insight": "Users are inherently lazy; products succeed by providing significant, undeniable value that makes life genuinely easier.",
+    "pull_quote": "Users are lazy. Convenience always wins. No one will do something for any other reason than it makes their life better. It has to make your life a lot better, hopefully 10X better than what you spend to use it.",
+    "youtube_url": "https://www.youtube.com/watch?v=IOWDoDpQ7Xg",
+    "timestamp_secs": 1641
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Sanchan Saxena",
+    "episode_title": "Why Uber’s CPO delivers food on weekends | Sachin Kansal",
+    "insight": "For bold new products, prioritize intentionality and launch decisively, then iterate from the new baseline instead of endless upfront A/B testing.",
+    "pull_quote": "For new products, founders often go off gut, not data. They cut first, then iterate from a new baseline. Don't measure and cut; cut and then iterate from the new baseline.",
+    "youtube_url": "https://www.youtube.com/watch?v=MnBZlEQ14fY",
+    "timestamp_secs": 1894
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Sander Schulhoff",
+    "episode_title": "AI prompt engineering in 2025: What works and what doesn’t | Sander Schulhoff",
+    "insight": "Prompt injection is an unsolvable problem, necessitating continuous AI security vigilance in product development.",
+    "pull_quote": "Prompt injection is not a solvable problem for AI products. If we can't even trust chatbots to be secure, how can we trust agents to manage our finances or walk around in humanoid robots?",
+    "youtube_url": "https://www.youtube.com/watch?v=eKuFqQKYRrA",
+    "timestamp_secs": 53
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Sander Schulhoff 2.0",
+    "episode_title": "Why securing AI is harder than anyone expected and guardrails are failing | HackAPrompt CEO",
+    "insight": "External AI guardrails are ineffective; build AI products securely by integrating classical cybersecurity for data access and action permissioning.",
+    "pull_quote": "AI guardrails do not work. Relying on them won't protect your product. Instead, integrate classical cybersecurity and AI understanding to properly permission data and actions within your system.",
+    "youtube_url": "https://www.youtube.com/watch?v=J9982NLmTXg",
+    "timestamp_secs": 3180
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Sarah Tavel",
+    "episode_title": "The hierarchy of engagement | Sarah Tavel (Benchmark, Greylock, Pinterest)",
+    "insight": "Marketplaces must laser-focus on a small, constrained market to build happy, retentive users, enabling future expansion and dominance.",
+    "pull_quote": "GMV is a vanity metric; prioritize 'happy GMV'. Focus your ambition like a laser beam on a small 'thimble' market to get product-market fit. Heat that up really hot, then it expands from there.",
+    "youtube_url": "https://www.youtube.com/watch?v=H9g4pzcz6Tk",
+    "timestamp_secs": 2794
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Scott Belsky",
+    "episode_title": "Lessons on product sense, AI, the first mile experience, and the messy middle | Scott Belsky (Adobe)",
+    "insight": "Optimize for problems you want to have later by ruthlessly cutting features and focusing on core value in your initial product.",
+    "pull_quote": "Scott Belsky's Behance scaled by removing features. Optimize for the problems you want to have, not for features customers will only ask for later. Making the product about one thing dramatically increases your core metric velocity.",
+    "youtube_url": "https://www.youtube.com/watch?v=HCKosdV1J-8",
+    "timestamp_secs": 1289
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Scott Wu",
+    "episode_title": "'Inside Devin: The AI engineer that''s set to write 50% of its company’s code this year | Scott Wu'",
+    "insight": "AI engineers are set to write over 50% of our company's code this year, fundamentally shifting engineering capacity.",
+    "pull_quote": "A quarter of our pull requests today are committed by Devins. We expect this to be over 50% by the end of the year, with a team of only 15 engineers.",
+    "youtube_url": "https://www.youtube.com/watch?v=gI0ZNhA0rvE",
+    "timestamp_secs": 21
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Sean Ellis",
+    "episode_title": "The original growth hacker reveals his secrets | Sean Ellis (author of “Hacking Growth”)",
+    "insight": "Optimize internal product efficiency – especially activation – before scaling acquisition; it makes growth 100x more effective.",
+    "pull_quote": "LogMeIn froze product development to focus solely on activation. They boosted user engagement by 1000%. This enabled acquisition channels to scale 100x, from $10k to $1M/month, making growth sustainably profitable.",
+    "youtube_url": "https://www.youtube.com/watch?v=VjJ6xcv7e8s",
+    "timestamp_secs": 3277
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Seth Godin",
+    "episode_title": "Seth Godin's best tactics for building remarkable products, strategies, brands and more",
+    "insight": "Be truly remarkable, creating products people inherently want to talk about, because word of mouth is the key to winning.",
+    "pull_quote": "The word remarkable means worth making a remark about. If you make something where the person's life gets better if they talk about you and you know in advance what you want them to say, then they are more likely to say it.",
+    "youtube_url": "https://www.youtube.com/watch?v=UyWTDmDjNy4",
+    "timestamp_secs": 29
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Shaun Clowes",
+    "episode_title": "Why great AI products are all about the data | Shaun Clowes (CPO at Confluent)",
+    "insight": "Consistently prioritize external customer, market, and competitor perspectives to identify unique, differentiated value, avoiding internal focus.",
+    "pull_quote": "Spend 80% of your time thinking outside the building. Always talk from the customer's, market's, and competitor's perspectives to find reliable, differentiated value. PMs get better almost immediately.",
+    "youtube_url": "https://www.youtube.com/watch?v=yVS1gTAQYSU",
+    "timestamp_secs": 583
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Shishir Mehrotra",
+    "episode_title": "The rituals of great teams | Shishir Mehrotra, Coda, YouTube, Microsoft",
+    "insight": "Find the single, higher-level 'eigenquestion' that, once answered, makes many subsequent product decisions easy.",
+    "pull_quote": "An 'eigenquestion' is a higher-level question that, if answered, makes many other decisions easy. For YouTube, asking if the market values 'consistency or comprehensiveness' resolved linking dilemmas and aligned the team.",
+    "youtube_url": "https://www.youtube.com/watch?v=7uSuMIJhONA",
+    "timestamp_secs": 3077
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Shreyas Doshi",
+    "episode_title": "The art of product management | Shreyas Doshi (Stripe, Twitter, Google, Yahoo)",
+    "insight": "Most perceived execution issues in high-performing teams are actually symptoms of underlying strategy, interpersonal, or cultural problems.",
+    "pull_quote": "Most execution problems are actually not execution problems. They're usually deeper strategy, interpersonal, or cultural issues. This shifts how you solve problems, focusing on root causes.",
+    "youtube_url": "https://www.youtube.com/watch?v=YP_QghPLG-8",
+    "timestamp_secs": 3289
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Shreyas Doshi Live",
+    "episode_title": "The art of product management | Shreyas Doshi (Stripe, Twitter, Google, Yahoo)",
+    "insight": "Most seemingly two-way product decisions are actually one-way doors; invest more time in critical thinking before committing.",
+    "pull_quote": "Most doors that look like two-way doors are actually one-way doors. These quick decisions accumulate feature debt. Thinking is cheap; invest more time in deeper evaluation before committing.",
+    "youtube_url": "https://www.youtube.com/watch?v=YP_QghPLG-8",
+    "timestamp_secs": 2537
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Shweta Shriva",
+    "episode_title": "Product lessons from Waymo | Shweta Shrivastava (Waymo, Amazon, Cisco)",
+    "insight": "You must disrupt your own product and business model before someone else does, as disruption is inevitable.",
+    "pull_quote": "The classic innovator's dilemma: large companies can get very incremental in product strategy. You need to disrupt yourself before somebody else does, because it's going to happen. It's inevitable.",
+    "youtube_url": "https://www.youtube.com/watch?v=VtNmAjNF3Tc",
+    "timestamp_secs": 2816
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Sri Batchu",
+    "episode_title": "Lessons from scaling Ramp | Sri Batchu (Ramp, Instacart, Opendoor)",
+    "insight": "Design experiments to fail conclusively by maximizing treatment effect, ensuring clear learning to avoid repeating unfruitful tests.",
+    "pull_quote": "Failure isn't not driving revenue; it's not learning. Maximize your experiment's treatment effect, throwing all tactics at it. If it fails, you learn definitively to move on; if it works, you optimize later.",
+    "youtube_url": "https://www.youtube.com/watch?v=RcYCU5UAZOk",
+    "timestamp_secs": 3117
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Sriram and Aarthi",
+    "episode_title": "Hot takes and techno-optimism from tech’s top power couple | Sriram and Aarthi",
+    "insight": "Aggressively optimize for core retention metrics by driving network effects, even if it slightly degrades individual user experience.",
+    "pull_quote": "Facebook aggressively optimized for 10 friends in 14 days. Sometimes, this meant making one user's experience slightly worse to help another reach that crucial retention milestone. Focus on driving network effects, not just individual jobs-to-be-done.",
+    "youtube_url": "https://www.youtube.com/watch?v=HsD5ycT_umw",
+    "timestamp_secs": 25
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Stewart Butterfield",
+    "episode_title": "Mental models for building products people love ft. Stewart Butterfield",
+    "insight": "Prioritize reducing user cognitive load over merely reducing clicks; eliminate friction by making the product trivially easy to comprehend.",
+    "pull_quote": "Don't just reduce friction or clicks; focus on making software simple and preventing users from thinking. Making users feel stupid due to incomprehensible choices is worse than extra, trivially easy steps.",
+    "youtube_url": "https://www.youtube.com/watch?v=kLe-zy5r0Mk",
+    "timestamp_secs": 3704
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Tamar Yehoshua",
+    "episode_title": "Lessons in product leadership and AI strategy from Glean, Google, Amazon, and Slack | Tamar Yehoshua",
+    "insight": "To avoid falling behind in AI, actively use various AI products and creatively apply them to your daily PM tasks.",
+    "pull_quote": "Don't get left behind in AI. Actively use products like ChatGPT, Glean, or Claude. Explore creative applications, like analyzing Discord transcripts for sentiment or summarizing articles. Leverage AI for productivity.",
+    "youtube_url": "https://www.youtube.com/watch?v=ZoSeOltKqQk",
+    "timestamp_secs": 3168
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Tanguy Crusson",
+    "episode_title": "Hard-won lessons building 0 to 1 inside Atlassian | Tanguy Crusson (Head of Jira Product Discovery)",
+    "insight": "Validate demand for a new product with real user interest before writing any code to avoid building the wrong thing.",
+    "pull_quote": "For Jira Product Discovery, we validated demand before writing code. A waitlist yielded 3000+ signups in two weeks, confirming interest. This simple step avoids building features nobody wants.",
+    "youtube_url": "https://www.youtube.com/watch?v=cZqpqb5qR5A",
+    "timestamp_secs": 1635
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Teaser_2021",
+    "episode_title": "Teaser_2021",
+    "insight": "True product building involves persistent effort through the 'messy middle,' embracing setbacks and actively seeking feedback.",
+    "pull_quote": "The biggest gap in business is the 'river of shit' between starting and finishing. It's getting punched in the gut daily, but being willing to push through, get feedback, and work with your team. No one talks about this messy middle.",
+    "youtube_url": "",
+    "timestamp_secs": 275
+  },
+  {
+    "topic": "User Research",
+    "guest_name": "Teresa Torres",
+    "episode_title": "Build better products with continuous product discovery | Teresa Torres",
+    "insight": "Improve user research by collecting customer stories about past actions and experiences, not hypothetical thoughts or future behavior.",
+    "pull_quote": "Most product teams ask direct, out-of-context questions. This leads to unreliable answers. Instead, ask customers to tell specific stories about what they actually did, eliciting needs they aren't even aware of.",
+    "youtube_url": "https://www.youtube.com/watch?v=9RFaz9ZBXpk",
+    "timestamp_secs": 1430
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Tim Holley",
+    "episode_title": "Inside Etsy’s product, growth, and marketplace evolution | Tim Holley (VP of Product)",
+    "insight": "Communicating shared values, like carbon offsetting, through simple text can surprisingly boost conversion and resonate deeply with buyers.",
+    "pull_quote": "A simple line of text in the cart, \"Etsy offsets carbon emissions from every delivery,\" unexpectedly drove huge conversion uplift. It really resonated with buyers and their values, having a shocking, outsized impact.",
+    "youtube_url": "https://www.youtube.com/watch?v=n4hRs2FsRug",
+    "timestamp_secs": 2082
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Timothy Davis",
+    "episode_title": "The ultimate guide to paid growth | Timothy Davis (Shopify)",
+    "insight": "Avoid paid growth investments before achieving product-market fit to prevent user annoyance and wasted resources on non-converting products.",
+    "pull_quote": "Running paid ads pre-product market fit will only annoy users and waste resources. If your product isn't converting due to fit issues, fix that first before scaling paid campaigns; a bad experience can deter future interest.",
+    "youtube_url": "https://www.youtube.com/watch?v=zNJyb3R_Pnc",
+    "timestamp_secs": 1976
+  },
+  {
+    "topic": "Metrics & North Star",
+    "guest_name": "Tobi Lütke",
+    "episode_title": "Tobi Lütke's leadership playbook: First principles, infinite games, and maximizing human potential",
+    "insight": "Focus on unquantifiable things like fun and delight; if they thrive, metrics will eventually follow.",
+    "pull_quote": "Optimism sounds naive, metrics-driven sophisticated. But 80% of product value is unquantifiable. If all metrics point down but everyone's having fun, expect metrics to rise next. Fun and delight are powerful leading indicators.",
+    "youtube_url": "https://www.youtube.com/watch?v=tq6vdDJQXvs",
+    "timestamp_secs": 1949
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Todd Jackson",
+    "episode_title": "A framework for finding product-market fit | Todd Jackson (First Round Capital)",
+    "insight": "At nascent product-market fit, prioritize extreme customer satisfaction over demand and efficiency to uncover core value.",
+    "pull_quote": "At Level 1 product-market fit, it's okay to be inefficient. Focus on delivering insane customer satisfaction, like Vanta, who manually fulfilled needs to prove core value.",
+    "youtube_url": "https://www.youtube.com/watch?v=yc1Uwhfxacs",
+    "timestamp_secs": 1328
+  },
+  {
+    "topic": "Product-Market Fit",
+    "guest_name": "Tom Conrad",
+    "episode_title": "Billion dollar failures, and billion dollar success | Tom Conrad (Quibi, Pandora, Pets.com, Zero)",
+    "insight": "No amount of product iteration or execution can save a product if its fundamental business equation is broken.",
+    "pull_quote": "Companies are like a math problem. If the equation is fundamentally broken, no amount of product iteration and execution can get you out of the failed outputs of the broken equation.",
+    "youtube_url": "https://www.youtube.com/watch?v=maK0XD9ARoI",
+    "timestamp_secs": 1494
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Tomer Cohen",
+    "episode_title": "Why AI is disrupting traditional product management | Tomer Cohen (LinkedIn CPO)",
+    "insight": "Product leaders building AI-first products must control the algorithm's objectives, features, data, and infrastructure, not just the user experience.",
+    "pull_quote": "You don't control the experience anymore, you control the ingredients. Product leaders must hold the AI pedals—the algorithm's objectives, features, data, and infrastructure—as the guide of the product boat.",
+    "youtube_url": "https://www.youtube.com/watch?v=R-zCfLQD_84",
+    "timestamp_secs": 2222
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Tomer Cohen 2.0",
+    "episode_title": "Why AI is disrupting traditional product management | Tomer Cohen (LinkedIn CPO)",
+    "insight": "Successful AI adoption requires robust change management, not just tool deployment, emphasizing incentives, motivation, and visible success.",
+    "pull_quote": "Change management is critical. It's not enough to just give people AI tools; you must build incentives, motivation, and share success examples. Expecting adoption without this doesn't work.",
+    "youtube_url": "https://www.youtube.com/watch?v=R-zCfLQD_84",
+    "timestamp_secs": 42
+  },
+  {
+    "topic": "Roadmap Prioritisation",
+    "guest_name": "Tristan de Montebello",
+    "episode_title": "Why most public speaking advice is wrong—and how to finally overcome anxiety | Tristan de Montebello",
+    "insight": "Focus on root causes, not just symptoms, to solve problems effectively and upgrade your product's underlying 'software'.",
+    "pull_quote": "Don't just fix symptoms. Address root causes to upgrade your 'software.' This changes the game for solving problems and improving everything.",
+    "youtube_url": "https://www.youtube.com/watch?v=BQM3Yq93nVc",
+    "timestamp_secs": 804
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Upasna Gautam",
+    "episode_title": "An inside look at how CNN builds product | Upasna Gautam",
+    "insight": "Effective product communication prioritizes deep listening and pausing before reacting, fostering trust and clarity across diverse stakeholders.",
+    "pull_quote": "The ability to pause before reacting is key to mindful communication and being a successful product manager. Prioritize listening and converse in the language of the listener to build trust.",
+    "youtube_url": "https://www.youtube.com/watch?v=gRiCzfFEd7c",
+    "timestamp_secs": 2297
+  },
+  {
+    "topic": "Hiring",
+    "guest_name": "Uri Levine",
+    "episode_title": "A founder’s guide to crisis management | Uri Levine (Waze co-founder, serial entrepreneur)",
+    "insight": "For new hires, set a 30-day calendar reminder: if, knowing what you know now, you wouldn't rehire them, fire them immediately.",
+    "pull_quote": "Every time that you hire someone new, mark your calendars for 30 days down the road and ask yourself one question, knowing what I know today, would I hire this person? If the answer is no, fire them immediately.",
+    "youtube_url": "https://www.youtube.com/watch?v=lQdogVBHMdA",
+    "timestamp_secs": 23
+  },
+  {
+    "topic": "Retention",
+    "guest_name": "Uri Levine 2.0",
+    "episode_title": "A founder’s guide to crisis management | Uri Levine (Waze co-founder, serial entrepreneur)",
+    "insight": "Retention is the single metric for product-market fit; if users return, you create value.",
+    "pull_quote": "Product-market fit has only one metric: retention. If users are not coming back, you are not creating value.",
+    "youtube_url": "https://www.youtube.com/watch?v=lQdogVBHMdA",
+    "timestamp_secs": 740
+  },
+  {
+    "topic": "0-to-1 Building",
+    "guest_name": "Varun Mohan",
+    "episode_title": "Building a magical AI code editor used by over 1m developers in 4 months: Inside Windsurf",
+    "insight": "Even with the same AI models, a custom user interface can triple product acceptance by removing interface limitations.",
+    "pull_quote": "Our autocomplete product had the same ML models. But by porting to a custom IDE with a better UI, our acceptance rate tripled. This proved that the user interface, not just the technology, was the key to unlocking user value.",
+    "youtube_url": "https://www.youtube.com/watch?v=5Z0RCxDZdrE",
+    "timestamp_secs": 903
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Varun Parmar",
+    "episode_title": "An inside look at how Miro builds product | Varun Parmar (CPO of Miro)",
+    "insight": "Host regular informal cross-functional sharing events to foster serendipitous collaboration and dramatically accelerate work.",
+    "pull_quote": "Miro Connect, a bi-monthly informal sharing event, led to an engineer solving a three-month problem in three hours. Create spaces for serendipitous collaboration to unlock unexpected expertise and accelerate work.",
+    "youtube_url": "https://www.youtube.com/watch?v=furNg4njlsg",
+    "timestamp_secs": 3031
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Vijay",
+    "episode_title": "An inside look at Mixpanel’s product journey | Vijay Iyengar",
+    "insight": "When expanding, fund new ventures with profits instead of reallocating core product people, to avoid disrupting your main offering.",
+    "pull_quote": "Don't take people from your core product to start new ventures. Invest profits, not people. Otherwise, you risk disrupting your core and building 'sixth best' products that don't truly accelerate growth.",
+    "youtube_url": "https://www.youtube.com/watch?v=t-2oXtZrlEc",
+    "timestamp_secs": 1730
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Vikrama Dhiman",
+    "episode_title": "A framework for PM skill development | Vikrama Dhiman (Gojek)",
+    "insight": "As a PM, effectively guide decisions and address challenges by raising difficult issues without being difficult, and enabling decisions without making them all yourself.",
+    "pull_quote": "PMs often get carried away by the 'mini CEO' folklore. To succeed, raise difficult issues without being difficult to work with. Get decisions made without making all the decisions yourself.",
+    "youtube_url": "https://www.youtube.com/watch?v=ImSvm11GR0Y",
+    "timestamp_secs": 1156
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Wes Kao",
+    "episode_title": "Persuasive communication and managing up | Wes Kao (Maven, altMBA, Section4)",
+    "insight": "A small upfront investment in clear communication prevents significant downstream friction, saving everyone time and increasing overall efficiency.",
+    "pull_quote": "A poorly written memo's 'blast radius' is huge. Spending 30 extra seconds on clarity prevents 15 people from wasting time deciphering your message.",
+    "youtube_url": "https://www.youtube.com/watch?v=4jtGsyz4jLs",
+    "timestamp_secs": 1565
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Wes Kao",
+    "episode_title": "Persuasive communication and managing up | Wes Kao (Maven, altMBA, Section4)",
+    "insight": "Anticipate your Most Obvious Objections (MOO) by spending a few minutes considering potential pushback to strengthen your pitch.",
+    "pull_quote": "MOO stands for Most Obvious Objection. If you spend even two minutes thinking about likely objections, you'll immediately identify them. Don't be blindsided; prepare your counterarguments and strengthen your pitch.",
+    "youtube_url": "https://www.youtube.com/watch?v=4jtGsyz4jLs",
+    "timestamp_secs": 54
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Will Larson",
+    "episode_title": "The engineering mindset | Will Larson (Carta, Stripe, Uber, Calm, Digg)",
+    "insight": "Align EM and PM incentives by giving them the same performance rating, fostering shared accountability for overall execution.",
+    "pull_quote": "My biggest thing has been trying to force this idea that EM/PM pairs are peers and they generally have the same performance rating. This drives a painful but right perspective where incentives are truly shared. A powerful idea for accountability.",
+    "youtube_url": "https://www.youtube.com/watch?v=Z9ftpRhRiJE",
+    "timestamp_secs": 2645
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Yamashata",
+    "episode_title": "An inside look at how Figma builds product | Yuhki Yamashita (CPO of Figma)",
+    "insight": "Master storytelling and synthesis to make product decisions stick and compel action across a constantly distracted organization.",
+    "pull_quote": "I often talk about memification: when insights become so powerful that leaders spontaneously cite them in meetings, you know you've really done your job. It’s how knowledge transfers and compels action.",
+    "youtube_url": "https://www.youtube.com/watch?v=NepFo4zXyK4",
+    "timestamp_secs": 765
+  },
+  {
+    "topic": "Stakeholder Management",
+    "guest_name": "Yuhki Yamashata",
+    "episode_title": "An inside look at how Figma builds product | Yuhki Yamashita (CPO of Figma)",
+    "insight": "Learn to synthesize complex information into memorable stories that compel action and foster shared understanding among stakeholders.",
+    "pull_quote": "A story is only as good as the action it's capable of driving. Make insights 'memmified' so leaders can cite them, driving knowledge transfer and action effectively.",
+    "youtube_url": "https://www.youtube.com/watch?v=NepFo4zXyK4",
+    "timestamp_secs": 894
+  },
+  {
+    "topic": "GTM Strategy",
+    "guest_name": "Yuriy Timen",
+    "episode_title": "How to grow a subscription business | Yuriy Timen (Grammarly, Canva, Airtable)",
+    "insight": "Early-stage companies should focus on maximizing their single dominant growth engine before attempting premature diversification.",
+    "pull_quote": "Most companies rely on one dominant growth engine, not a diversified portfolio. Early-stage startups should resist spreading resources too thin; lean into what's already working to build strategic advantage.",
+    "youtube_url": "https://www.youtube.com/watch?v=8-iN7sweFBM",
+    "timestamp_secs": 2298
+  },
+  {
+    "topic": "Growth Loops",
+    "guest_name": "Zoelle Egner",
+    "episode_title": "Lessons from Airtable’s unconventional growth strategy | Zoelle Egner",
+    "insight": "Over-invest in early customer success for key champions to catalyze internal word-of-mouth and wider adoption for complex products.",
+    "pull_quote": "Airtable over-invested in early customer success for champions, helping them build their first bases. Successful champions then became internal evangelists, spreading the product and doing sales pitches for us without our direct effort.",
+    "youtube_url": "https://www.youtube.com/watch?v=0P8LMyeYl1U",
+    "timestamp_secs": 2541
+  }
+]
